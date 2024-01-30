@@ -19,6 +19,9 @@ public class FusionSpawner : MonoBehaviour, INetworkRunnerCallbacks
     SessionListUIHandler sessionListUIHandler;
 
 
+    //ingame
+    InGameUIHandler inGameUIHandler;
+
     // Mapping between Token ID and Re-created Players
     Dictionary<int, NetworkPlayer> mapTokenIDWithNetworkPlayer;
 
@@ -28,6 +31,7 @@ public class FusionSpawner : MonoBehaviour, INetworkRunnerCallbacks
         mapTokenIDWithNetworkPlayer = new Dictionary<int, NetworkPlayer>();
 
         sessionListUIHandler = FindObjectOfType<SessionListUIHandler>(true);
+        
     }
     int GetPlayerToken(NetworkRunner runner, PlayerRef player)
     {
@@ -146,6 +150,7 @@ public class FusionSpawner : MonoBehaviour, INetworkRunnerCallbacks
     public void OnSceneLoadDone(NetworkRunner runner)
     {
         print(System.Reflection.MethodBase.GetCurrentMethod().Name);
+       
     }
 
     public void OnSceneLoadStart(NetworkRunner runner)
@@ -179,6 +184,9 @@ public class FusionSpawner : MonoBehaviour, INetworkRunnerCallbacks
                 Debug.Log($"Found session {sessionInfo.Name} playerCount {sessionInfo.PlayerCount}");
             }
         }
+
+
+
 
     }
 

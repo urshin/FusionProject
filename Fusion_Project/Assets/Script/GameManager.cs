@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -49,6 +50,8 @@ public class GameManager : MonoBehaviour
     }
 
 
+    [Header("세션 게임 정보")]
+    public int playerCount;
 
 
 
