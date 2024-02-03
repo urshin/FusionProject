@@ -1,0 +1,25 @@
+// CharacterInfo.txt
+
+// 검사
+Class: 검사
+HP: 100
+Speed: 10
+Attack: 20
+AttackSpeed: 1.5
+Deffence: 15
+
+// 마법사
+Class: 마법사
+HP: 80
+Speed: 8
+Attack: 25
+AttackSpeed: 2.0
+Deffence: 10
+
+// 궁수
+Class: 궁수
+HP: 90
+Speed: 12
+Attack: 18
+AttackSpeed: 1.8
+Deffence: 12

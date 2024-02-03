@@ -59,11 +59,7 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
-        if(Input.GetKeyDown(KeyCode.P))
-        {
-            PlayerRef playerRef = new PlayerRef();
-            print(playerRef.PlayerId);
-        }
+       
     }
 
 

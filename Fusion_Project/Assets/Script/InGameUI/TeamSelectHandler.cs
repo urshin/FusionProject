@@ -5,21 +5,45 @@ using System.Data.SqlTypes;
 using TMPro;
 using UnityEngine;
 
-public class TeamSelectHandler : MonoBehaviour
+public class TeamSelectHandler : NetworkBehaviour
 {
-    [SerializeField] TextMeshProUGUI TeamA;
-    [SerializeField] TextMeshProUGUI TeamB;
+    public TextMeshProUGUI TeamA;
+    public TextMeshProUGUI TeamB;
 
     CurrentPlayersInformation currentPlayersInformation;
 
-    
+
 
     private void Awake()
     {
         currentPlayersInformation = FindObjectOfType<CurrentPlayersInformation>();
     }
 
+
     private void OnEnable()
+    {
+        
+    }
+
+    private ChangeDetector _changeDetector;
+
+    public override void Spawned()
+    {
+        _changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
+    }
+    public override void Render()
+    {
+        foreach (var change in _changeDetector.DetectChanges(this))
+        {
+            switch (change)
+            {
+                case nameof(currentPlayersInformation.TeamAcount):
+                    print(currentPlayersInformation.TeamAcount);
+                    break;
+            }
+        }
+    }
+    private void Update()
     {
         TeamA.text = currentPlayersInformation.TeamAcount.ToString();
     }
@@ -27,20 +51,21 @@ public class TeamSelectHandler : MonoBehaviour
     public void OnClickTeamA()
     {
         currentPlayersInformation.TeamAcount++;
-        print( currentPlayersInformation.TeamAcount );
-        currentPlayersInformation.currentPlayers.Add(PlayerPrefs.GetString("PlayerNickname"),1);
-           
+        print(currentPlayersInformation.TeamAcount);
+       
+
 
     }
     public void OnClickTeamB()
     {
         currentPlayersInformation.TeamBcount++;
         print(currentPlayersInformation.TeamBcount);
+       
 
 
     }
 
 
-    
+
 
 }
