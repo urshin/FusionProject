@@ -3,10 +3,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+
 using UnityEngine;
 
 public class InGameUIHandler : MonoBehaviour
 {
+    [SerializeField] GameObject CrueentPlayerInformation;
+
     [Header("ÆÐ³Îµé")]
     [SerializeField] GameObject teamSelectPanel;
     [SerializeField] GameObject characterSelecPanel;
@@ -20,6 +23,12 @@ public class InGameUIHandler : MonoBehaviour
 
 
     NetworkRunner runner;
+
+
+    private void Awake()
+    {
+        Instantiate(CrueentPlayerInformation);
+    }
 
 
     private void Start()

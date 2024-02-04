@@ -1283,6 +1283,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99fb4af3ed07a8944b7464e5918ec333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CrueentPlayerInformation: {fileID: 7924173928744243609, guid: 70d48355e4a9b6a439a76d8651a36d06, type: 3}
   teamSelectPanel: {fileID: 708427430}
   characterSelecPanel: {fileID: 669221850}
   WaitingPanel: {fileID: 651986351}
@@ -2160,7 +2161,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &609005998
 Transform:
   m_ObjectHideFlags: 0
@@ -2190,7 +2191,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _TeamAcount: 0
   _TeamBcount: 0
-  _maxPlayer: 0
   _currentplayer: 0
 --- !u!114 &609006000
 MonoBehaviour:

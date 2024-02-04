@@ -1,6 +1,7 @@
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -33,7 +34,16 @@ public class CurrentPlayersInformation : NetworkBehaviour
     public int currentplayer { get; set; }
     public int maxPlayer { get; set; }
 
-   
+    ////Ç»Á¯ µñ¼Å³Ê¸®
+    //[Networked]
+    //[Capacity(4)] // Sets the fixed capacity of the collection
+    //[UnitySerializeField] // Show this private property in the inspector.
+    //private NetworkDictionary<NetworkString<_32>, float> playerDistances => default;
+
+
+
+    [UnitySerializeField]
+    PlayerInfo[] playerInfos { get; set; }
 
 
     public List<PlayerInfo> playerList { get; set; }
@@ -74,7 +84,10 @@ public class CurrentPlayersInformation : NetworkBehaviour
 
     private void Update()
     {
-       
+       if(Input.GetKeyDown(KeyCode.T))
+        {
+           
+        }
 
 
     }

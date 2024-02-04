@@ -39,20 +39,24 @@ public class TeamSelectHandler : NetworkBehaviour
             {
                 case nameof(currentPlayersInformation.TeamAcount):
                     print(currentPlayersInformation.TeamAcount);
+                    TeamA.text = currentPlayersInformation.TeamAcount.ToString();
                     break;
             }
         }
     }
     private void Update()
     {
-        TeamA.text = currentPlayersInformation.TeamAcount.ToString();
+       // TeamA.text = currentPlayersInformation.TeamAcount.ToString();
     }
 
+    //d
     public void OnClickTeamA()
     {
         currentPlayersInformation.TeamAcount++;
         print(currentPlayersInformation.TeamAcount);
-       
+        
+
+
 
 
     }
