@@ -37,6 +37,7 @@ public class TeamSelectHandler : MonoBehaviour
         
         
         PlayerPrefs.SetString("Team", "A");
+        PlayerPrefs.Save();
         currentPlayersInformation.OnJoinTeam("A");
         
 
@@ -47,6 +48,7 @@ public class TeamSelectHandler : MonoBehaviour
     {
         
         PlayerPrefs.SetString("Team", "B");
+        PlayerPrefs.Save();
         currentPlayersInformation.OnJoinTeam("B");
 
     }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using TMPro;
 
 using UnityEngine;
+using static InGameUIHandler;
 
 public class InGameUIHandler : MonoBehaviour
 {
@@ -25,9 +26,12 @@ public class InGameUIHandler : MonoBehaviour
     NetworkRunner runner;
 
 
+
+
     private void Awake()
     {
         Instantiate(CrueentPlayerInformation);
+      
     }
 
 
@@ -36,18 +40,21 @@ public class InGameUIHandler : MonoBehaviour
         //패널 숨김으로 초기화
         HideAllPanel();
         teamSelectPanel.SetActive(true);
-        
-        
+      
+
+
+
     }
 
 
 
-    public void OnClickTeamSelect(string Team)
+    public void OnClickTeamSelect()
     {
         
         HideAllPanel();
 
         characterSelecPanel.SetActive(true);
+      
     }
 
 
@@ -56,10 +63,11 @@ public class InGameUIHandler : MonoBehaviour
         HideAllPanel();
 
         WaitingPanel.SetActive(true);
+     
     }
 
 
-
+    
 
     public void OnclickStartBTN()
     {
@@ -76,34 +84,12 @@ public class InGameUIHandler : MonoBehaviour
         }
         else playerStatePanel.SetActive(false);
 
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            runner = FindAnyObjectByType<NetworkRunner>();
-            print("현재 세션 플레이어 카운트"+ runner.SessionInfo.PlayerCount.ToString());
-        }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     void HideAllPanel()
     {
+       
         teamSelectPanel.SetActive(false);
         characterSelecPanel.SetActive(false);
         WaitingPanel.SetActive(false);

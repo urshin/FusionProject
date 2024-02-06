@@ -8,6 +8,7 @@ using static Fusion.NetworkBehaviour;
 using Fusion;
 using Unity.VisualScripting;
 using System.Linq;
+using static InGameUIHandler;
 
 public class CharacterSelectPanel : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class CharacterSelectPanel : MonoBehaviour
     private void Awake()
     {
         currentPlayersInformation = FindObjectOfType<CurrentPlayersInformation>();
+        currentPlayersInformation.characterSelectPanel = this;
     }
 
 
@@ -47,6 +49,8 @@ public class CharacterSelectPanel : MonoBehaviour
 
     public void Start()
     {
+        currentPlayersInformation = FindObjectOfType<CurrentPlayersInformation>();
+        currentPlayersInformation.characterSelectPanel = this;
         //ShowTeamInfo();
 
         if (File.Exists(filePath))
@@ -128,16 +132,21 @@ public class CharacterSelectPanel : MonoBehaviour
                     return;
             }
 
-            if (team == "A" || team == "B")
+            if (team == "A" )
             {
                 currentPlayersInformation.teamADictionary.Set(playerName, characterIndex);
+            }
+            else if(team == "B")
+            {
+                currentPlayersInformation.teamBDictionary.Set(playerName, characterIndex);
             }
             else
             {
                 Debug.LogWarning("Invalid team: " + team);
             }
         }
-        ShowTeamInfo();
+        
+      
     }
 
 
@@ -151,7 +160,7 @@ public class CharacterSelectPanel : MonoBehaviour
             int j = 0;
             foreach (var kvp in currentPlayersInformation.teamADictionary)
             {
-                Debug.Log($"Key: {kvp.Key}, Value: {kvp.Value}");
+                Debug.Log($"Key: {kvp.Key}, Value: {kvp.Value}");   
 
                 // 캐릭터의 이미지 파일명
                 string characterSpriteName = "";

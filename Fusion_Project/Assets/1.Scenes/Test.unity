@@ -2700,6 +2700,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 234b1d7f01d28aa488d8561d59e4cf24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterSelectPanel: {fileID: 0}
+  waitingPanelHandler: {fileID: 0}
+  inGameUIHandler: {fileID: 0}
   _TeamAcount: 0
   _TeamBcount: 0
   _currentplayer: 0
@@ -3561,13 +3564,25 @@ MonoBehaviour:
       - m_Target: {fileID: 249549975}
         m_TargetAssemblyTypeName: InGameUIHandler, Assembly-CSharp
         m_MethodName: OnClickTeamSelect
-        m_Mode: 5
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: B
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 708427434}
+        m_TargetAssemblyTypeName: TeamSelectHandler, Assembly-CSharp
+        m_MethodName: OnClickTeamB
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &779187735
@@ -6079,7 +6094,7 @@ MonoBehaviour:
       - m_Target: {fileID: 249549975}
         m_TargetAssemblyTypeName: InGameUIHandler, Assembly-CSharp
         m_MethodName: OnClickTeamSelect
-        m_Mode: 5
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

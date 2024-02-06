@@ -6,13 +6,15 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using static Fusion.NetworkBehaviour;
+using static InGameUIHandler;
 
 public class CurrentPlayersInformation : NetworkBehaviour
 {
     [Header("UI")]
-    CharacterSelectPanel characterSelectPanel;
-    WaitingPanelHandler waitingPanelHandler;
+    public CharacterSelectPanel characterSelectPanel;
+    public WaitingPanelHandler waitingPanelHandler;
 
+    public InGameUIHandler inGameUIHandler;
 
 
     public static CurrentPlayersInformation instance;
@@ -20,16 +22,17 @@ public class CurrentPlayersInformation : NetworkBehaviour
     {
         characterSelectPanel = FindObjectOfType<CharacterSelectPanel>();
         waitingPanelHandler = FindObjectOfType<WaitingPanelHandler>();
+        inGameUIHandler = FindObjectOfType<InGameUIHandler>();
         if (instance != null)
         {
-            
+
             return;
         }
         else
         {
             instance = this;
         }
-        
+
     }
 
 
@@ -37,7 +40,7 @@ public class CurrentPlayersInformation : NetworkBehaviour
     public int TeamAcount { get; set; }
     [Networked]
     public int TeamBcount { get; set; }
-   
+
     [Networked]
     public int currentplayer { get; set; }
     public int maxPlayer { get; set; }
@@ -69,39 +72,41 @@ public class CurrentPlayersInformation : NetworkBehaviour
         {
             switch (change)
             {
-                
+
                 case nameof(teamADictionary):
-                    print("TeamAµñ¼Å³Ê¸® ¹Ù²ñ");
                     characterSelectPanel.ShowTeamInfo();
                     break;
 
-               
+                case nameof(teamBDictionary):
+                    characterSelectPanel.ShowTeamInfo();
+                    break;
+
             }
         }
     }
 
-    
-    
+
+
 
 
     private void Start()
     {
-        
+
         maxPlayer = 6;
-        
+
 
     }
 
 
     private void Update()
     {
-       if(Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.T))
         {
             print(teamADictionary.Count);
         }
         if (Input.GetKeyDown(KeyCode.Y))
         {
-            teamADictionary.Add("TestPlayer",0);
+            teamADictionary.Add("TestPlayer", 0);
         }
         if (Input.GetKeyDown(KeyCode.Z))
         {
@@ -112,13 +117,13 @@ public class CurrentPlayersInformation : NetworkBehaviour
 
     public void ClearPlayerList()
     {
-        
+
     }
 
-   
+
     public void OnJoinTeam(string team)
     {
-        if(team == "A")
+        if (team == "A")
         {
             TeamAcount++;
             teamADictionary.Add(PlayerPrefs.GetString("PlayerNickname"), 0);
