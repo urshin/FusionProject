@@ -1,18 +1,42 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WaitingPanelHandler : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    CurrentPlayersInformation currentPlayersInformation;
+
+
+    [SerializeField] TextMeshProUGUI PlayerCounting;
+
+    //방장 권한이 있는 사람만 active시키기
+    [SerializeField] GameObject PlayBTN;
+
+    [SerializeField] VerticalLayoutGroup TeamA;
+    [SerializeField] VerticalLayoutGroup TeamB;
+
+
+
+    private void Awake()
     {
-        
+        currentPlayersInformation = FindObjectOfType<CurrentPlayersInformation>();
+    }
+    public void OnEnable()
+    {
+       // CurrentPlayer();
     }
 
-    // Update is called once per frame
-    void Update()
+
+    public void CurrentPlayer()
     {
-        
+        PlayerCounting.text = "Current Player :  " + (currentPlayersInformation.TeamAcount + currentPlayersInformation.TeamBcount).ToString();
     }
+
+
+    
+
+
+
 }

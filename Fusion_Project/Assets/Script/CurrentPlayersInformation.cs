@@ -9,9 +9,17 @@ using static Fusion.NetworkBehaviour;
 
 public class CurrentPlayersInformation : NetworkBehaviour
 {
+    [Header("UI")]
+    CharacterSelectPanel characterSelectPanel;
+    WaitingPanelHandler waitingPanelHandler;
+
+
+
     public static CurrentPlayersInformation instance;
     void Awake()
     {
+        characterSelectPanel = FindObjectOfType<CharacterSelectPanel>();
+        waitingPanelHandler = FindObjectOfType<WaitingPanelHandler>();
         if (instance != null)
         {
             
@@ -34,20 +42,19 @@ public class CurrentPlayersInformation : NetworkBehaviour
     public int currentplayer { get; set; }
     public int maxPlayer { get; set; }
 
-    ////«ª¡Ø µÒº≈≥ ∏Æ
-    //[Networked]
-    //[Capacity(4)] // Sets the fixed capacity of the collection
-    //[UnitySerializeField] // Show this private property in the inspector.
-    //private NetworkDictionary<NetworkString<_32>, float> playerDistances => default;
 
 
 
-    [UnitySerializeField]
-    PlayerInfo[] playerInfos { get; set; }
+    //«ª¡Ø µÒº≈≥ ∏Æ
+    [Networked]
+    [Capacity(3)] // Sets the fixed capacity of the collection
+    [UnitySerializeField] // Show this private property in the inspector.
+    public NetworkDictionary<NetworkString<_32>, float> teamADictionary => default;
 
-
-    public List<PlayerInfo> playerList { get; set; }
-
+    [Networked]
+    [Capacity(3)] // Sets the fixed capacity of the collection
+    [UnitySerializeField] // Show this private property in the inspector.
+    public NetworkDictionary<NetworkString<_32>, float> teamBDictionary => default;
 
 
     private ChangeDetector _changeDetector;
@@ -62,9 +69,13 @@ public class CurrentPlayersInformation : NetworkBehaviour
         {
             switch (change)
             {
-                case nameof(TeamAcount):
-                    //print(TeamAcount);
+                
+                case nameof(teamADictionary):
+                    print("TeamAµÒº≈≥ ∏Æ πŸ≤Ò");
+                    characterSelectPanel.ShowTeamInfo();
                     break;
+
+               
             }
         }
     }
@@ -86,19 +97,39 @@ public class CurrentPlayersInformation : NetworkBehaviour
     {
        if(Input.GetKeyDown(KeyCode.T))
         {
-           
+            print(teamADictionary.Count);
         }
-
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            teamADictionary.Add("TestPlayer",0);
+        }
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            print(PlayerPrefs.GetString("PlayerNickname"));
+        }
 
     }
 
     public void ClearPlayerList()
     {
-        //«√∑π¿ÃæÓ ∏ÆΩ∫∆Æ √ ±‚»≠ «œ±‚
-        playerList.Clear();
+        
     }
 
    
-    
+    public void OnJoinTeam(string team)
+    {
+        if(team == "A")
+        {
+            TeamAcount++;
+            teamADictionary.Add(PlayerPrefs.GetString("PlayerNickname"), 0);
+
+        }
+        if (team == "B")
+        {
+            TeamBcount++;
+            teamBDictionary.Add(PlayerPrefs.GetString("PlayerNickname"), 0);
+
+        }
+    }
 
 }

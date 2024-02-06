@@ -1,3 +1,4 @@
+using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +12,7 @@ public enum Team
 }
 
 [System.Serializable]
-public class PlayerInfo //구조체로 해보기
+public class PlayerInfo:INetworkStruct //구조체로 해보기 
 {
     Team team = new Team();
 

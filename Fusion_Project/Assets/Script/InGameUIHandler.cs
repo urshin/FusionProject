@@ -51,7 +51,7 @@ public class InGameUIHandler : MonoBehaviour
     }
 
 
-    public void OnClickCharacterSelect(string character)
+    public void OnClickCharacterSelect()
     {
         HideAllPanel();
 
