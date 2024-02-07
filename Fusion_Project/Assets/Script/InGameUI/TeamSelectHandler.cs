@@ -10,13 +10,12 @@ public class TeamSelectHandler : MonoBehaviour
     public TextMeshProUGUI TeamA;
     public TextMeshProUGUI TeamB;
 
-    CurrentPlayersInformation currentPlayersInformation;
 
-
+    public CurrentPlayersInformation currentPlayersInformation;
 
     private void Awake()
     {
-        currentPlayersInformation = FindObjectOfType<CurrentPlayersInformation>();
+     
     }
 
 

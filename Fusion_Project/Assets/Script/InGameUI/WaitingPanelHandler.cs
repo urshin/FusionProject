@@ -7,8 +7,7 @@ using UnityEngine.UI;
 
 public class WaitingPanelHandler : MonoBehaviour
 {
-    CurrentPlayersInformation currentPlayersInformation;
-
+    public CurrentPlayersInformation currentPlayersInformation;
 
     [SerializeField] TextMeshProUGUI PlayerCounting;
 
@@ -22,12 +21,11 @@ public class WaitingPanelHandler : MonoBehaviour
 
     private void Awake()
     {
-        currentPlayersInformation = FindObjectOfType<CurrentPlayersInformation>();
-        currentPlayersInformation.waitingPanelHandler = this;
+       
     }
     public void OnEnable()
     {
-        InvokeRepeating("ShowWaitingPlayer", 0, 0.5f);
+        //InvokeRepeating("ShowWaitingPlayer", 0, 0.5f);
     }
 
 

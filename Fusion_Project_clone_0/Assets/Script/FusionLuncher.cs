@@ -13,6 +13,8 @@ public class FusionLuncher : MonoBehaviour
     // spawner Prefab
     public NetworkRunner networkRunnerPrefab;
 
+     
+
     // networkRunner
     NetworkRunner networkRunner;
 
@@ -40,7 +42,19 @@ public class FusionLuncher : MonoBehaviour
             Debug.Log($"Server NetworkRunner started.");
         }
     }
+  // NetworkSceneManager를 가져오는 메서드
+    INetworkSceneManager GetSceneManager(NetworkRunner runner)
+    {
+        var sceneManager = runner.GetComponents(typeof(MonoBehaviour)).OfType<INetworkSceneManager>().FirstOrDefault();
 
+        if (sceneManager == null)
+        {
+            // 씬에 이미 존재하는 네트워크 오브젝트를 처리합니다.
+            sceneManager = runner.gameObject.AddComponent<NetworkSceneManagerDefault>();
+        }
+
+        return sceneManager;
+    }
     protected virtual Task InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode, string sessionName, byte[] connectionToken, NetAddress address, SceneRef scene, Action<NetworkRunner> initialized)
     {
         var sceneManager = GetSceneManager(runner);
@@ -57,23 +71,9 @@ public class FusionLuncher : MonoBehaviour
             OnGameStarted = initialized,
             SceneManager = sceneManager,
             ConnectionToken = connectionToken
-
         });
     }
 
-    // NetworkSceneManager를 가져오는 메서드
-    INetworkSceneManager GetSceneManager(NetworkRunner runner)
-    {
-        var sceneManager = runner.GetComponents(typeof(MonoBehaviour)).OfType<INetworkSceneManager>().FirstOrDefault();
-
-        if (sceneManager == null)
-        {
-            // 씬에 이미 존재하는 네트워크 오브젝트를 처리합니다.
-            sceneManager = runner.gameObject.AddComponent<NetworkSceneManagerDefault>();
-        }
-
-        return sceneManager;
-    }
 
     // 로비에 참여하는 메서드
     public void OnJoinLobby()

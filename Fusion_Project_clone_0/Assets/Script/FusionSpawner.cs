@@ -7,6 +7,9 @@ using UnityEngine;
 
 public class FusionSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
+    public NetworkPlayer networkPlayer;
+
+
     //플레이어 정보를 가지는 딕셔너리
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
 
@@ -17,6 +20,7 @@ public class FusionSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     //메인메뉴 세션
     SessionListUIHandler sessionListUIHandler;
+
 
 
     //ingame
@@ -52,6 +56,10 @@ public class FusionSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
             return 0; // invalid
         }
+    }
+    IEnumerator CallSpawnedCO()
+    {
+        yield return new WaitForSeconds(0.5f);
     }
 
 
@@ -127,7 +135,7 @@ public class FusionSpawner : MonoBehaviour, INetworkRunnerCallbacks
             else
             {
                 Debug.Log($"Spawning new player for connection token {playerToken}");
-               // NetworkObject networkPlayerObject = runner.Spawn(Quaternion.identity, player);
+                NetworkObject networkPlayerObject = runner.Spawn(swordMan, new Vector3(0, 0, 0), Quaternion.identity, player) ;
             }
         }
     }
@@ -135,6 +143,11 @@ public class FusionSpawner : MonoBehaviour, INetworkRunnerCallbacks
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
         print(System.Reflection.MethodBase.GetCurrentMethod().Name);
+        if (_spawnedCharacters.TryGetValue(player, out NetworkObject networkObject))
+        {
+            runner.Despawn(networkObject);
+            _spawnedCharacters.Remove(player);
+        }
     }
 
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress)

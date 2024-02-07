@@ -10,14 +10,13 @@ using Unity.VisualScripting;
 using System.Linq;
 using static InGameUIHandler;
 
-public class CharacterSelectPanel : MonoBehaviour
+public class CharacterSelectHandler : MonoBehaviour
 {
+    public CurrentPlayersInformation currentPlayersInformation;
 
-    CurrentPlayersInformation currentPlayersInformation;
     private void Awake()
     {
-        currentPlayersInformation = FindObjectOfType<CurrentPlayersInformation>();
-        currentPlayersInformation.characterSelectPanel = this;
+       
     }
 
 
@@ -43,8 +42,7 @@ public class CharacterSelectPanel : MonoBehaviour
 
     private void OnEnable()
     {
-        currentPlayersInformation = FindObjectOfType<CurrentPlayersInformation>();
-        currentPlayersInformation.characterSelectPanel = this;
+      
         whatTeam.text = PlayerPrefs.GetString("Team");
         if (File.Exists(filePath))
         {
@@ -81,10 +79,6 @@ public class CharacterSelectPanel : MonoBehaviour
                 classCount++;
             }
             Debug.Log("class count is" + classCount);
-
-
-
-
         }
         else
         {
@@ -173,17 +167,17 @@ public class CharacterSelectPanel : MonoBehaviour
                 characterIndex = 3;
                 break;
             default:
-                //  Debug.LogWarning("Unknown button clicked: " + clickedButton.name);
                 return;
         }
 
         if (team == "A")
         {
-            currentPlayersInformation.teamADictionary.Set(playerName, characterIndex);
+            currentPlayersInformation.RPC_TeamAdd(playerName, team, characterIndex);
+           // currentPlayersInformation.teamADictionary.Set(playerName, characterIndex);
         }
         else if (team == "B")
         {
-            currentPlayersInformation.teamBDictionary.Set(playerName, characterIndex);
+            currentPlayersInformation.RPC_TeamAdd(playerName, team, characterIndex);
         }
         else
         {

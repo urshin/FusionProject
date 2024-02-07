@@ -11,27 +11,17 @@ using static InGameUIHandler;
 public class CurrentPlayersInformation : NetworkBehaviour
 {
     [Header("UI")]
-    public CharacterSelectPanel characterSelectPanel;
-    public WaitingPanelHandler waitingPanelHandler;
-
-    public InGameUIHandler inGameUIHandler;
+    CharacterSelectHandler characterSelectPanel;
+    WaitingPanelHandler waitingPanelHandler;
 
 
-    public static CurrentPlayersInformation instance;
+
     void Awake()
     {
-        characterSelectPanel = FindObjectOfType<CharacterSelectPanel>();
-        waitingPanelHandler = FindObjectOfType<WaitingPanelHandler>();
-        inGameUIHandler = FindObjectOfType<InGameUIHandler>();
-        if (instance != null)
-        {
+        characterSelectPanel = GetComponentInChildren<CharacterSelectHandler>();
+        waitingPanelHandler = GetComponentInChildren<WaitingPanelHandler>();
 
-            return;
-        }
-        else
-        {
-            instance = this;
-        }
+
 
     }
 
@@ -81,30 +71,20 @@ public class CurrentPlayersInformation : NetworkBehaviour
             {
 
                 case nameof(teamADictionary):
-                    characterSelectPanel.ShowTeamInfo();
+                    //characterSelectPanel.ShowTeamInfo();
                     break;
 
                 case nameof(teamBDictionary):
-                    characterSelectPanel.ShowTeamInfo();
+                    //characterSelectPanel.ShowTeamInfo();
                     break;
 
             }
         }
     }
-
-
-
-
-
     private void Start()
     {
-
         maxPlayer = 6;
-
-
     }
-
-
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.T))
@@ -113,15 +93,134 @@ public class CurrentPlayersInformation : NetworkBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Y))
         {
-            for(int i = 0; i < teamAplayerList.Count; i++)
+            for (int i = 0; i < teamAplayerList.Count; i++)
             {
                 print(teamAplayerList[i]);
             }
         }
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (Object.HasInputAuthority && Input.GetKeyDown(KeyCode.Z))
         {
-            print(PlayerPrefs.GetString("PlayerNickname"));
+            RPC_TeamAdd("z", "A", 0);
         }
+        if (Object.HasInputAuthority && Input.GetKeyDown(KeyCode.X))
+        {
+            RPC_TeamAdd("x", "A", 0);
+        }
+        if (Object.HasInputAuthority && Input.GetKeyDown(KeyCode.C))
+        {
+            RPC_TeamAdd("c", "B", 0);
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            foreach (var pair in teamADictionary)
+            {
+                Debug.Log("TeamA : Key: " + pair.Key + ", Value: " + pair.Value);
+            }
+            foreach (var pair in teamBDictionary)
+            {
+                Debug.Log("TeamB : Key: " + pair.Key + ", Value: " + pair.Value);
+            }
+        }
+    }
+    private TMP_Text _messages;
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
+    public void RPC_TeamAdd(string NickName, string Team, float classinfo, RpcInfo info = default)
+    {
+        RPC_TeamABadd(NickName, Team, classinfo, info.Source);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
+    public void RPC_TeamABadd(string NickName, string Team, float classinfo, PlayerRef messageSource)
+    {
+        // ÆÀ A¿¡ ´ëÇÑ Ã³¸®
+        if (Team == "A")
+        {
+            if (!teamADictionary.ContainsKey(NickName))
+            {
+                teamADictionary.Add(NickName, classinfo);
+            }
+            else
+            {
+                teamADictionary.Set(NickName, classinfo);
+            }
+        }
+        // ÆÀ B¿¡ ´ëÇÑ Ã³¸®
+        else if (Team == "B")
+        {
+            if (!teamBDictionary.ContainsKey(NickName))
+            {
+                teamBDictionary.Add(NickName, classinfo);
+            }
+            else
+            {
+                teamBDictionary.Set(NickName, classinfo);
+            }
+        }
+        //if (!teamADictionary.ContainsKey(NickName))
+        //{
+        //    if (messageSource == Runner.LocalPlayer)
+        //    {
+
+        //        if (Team == "A")
+        //        {
+        //            teamADictionary.Add(NickName, classinfo);
+        //        }
+        //        else if (Team == "B")
+        //        {
+        //            teamBDictionary.Add(NickName, classinfo);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (Team == "A")
+        //        {
+        //            teamADictionary.Add(NickName, classinfo);
+        //        }
+        //        else if (Team == "B")
+        //        {
+        //            teamBDictionary.Add(NickName, classinfo);
+        //        }
+        //    }
+
+        //}
+        //else
+        //{
+        //    teamADictionary.Set(NickName, classinfo);
+        //}
+
+        //if (teamBDictionary.ContainsKey(NickName))
+        //{
+        //    if (messageSource == Runner.LocalPlayer)
+        //    {
+
+        //        if (Team == "A")
+        //        {
+        //            teamADictionary.Add(NickName, classinfo);
+        //        }
+        //        else if (Team == "B")
+        //        {
+        //            teamBDictionary.Add(NickName, classinfo);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (Team == "A")
+        //        {
+        //            teamADictionary.Add(NickName, classinfo);
+        //        }
+        //        else if (Team == "B")
+        //        {
+        //            teamBDictionary.Add(NickName, classinfo);
+        //        }
+        //    }
+        //}
+        //else
+        //{
+        //    teamBDictionary.Set(NickName, classinfo);
+        //}
+
+
 
     }
 
@@ -135,18 +234,23 @@ public class CurrentPlayersInformation : NetworkBehaviour
     {
         if (team == "A")
         {
-            TeamAcount++;
-            teamADictionary.Add(PlayerPrefs.GetString("PlayerNickname"), 0);
+            //TeamAcount++;
+            //teamADictionary.Add(PlayerPrefs.GetString("PlayerNickname"), 0);
+            if (Object.HasInputAuthority)
+            {
+                RPC_TeamAdd(PlayerPrefs.GetString("PlayerNickname"), "A", 0);
+            }
             Debug.Log("AÆÀ Âü°¡");
-
         }
         if (team == "B")
         {
-            TeamBcount++;
-            teamBDictionary.Add(PlayerPrefs.GetString("PlayerNickname"), 0);
+            //TeamBcount++;
+            //teamBDictionary.Add(PlayerPrefs.GetString("PlayerNickname"), 0);
+            if (Object.HasInputAuthority)
+            {
+                RPC_TeamAdd(PlayerPrefs.GetString("PlayerNickname"), "B", 0);
+            }
             Debug.Log("BÆÀ Âü°¡");
-
         }
     }
-
 }

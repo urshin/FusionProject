@@ -9,7 +9,7 @@ using static InGameUIHandler;
 
 public class InGameUIHandler : MonoBehaviour
 {
-    [SerializeField] GameObject CrueentPlayerInformation;
+    [SerializeField] CurrentPlayersInformation CrueentPlayerInformation;
 
     [Header("ÆÐ³Îµé")]
     [SerializeField] GameObject teamSelectPanel;
@@ -30,8 +30,12 @@ public class InGameUIHandler : MonoBehaviour
 
     private void Awake()
     {
-        Instantiate(CrueentPlayerInformation);
+       // Instantiate(CrueentPlayerInformation);
       
+        teamSelectPanel.GetComponent<TeamSelectHandler>().currentPlayersInformation = CrueentPlayerInformation;
+        characterSelecPanel.GetComponent<CharacterSelectHandler>().currentPlayersInformation = CrueentPlayerInformation;
+        WaitingPanel.GetComponent<WaitingPanelHandler>().currentPlayersInformation = CrueentPlayerInformation;
+        
     }
 
 
