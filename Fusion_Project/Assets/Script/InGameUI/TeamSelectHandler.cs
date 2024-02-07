@@ -34,10 +34,12 @@ public class TeamSelectHandler : MonoBehaviour
     //d
     public void OnClickTeamA()
     {
-        
-        
+
+        PlayerPrefs.DeleteKey("Team");
         PlayerPrefs.SetString("Team", "A");
-        PlayerPrefs.Save();
+
+
+        currentPlayersInformation.teamAplayerList.Add(PlayerPrefs.GetString("PlayerNickname"));
         currentPlayersInformation.OnJoinTeam("A");
         
 
@@ -46,9 +48,9 @@ public class TeamSelectHandler : MonoBehaviour
     }
     public void OnClickTeamB()
     {
-        
+        PlayerPrefs.DeleteKey("Team");
         PlayerPrefs.SetString("Team", "B");
-        PlayerPrefs.Save();
+        currentPlayersInformation.teamBplayerList.Add(PlayerPrefs.GetString("PlayerNickname"));
         currentPlayersInformation.OnJoinTeam("B");
 
     }

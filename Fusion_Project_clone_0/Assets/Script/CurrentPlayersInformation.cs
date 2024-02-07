@@ -46,7 +46,14 @@ public class CurrentPlayersInformation : NetworkBehaviour
     public int maxPlayer { get; set; }
 
 
-
+    [Networked]
+    [Capacity(4)] // Sets the fixed capacity of the collection
+    [UnitySerializeField] // Show this private property in the inspector.
+    public NetworkLinkedList<NetworkString<_32>> teamAplayerList { get; } = MakeInitializer(new NetworkString<_32>[] { });
+    [Networked]
+    [Capacity(4)] // Sets the fixed capacity of the collection
+    [UnitySerializeField] // Show this private property in the inspector.
+    public NetworkLinkedList<NetworkString<_32>> teamBplayerList { get; } = MakeInitializer(new NetworkString<_32>[] { });
 
     //Ç»Á¯ µñ¼Å³Ê¸®
     [Networked]
@@ -106,7 +113,10 @@ public class CurrentPlayersInformation : NetworkBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Y))
         {
-            teamADictionary.Add("TestPlayer", 0);
+            for(int i = 0; i < teamAplayerList.Count; i++)
+            {
+                print(teamAplayerList[i]);
+            }
         }
         if (Input.GetKeyDown(KeyCode.Z))
         {
@@ -127,12 +137,14 @@ public class CurrentPlayersInformation : NetworkBehaviour
         {
             TeamAcount++;
             teamADictionary.Add(PlayerPrefs.GetString("PlayerNickname"), 0);
+            Debug.Log("AÆÀ Âü°¡");
 
         }
         if (team == "B")
         {
             TeamBcount++;
             teamBDictionary.Add(PlayerPrefs.GetString("PlayerNickname"), 0);
+            Debug.Log("BÆÀ Âü°¡");
 
         }
     }

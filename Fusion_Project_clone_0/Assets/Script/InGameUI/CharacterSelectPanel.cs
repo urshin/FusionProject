@@ -43,16 +43,9 @@ public class CharacterSelectPanel : MonoBehaviour
 
     private void OnEnable()
     {
-        whatTeam.text = PlayerPrefs.GetString("Team");
-    }
-
-
-    public void Start()
-    {
         currentPlayersInformation = FindObjectOfType<CurrentPlayersInformation>();
         currentPlayersInformation.characterSelectPanel = this;
-        //ShowTeamInfo();
-
+        whatTeam.text = PlayerPrefs.GetString("Team");
         if (File.Exists(filePath))
         {
             string characterInfoText = File.ReadAllText(filePath);
@@ -83,15 +76,13 @@ public class CharacterSelectPanel : MonoBehaviour
                 classinfo.SetActive(true);
                 classinfo.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>(resourceName);
                 classinfo.GetComponentInChildren<TextMeshProUGUI>().text = text;
-                classinfo.GetComponentInChildren<Button>().name = buttonName;
+                classinfo.GetComponentInChildren<Button>().onClick.AddListener(() => OnclickCharacterInfo(buttonName));
+
                 classCount++;
             }
             Debug.Log("class count is" + classCount);
 
-            //for(int i = 0; i < classCount; i++)
-            //{
-            //    CharacterContent.transform.GetChild(i).gameObject.SetActive(true);
-            //}
+
 
 
         }
@@ -100,53 +91,107 @@ public class CharacterSelectPanel : MonoBehaviour
             Debug.LogError("파일이 없습니다 ");
         }
 
+    }
+
+
+    public void Start()
+    {
+        //currentPlayersInformation = FindObjectOfType<CurrentPlayersInformation>();
+        //currentPlayersInformation.characterSelectPanel = this;
+        ////ShowTeamInfo();
+
+        //if (File.Exists(filePath))
+        //{
+        //    string characterInfoText = File.ReadAllText(filePath);
+        //    string[] lines = File.ReadAllLines(filePath);
+
+        //    int classCount = 0;
+
+        //    foreach (string line in lines)
+        //    {
+        //        if (line.StartsWith("Class: Sword"))
+        //        {
+        //            SetCharacterInfo("Sword", "SwordMan", "SwordBTN", classCount);
+        //        }
+        //        else if (line.StartsWith("Class: Magic"))
+        //        {
+        //            SetCharacterInfo("Magic", "Magician", "MagicianBTN", classCount);
+        //        }
+        //        else if (line.StartsWith("Class: Archer"))
+        //        {
+        //            SetCharacterInfo("Archer", "Archer", "ArcherBTN", classCount);
+        //        }
+        //    }
+
+        //    void SetCharacterInfo(string resourceName, string text, string buttonName, int index)
+        //    {
+        //        Transform classTransform = CharacterContent.transform.GetChild(index);
+        //        GameObject classinfo = classTransform.gameObject;
+        //        classinfo.SetActive(true);
+        //        classinfo.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>(resourceName);
+        //        classinfo.GetComponentInChildren<TextMeshProUGUI>().text = text;
+        //        classinfo.GetComponentInChildren<Button>().name = buttonName;
+        //        classCount++;
+        //    }
+        //    Debug.Log("class count is" + classCount);
+
+        //    //for(int i = 0; i < classCount; i++)
+        //    //{
+        //    //    CharacterContent.transform.GetChild(i).gameObject.SetActive(true);
+        //    //}
+
+
+        //}
+        //else
+        //{
+        //    Debug.LogError("파일이 없습니다 ");
+        //}
+
 
     }
     public void Update()
     {
-
+     
     }
 
-    public void OnclickCharacterInfo()
+    public void OnclickCharacterInfo(string name)
     {
-        Button clickedButton = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
-        if (clickedButton != null)
+
+        string team = PlayerPrefs.GetString("Team");
+        string playerName = PlayerPrefs.GetString("PlayerNickname");
+        int characterIndex = 0;
+
+        switch (name)
         {
-            string team = PlayerPrefs.GetString("Team");
-            string playerName = PlayerPrefs.GetString("PlayerNickname");
-            int characterIndex = 0;
-
-            switch (clickedButton.name)
-            {
-                case "SwordBTN":
-                    characterIndex = 1;
-                    break;
-                case "MagicianBTN":
-                    characterIndex = 2;
-                    break;
-                case "ArcherBTN":
-                    characterIndex = 3;
-                    break;
-                default:
-                  //  Debug.LogWarning("Unknown button clicked: " + clickedButton.name);
-                    return;
-            }
-
-            if (team == "A" )
-            {
-                currentPlayersInformation.teamADictionary.Set(playerName, characterIndex);
-            }
-            else if(team == "B")
-            {
-                currentPlayersInformation.teamBDictionary.Set(playerName, characterIndex);
-            }
-            else
-            {
-                Debug.LogWarning("Invalid team: " + team);
-            }
+            case "SwordBTN":
+                characterIndex = 1;
+                break;
+            case "MagicianBTN":
+                characterIndex = 2;
+                break;
+            case "ArcherBTN":
+                characterIndex = 3;
+                break;
+            default:
+                //  Debug.LogWarning("Unknown button clicked: " + clickedButton.name);
+                return;
         }
-        
-      
+
+        if (team == "A")
+        {
+            currentPlayersInformation.teamADictionary.Set(playerName, characterIndex);
+        }
+        else if (team == "B")
+        {
+            currentPlayersInformation.teamBDictionary.Set(playerName, characterIndex);
+        }
+        else
+        {
+            Debug.LogWarning("Invalid team: " + team);
+        }
+
+
+
     }
 
 
@@ -160,7 +205,7 @@ public class CharacterSelectPanel : MonoBehaviour
             int j = 0;
             foreach (var kvp in currentPlayersInformation.teamADictionary)
             {
-                Debug.Log($"Key: {kvp.Key}, Value: {kvp.Value}");   
+                Debug.Log($"Key: {kvp.Key}, Value: {kvp.Value}");
 
                 // 캐릭터의 이미지 파일명
                 string characterSpriteName = "";

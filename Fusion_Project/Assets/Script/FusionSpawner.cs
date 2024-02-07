@@ -127,7 +127,7 @@ public class FusionSpawner : MonoBehaviour, INetworkRunnerCallbacks
             else
             {
                 Debug.Log($"Spawning new player for connection token {playerToken}");
-     
+               // NetworkObject networkPlayerObject = runner.Spawn(Quaternion.identity, player);
             }
         }
     }
