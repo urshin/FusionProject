@@ -12,6 +12,10 @@ public class GameManager : MonoBehaviour
     // 플레이어 연결 토큰을 저장하는 배열
     byte[] connectionToken;
 
+    public string PlayerNickname;
+    public string playerId;
+
+    
 
     private void Awake()
     {
@@ -26,6 +30,7 @@ public class GameManager : MonoBehaviour
 
         // 씬 전환 시에도 게임 매니저를 파괴하지 않도록 설정합니다.
         DontDestroyOnLoad(gameObject);
+
     }
 
     void Start()
@@ -36,6 +41,11 @@ public class GameManager : MonoBehaviour
             connectionToken = ConnectionTokenUtils.NewToken();
             Debug.Log($"Player connection token {ConnectionTokenUtils.HashToken(connectionToken)}");
         }
+
+
+        
+
+
     }
 
     // 다른 스크립트에서 연결 토큰을 설정하는 메서드
@@ -51,19 +61,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    [Header("세션 게임 정보")]
-    public int playerCount;
 
-
-
-
-    public void Update()
-    {
-       if(Input.GetKeyDown(KeyCode.Escape))
-        {
-            //print(PlayerPrefs.);
-        }
-    }
 
 
 }

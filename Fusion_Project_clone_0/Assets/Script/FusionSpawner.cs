@@ -10,6 +10,8 @@ public class FusionSpawner : MonoBehaviour, INetworkRunnerCallbacks
     public NetworkPlayer networkPlayer;
 
 
+    PlayerInputHandler _playerInputHandler;
+
     //플레이어 정보를 가지는 딕셔너리
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
 
@@ -88,14 +90,25 @@ public class FusionSpawner : MonoBehaviour, INetworkRunnerCallbacks
         print(System.Reflection.MethodBase.GetCurrentMethod().Name);
     }
 
-    public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
+    public  void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
     {
+        
         print(System.Reflection.MethodBase.GetCurrentMethod().Name  );
+      
     }
-
+   
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-        print(System.Reflection.MethodBase.GetCurrentMethod().Name);
+        //print(System.Reflection.MethodBase.GetCurrentMethod().Name);
+        if (_playerInputHandler == null && NetworkPlayer.Local != null)
+        {
+            _playerInputHandler = NetworkPlayer.Local.GetComponent<PlayerInputHandler>();
+            print("playerinputhandler부착");
+        }
+        if (_playerInputHandler != null)
+        {
+            input.Set(_playerInputHandler.GetNetworkInput());
+        }
     }
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
@@ -136,8 +149,10 @@ public class FusionSpawner : MonoBehaviour, INetworkRunnerCallbacks
             {
                 Debug.Log($"Spawning new player for connection token {playerToken}");
                 NetworkObject networkPlayerObject = runner.Spawn(swordMan, new Vector3(0, 0, 0), Quaternion.identity, player) ;
+                
             }
         }
+        else Debug.Log("OnPlayerJoined");
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
@@ -213,5 +228,5 @@ public class FusionSpawner : MonoBehaviour, INetworkRunnerCallbacks
         print(System.Reflection.MethodBase.GetCurrentMethod().Name);
     }
 
-   
+
 }

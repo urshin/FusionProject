@@ -10,51 +10,16 @@ public class TeamSelectHandler : MonoBehaviour
     public TextMeshProUGUI TeamA;
     public TextMeshProUGUI TeamB;
 
+    [SerializeField] CurrentPlayersInformation currentPlayersInformation;
 
-    public CurrentPlayersInformation currentPlayersInformation;
+    
 
-    private void Awake()
+    public void OnclickTeam(string team)
     {
-     
-    }
-
-
-    private void OnEnable()
-    {
+        currentPlayersInformation.TeamSelect(team);
        
+    
     }
-
-  
-    private void Update()
-    {
-       // TeamA.text = currentPlayersInformation.TeamAcount.ToString();
-    }
-
-    //d
-    public void OnClickTeamA()
-    {
-
-        PlayerPrefs.DeleteKey("Team");
-        PlayerPrefs.SetString("Team", "A");
-
-
-        currentPlayersInformation.teamAplayerList.Add(PlayerPrefs.GetString("PlayerNickname"));
-        currentPlayersInformation.OnJoinTeam("A");
-        
-
-
-
-    }
-    public void OnClickTeamB()
-    {
-        PlayerPrefs.DeleteKey("Team");
-        PlayerPrefs.SetString("Team", "B");
-        currentPlayersInformation.teamBplayerList.Add(PlayerPrefs.GetString("PlayerNickname"));
-        currentPlayersInformation.OnJoinTeam("B");
-
-    }
-
-
-
+    
 
 }

@@ -7,6 +7,7 @@ using UnityEngine;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using Unity.VisualScripting;
 
 public class FusionLuncher : MonoBehaviour
 {
@@ -119,4 +120,14 @@ public class FusionLuncher : MonoBehaviour
         // 클라이언트로써 기존 게임에 참여합니다.
         var clientTask = InitializeNetworkRunner(networkRunner, GameMode.Client, sessionInfo.Name, GameManager.instance.GetConnectionToken(), NetAddress.Any(), SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex), null);
     }
+
+
+
+
+   
+
+
+
+
+
 }

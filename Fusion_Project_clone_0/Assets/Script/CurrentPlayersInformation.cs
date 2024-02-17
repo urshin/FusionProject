@@ -1,6 +1,7 @@
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using TMPro;
 using Unity.VisualScripting;
@@ -13,48 +14,15 @@ public class CurrentPlayersInformation : NetworkBehaviour
     [Header("UI")]
     CharacterSelectHandler characterSelectPanel;
     WaitingPanelHandler waitingPanelHandler;
+    [SerializeField] TextMeshProUGUI progressTMP;
+    [SerializeField] GameObject canvas;
+    public IngameTeamInfos ingameTeamInfos;
 
 
-
-    void Awake()
-    {
-        characterSelectPanel = GetComponentInChildren<CharacterSelectHandler>();
-        waitingPanelHandler = GetComponentInChildren<WaitingPanelHandler>();
-
-
-
-    }
-
-
-    [Networked]
-    public int TeamAcount { get; set; }
-    [Networked]
-    public int TeamBcount { get; set; }
-
-    [Networked]
-    public int currentplayer { get; set; }
-    public int maxPlayer { get; set; }
-
-
-    [Networked]
-    [Capacity(4)] // Sets the fixed capacity of the collection
-    [UnitySerializeField] // Show this private property in the inspector.
-    public NetworkLinkedList<NetworkString<_32>> teamAplayerList { get; } = MakeInitializer(new NetworkString<_32>[] { });
-    [Networked]
-    [Capacity(4)] // Sets the fixed capacity of the collection
-    [UnitySerializeField] // Show this private property in the inspector.
-    public NetworkLinkedList<NetworkString<_32>> teamBplayerList { get; } = MakeInitializer(new NetworkString<_32>[] { });
-
-    //Ç»Á¯ µñ¼Å³Ê¸®
-    [Networked]
-    [Capacity(3)] // Sets the fixed capacity of the collection
-    [UnitySerializeField] // Show this private property in the inspector.
-    public NetworkDictionary<NetworkString<_32>, float> teamADictionary => default;
-
-    [Networked]
-    [Capacity(3)] // Sets the fixed capacity of the collection
-    [UnitySerializeField] // Show this private property in the inspector.
-    public NetworkDictionary<NetworkString<_32>, float> teamBDictionary => default;
+    [Networked, Capacity(3)]
+    public NetworkDictionary<NetworkString<_32>, int> teamADic { get; }
+  // Optional initialization
+  = MakeInitializer(new Dictionary<NetworkString<_32>, int> { });
 
 
     private ChangeDetector _changeDetector;
@@ -62,195 +30,196 @@ public class CurrentPlayersInformation : NetworkBehaviour
     public override void Spawned()
     {
         _changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
+        ingameTeamInfos = FindObjectOfType<IngameTeamInfos>();
+        characterSelectPanel = GetComponentInChildren<CharacterSelectHandler>();
     }
     public override void Render()
     {
+        //ingameTeamInfo Change Detect
+        foreach (var change in ingameTeamInfos._changeDetector.DetectChanges(ingameTeamInfos))
+        {
+            switch (change)
+            {
+                case nameof(ingameTeamInfos.teamADictionary):
+                    ClassChange();
+                    break;
+                case nameof(ingameTeamInfos.teamBDictionary):
+                    ClassChange();
+                    break;
+            }
+        }
+
+
         foreach (var change in _changeDetector.DetectChanges(this))
         {
             switch (change)
             {
-
-                case nameof(teamADictionary):
-                    //characterSelectPanel.ShowTeamInfo();
-                    break;
-
-                case nameof(teamBDictionary):
-                    //characterSelectPanel.ShowTeamInfo();
+                case nameof(teamADic):
+                    
+                    
                     break;
 
             }
         }
     }
+
+    public void updateDiction()
+    {
+
+    }
+
+    public void HideCanvas()
+    {
+        if (!Object.HasInputAuthority)
+        {
+            canvas.SetActive(false);
+        }
+        else
+        {
+            return;
+        }
+    }
+    void Awake()
+    {
+
+        // HideCanvas();
+
+    }
+
+
+
+
     private void Start()
     {
-        maxPlayer = 6;
+        HideCanvas();
     }
-    private void Update()
+
+    public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.Space) && Object.HasInputAuthority)
         {
-            print(teamADictionary.Count);
-        }
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            for (int i = 0; i < teamAplayerList.Count; i++)
+            foreach (var A in ingameTeamInfos.teamADictionary)
             {
-                print(teamAplayerList[i]);
+                print("A Team ::::: " + A.Key + "   " + A.Value);
+                progressTMP.text = (A.Key + "   " + A.Value);
+            }
+            foreach (var A in ingameTeamInfos.teamBDictionary)
+            {
+                print("B Team ::::: " + A.Key + "   " + A.Value);
+                progressTMP.text = (A.Key + "   " + A.Value);
             }
         }
-        if (Object.HasInputAuthority && Input.GetKeyDown(KeyCode.Z))
+
+
+        if (Input.GetKeyDown(KeyCode.O) && Object.HasInputAuthority)
         {
-            RPC_TeamAdd("z", "A", 0);
+            print(Object.HasStateAuthority.ToString() + Object.HasInputAuthority.ToString());
+            progressTMP.text = (Object.HasStateAuthority.ToString() + Object.HasInputAuthority.ToString());
         }
-        if (Object.HasInputAuthority && Input.GetKeyDown(KeyCode.X))
+
+        if (Input.GetKeyDown(KeyCode.X) && Object.HasInputAuthority)
         {
-            RPC_TeamAdd("x", "A", 0);
+
+            RPC_TeamUpdate(gameObject.name, 0, "A");
+
+
         }
-        if (Object.HasInputAuthority && Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.Backspace) && Object.HasInputAuthority)
         {
-            RPC_TeamAdd("c", "B", 0);
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            foreach (var pair in teamADictionary)
-            {
-                Debug.Log("TeamA : Key: " + pair.Key + ", Value: " + pair.Value);
-            }
-            foreach (var pair in teamBDictionary)
-            {
-                Debug.Log("TeamB : Key: " + pair.Key + ", Value: " + pair.Value);
-            }
+            progressTMP.text = "";
         }
     }
-    private TMP_Text _messages;
+
+
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
-    public void RPC_TeamAdd(string NickName, string Team, float classinfo, RpcInfo info = default)
+    public void RPC_TeamUpdate(NetworkString<_32> name, int job, string team, RpcInfo info = default)
     {
-        RPC_TeamABadd(NickName, Team, classinfo, info.Source);
+        RPC_Team(name, job, team, info.Source);
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_TeamABadd(string NickName, string Team, float classinfo, PlayerRef messageSource)
-    {
-        // ÆÀ A¿¡ ´ëÇÑ Ã³¸®
-        if (Team == "A")
-        {
-            if (!teamADictionary.ContainsKey(NickName))
-            {
-                teamADictionary.Add(NickName, classinfo);
-            }
-            else
-            {
-                teamADictionary.Set(NickName, classinfo);
-            }
-        }
-        // ÆÀ B¿¡ ´ëÇÑ Ã³¸®
-        else if (Team == "B")
-        {
-            if (!teamBDictionary.ContainsKey(NickName))
-            {
-                teamBDictionary.Add(NickName, classinfo);
-            }
-            else
-            {
-                teamBDictionary.Set(NickName, classinfo);
-            }
-        }
-        //if (!teamADictionary.ContainsKey(NickName))
-        //{
-        //    if (messageSource == Runner.LocalPlayer)
-        //    {
-
-        //        if (Team == "A")
-        //        {
-        //            teamADictionary.Add(NickName, classinfo);
-        //        }
-        //        else if (Team == "B")
-        //        {
-        //            teamBDictionary.Add(NickName, classinfo);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        if (Team == "A")
-        //        {
-        //            teamADictionary.Add(NickName, classinfo);
-        //        }
-        //        else if (Team == "B")
-        //        {
-        //            teamBDictionary.Add(NickName, classinfo);
-        //        }
-        //    }
-
-        //}
-        //else
-        //{
-        //    teamADictionary.Set(NickName, classinfo);
-        //}
-
-        //if (teamBDictionary.ContainsKey(NickName))
-        //{
-        //    if (messageSource == Runner.LocalPlayer)
-        //    {
-
-        //        if (Team == "A")
-        //        {
-        //            teamADictionary.Add(NickName, classinfo);
-        //        }
-        //        else if (Team == "B")
-        //        {
-        //            teamBDictionary.Add(NickName, classinfo);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        if (Team == "A")
-        //        {
-        //            teamADictionary.Add(NickName, classinfo);
-        //        }
-        //        else if (Team == "B")
-        //        {
-        //            teamBDictionary.Add(NickName, classinfo);
-        //        }
-        //    }
-        //}
-        //else
-        //{
-        //    teamBDictionary.Set(NickName, classinfo);
-        //}
-
-
-
-    }
-
-    public void ClearPlayerList()
+    public void RPC_Team(NetworkString<_32> name, int job, string team, PlayerRef messageSource)
     {
 
-    }
 
-
-    public void OnJoinTeam(string team)
-    {
         if (team == "A")
         {
-            //TeamAcount++;
-            //teamADictionary.Add(PlayerPrefs.GetString("PlayerNickname"), 0);
-            if (Object.HasInputAuthority)
-            {
-                RPC_TeamAdd(PlayerPrefs.GetString("PlayerNickname"), "A", 0);
-            }
-            Debug.Log("AÆÀ Âü°¡");
+            //if (messageSource == Runner.LocalPlayer)
+                teamADic.Add(name, job);
+                ingameTeamInfos.teamADictionary.Add(name, job);
+                ingameTeamInfos.teamAll.Add(name, job);
+          
+
         }
-        if (team == "B")
+        else if (team == "B")
         {
-            //TeamBcount++;
-            //teamBDictionary.Add(PlayerPrefs.GetString("PlayerNickname"), 0);
-            if (Object.HasInputAuthority)
-            {
-                RPC_TeamAdd(PlayerPrefs.GetString("PlayerNickname"), "B", 0);
-            }
-            Debug.Log("BÆÀ Âü°¡");
+            teamADic.Add(name, job);
+            ingameTeamInfos.teamBDictionary.Add(name, job);
+            ingameTeamInfos.teamAll.Add(name, job);
+        }
+
+
+
+
+    }
+
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
+    public void RPC_ClassUpdate(NetworkString<_32> name, int job, RpcInfo info = default)
+    {
+        RPC_Class(name, job, info.Source);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
+    public void RPC_Class(NetworkString<_32> name, int job,  PlayerRef messageSource)
+    {
+        if(ingameTeamInfos.teamADictionary.ContainsKey(name))
+        {
+            ingameTeamInfos.teamADictionary.Set(name, job);
+            ingameTeamInfos.teamAll.Set(name, job);
+        }
+        else if (ingameTeamInfos.teamBDictionary.ContainsKey(name))
+        {
+            ingameTeamInfos.teamBDictionary.Set(name, job);
+            ingameTeamInfos.teamAll.Set(name, job);
+
+        }
+
+    }
+
+
+    public void TeamSelect(string team)
+    {
+        if (Object.HasInputAuthority)
+        {
+            if (team == "A") RPC_TeamUpdate(gameObject.name, 0, "A");
+            if (team == "B") RPC_TeamUpdate(gameObject.name, 0, "B");
         }
     }
+
+    public void ClassSelect(string Class)
+    {
+        switch (Class)
+        {
+            case "SwordBTN":
+                RPC_ClassUpdate(gameObject.name, 1);
+                break;
+
+            case "MagicianBTN":
+                RPC_ClassUpdate(gameObject.name, 2);
+                break;
+
+            case "ArcherBTN":
+                RPC_ClassUpdate(gameObject.name, 3);
+                break;
+        }
+    }
+
+    public void ClassChange()
+    {
+        characterSelectPanel.TeamClassChange(gameObject.name, PlayerPrefs.GetString("Team"));
+    }
+
+
 }

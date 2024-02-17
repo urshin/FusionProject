@@ -1,16 +1,18 @@
 using Fusion;
+using Fusion.Sockets;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static InGameUIHandler;
 
 public class InGameUIHandler : MonoBehaviour
 {
-    [SerializeField] CurrentPlayersInformation CrueentPlayerInformation;
-
+    [SerializeField] CurrentPlayersInformation crueentPlayerInformationPrefab;
+  
     [Header("패널들")]
     [SerializeField] GameObject teamSelectPanel;
     [SerializeField] GameObject characterSelecPanel;
@@ -30,17 +32,17 @@ public class InGameUIHandler : MonoBehaviour
 
     private void Awake()
     {
-       // Instantiate(CrueentPlayerInformation);
+    
       
-        teamSelectPanel.GetComponent<TeamSelectHandler>().currentPlayersInformation = CrueentPlayerInformation;
-        characterSelecPanel.GetComponent<CharacterSelectHandler>().currentPlayersInformation = CrueentPlayerInformation;
-        WaitingPanel.GetComponent<WaitingPanelHandler>().currentPlayersInformation = CrueentPlayerInformation;
-        
+
     }
 
 
     private void Start()
     {
+       
+
+
         //패널 숨김으로 초기화
         HideAllPanel();
         teamSelectPanel.SetActive(true);

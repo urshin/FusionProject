@@ -42,6 +42,7 @@ public class MainMenuHandler : MonoBehaviour
     {
         // 플레이어 닉네임을 저장하고 게임 매니저에 설정합니다.
         PlayerPrefs.SetString("PlayerNickname", playerNameInputField.text);
+        GameManager.instance.PlayerNickname = playerNameInputField.text;
         PlayerPrefs.Save();
 
         // 네트워크 러너 핸들러를 찾아서 로비 참여를 시작합니다.
@@ -70,6 +71,7 @@ public class MainMenuHandler : MonoBehaviour
         //네트워크 러너 핸들러를 찾아서 새로운 게임 세션을 생성합니다.
         FusionLuncher fusionLuncher = FindObjectOfType<FusionLuncher>();
         fusionLuncher.CreateGame(sessionNameInputField.text, "Test");
+        HideAllPanels();
     }
 
 
