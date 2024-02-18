@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7924173928744243609}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 960, y: 540, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -45,10 +45,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 234b1d7f01d28aa488d8561d59e4cf24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _TeamAcount: 0
-  _TeamBcount: 0
-  _maxPlayer: 0
-  _currentplayer: 0
+  progressTMP: {fileID: 0}
+  canvas: {fileID: 0}
+  ingameTeamInfos: {fileID: 0}
+  playerBody: {fileID: 0}
 --- !u!114 &5926910476245347992
 MonoBehaviour:
   m_ObjectHideFlags: 0

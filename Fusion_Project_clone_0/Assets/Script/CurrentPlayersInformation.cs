@@ -17,14 +17,15 @@ public class CurrentPlayersInformation : NetworkBehaviour
     PlayerStatePanelHandler playerStatePanelHandler;
     [SerializeField] TextMeshProUGUI progressTMP;
     [SerializeField] GameObject canvas;
+    [SerializeField] InGameUIHandler ingameUIHandler;
     public IngameTeamInfos ingameTeamInfos;
 
 
-    [Networked, Capacity(3)]
-    public NetworkDictionary<NetworkString<_32>, int> teamADic { get; }
-  // Optional initialization
-  = MakeInitializer(new Dictionary<NetworkString<_32>, int> { });
+    [Header("PlayerBodyThings")]
+    public GameObject playerBody;
 
+
+  
 
     private ChangeDetector _changeDetector;
 
@@ -52,22 +53,15 @@ public class CurrentPlayersInformation : NetworkBehaviour
                 case nameof(ingameTeamInfos.teamAll):
                     UpdateWaiting();
                     break;
-
-            }
-        }
-
-
-        foreach (var change in _changeDetector.DetectChanges(this))
-        {
-            switch (change)
-            {
-                case nameof(teamADic):
-
-
+                case nameof(ingameTeamInfos.isStartBTNOn):
+                    ingameUIHandler.OnclickStartBTN();
                     break;
 
             }
         }
+
+
+        
     }
 
     public void updateDiction()
@@ -103,38 +97,7 @@ public class CurrentPlayersInformation : NetworkBehaviour
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && Object.HasInputAuthority)
-        {
-            foreach (var A in ingameTeamInfos.teamADictionary)
-            {
-                print("A Team ::::: " + A.Key + "   " + A.Value);
-                progressTMP.text = (A.Key + "   " + A.Value);
-            }
-            foreach (var A in ingameTeamInfos.teamBDictionary)
-            {
-                print("B Team ::::: " + A.Key + "   " + A.Value);
-                progressTMP.text = (A.Key + "   " + A.Value);
-            }
-        }
-
-
-        if (Input.GetKeyDown(KeyCode.O) && Object.HasInputAuthority)
-        {
-            print(Object.HasStateAuthority.ToString() + Object.HasInputAuthority.ToString());
-            progressTMP.text = (Object.HasStateAuthority.ToString() + Object.HasInputAuthority.ToString());
-        }
-
-        if (Input.GetKeyDown(KeyCode.X) && Object.HasInputAuthority)
-        {
-
-            RPC_TeamUpdate(gameObject.name, 0, "A");
-
-
-        }
-        if (Input.GetKeyDown(KeyCode.Backspace) && Object.HasInputAuthority)
-        {
-            progressTMP.text = "";
-        }
+        
     }
 
 
@@ -152,8 +115,7 @@ public class CurrentPlayersInformation : NetworkBehaviour
 
         if (team == "A")
         {
-            //if (messageSource == Runner.LocalPlayer)
-            teamADic.Add(name, job);
+       
             ingameTeamInfos.teamADictionary.Add(name, job);
             ingameTeamInfos.teamAll.Add(name, job);
 
@@ -161,7 +123,7 @@ public class CurrentPlayersInformation : NetworkBehaviour
         }
         else if (team == "B")
         {
-            teamADic.Add(name, job);
+          
             ingameTeamInfos.teamBDictionary.Add(name, job);
             ingameTeamInfos.teamAll.Add(name, job);
         }

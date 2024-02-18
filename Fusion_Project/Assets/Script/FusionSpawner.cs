@@ -13,7 +13,7 @@ public class FusionSpawner : MonoBehaviour, INetworkRunnerCallbacks
     PlayerInputHandler _playerInputHandler;
 
     //플레이어 정보를 가지는 딕셔너리
-    private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
+    public Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
 
     //플레이어 캐릭터
     [SerializeField] private NetworkPrefabRef networkPrefab;
@@ -23,6 +23,7 @@ public class FusionSpawner : MonoBehaviour, INetworkRunnerCallbacks
     SessionListUIHandler sessionListUIHandler;
 
 
+ 
 
     //ingame
     InGameUIHandler inGameUIHandler;
@@ -147,8 +148,9 @@ public class FusionSpawner : MonoBehaviour, INetworkRunnerCallbacks
             else
             {
                 Debug.Log($"Spawning new player for connection token {playerToken}");
-                NetworkObject networkPlayerObject = runner.Spawn(networkPrefab, new Vector3(0, 0, 0), Quaternion.identity, player) ;
                 
+                NetworkObject networkPlayerObject = runner.Spawn(networkPrefab, new Vector3(0,0,0), Quaternion.identity, player) ;
+                FindObjectOfType<IngameTeamInfos>().allPlayer.Add(networkPlayerObject, 0);
             }
         }
         else Debug.Log("OnPlayerJoined");

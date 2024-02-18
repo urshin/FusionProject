@@ -2504,6 +2504,38 @@ Transform:
   m_Father: {fileID: 6946358379257236146}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2683681197174424675
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3682783817201049315}
+  m_Layer: 0
+  m_Name: Body
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3682783817201049315
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2683681197174424675}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7025759624954733006}
+  m_Father: {fileID: 5559005070095694398}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2683756627977124378
 GameObject:
   m_ObjectHideFlags: 0
@@ -3864,7 +3896,7 @@ Transform:
   - {fileID: 7891707044807127042}
   - {fileID: 4770531269313155493}
   - {fileID: 584899522253898062}
-  m_Father: {fileID: 5559005070095694398}
+  m_Father: {fileID: 3682783817201049315}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &963972477806105466
@@ -6096,9 +6128,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4156353320242996704}
-        m_TargetAssemblyTypeName: InGameUIHandler, Assembly-CSharp
-        m_MethodName: OnclickStartBTN
+      - m_Target: {fileID: 3215800012333975440}
+        m_TargetAssemblyTypeName: WaitingPanelHandler, Assembly-CSharp
+        m_MethodName: OnclickStart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6976,8 +7008,9 @@ GameObject:
   - component: {fileID: 3218859448128554395}
   - component: {fileID: 7492844300681368518}
   - component: {fileID: 4346289900459054208}
+  - component: {fileID: 2015607649979140950}
   m_Layer: 0
-  m_Name: Archer
+  m_Name: PlayerPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6996,7 +7029,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1376020648057477763}
-  - {fileID: 7025759624954733006}
+  - {fileID: 3682783817201049315}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7033,6 +7066,7 @@ MonoBehaviour:
   - {fileID: 7417416623134514743}
   - {fileID: 7492844300681368518}
   - {fileID: 4346289900459054208}
+  - {fileID: 2015607649979140950}
   - {fileID: 3215800012333975440}
 --- !u!114 &4400179455552832954
 MonoBehaviour:
@@ -7065,13 +7099,13 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.5
+  m_Height: 1.8
+  m_Radius: 0.2
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!114 &7492844300681368518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7104,9 +7138,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   progressTMP: {fileID: 4427139712452385436}
   canvas: {fileID: 5201258076072716853}
+  ingameUIHandler: {fileID: 0}
   ingameTeamInfos: {fileID: 0}
-  _teamADic:
-    _items: []
+  playerBody: {fileID: 2683681197174424675}
+--- !u!114 &2015607649979140950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6065553176632980778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b04828ff7ee28f4eb5ef8192ae219c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bodyAnime: {fileID: 0}
 --- !u!1 &6172366228139659007
 GameObject:
   m_ObjectHideFlags: 0

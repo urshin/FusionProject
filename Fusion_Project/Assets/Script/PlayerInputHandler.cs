@@ -27,7 +27,13 @@ public class PlayerInputHandler : MonoBehaviour
     {
         NetworkInputData networkInputData = new NetworkInputData();
 
-        
+
+        var inputDirection = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+        networkInputData.direction = inputDirection;
+        // 스페이스바에 기반한 점프 입력 설정
+        networkInputData.buttons.Set(NetworkInputButtons.Jump, Input.GetKey(KeyCode.Space));
+
+
         return networkInputData;
     }
 

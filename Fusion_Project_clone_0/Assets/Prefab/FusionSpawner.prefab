@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2353318815689641839}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.9805567, y: 2.0765786, z: 1.459774}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -46,12 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkPlayer: {fileID: 0}
-  swordMan:
+  networkPrefab:
     RawGuidValue: ddab4aad5e9671d4399c18e05eef1ca6
-  magician:
-    RawGuidValue: 00000000000000000000000000000000
-  archer:
-    RawGuidValue: 00000000000000000000000000000000
 --- !u!114 &-7365086129018719577
 MonoBehaviour:
   m_ObjectHideFlags: 0

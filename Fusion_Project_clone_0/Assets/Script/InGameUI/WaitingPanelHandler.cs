@@ -135,7 +135,7 @@ public class WaitingPanelHandler : NetworkBehaviour
 
     public void OnclickStart()
     {
-        gameObject.SetActive(false);
+        ingameTeamInfos.isStartBTNOn = true;
 
     }
 
