@@ -19,8 +19,9 @@ public class CharacterSelectHandler : MonoBehaviour
 
     private void Awake()
     {
-
+        
     }
+  
 
 
     //현재 팀원의 캐릭터 정보들
@@ -43,7 +44,15 @@ public class CharacterSelectHandler : MonoBehaviour
     string filePath = "Assets/Resources/CharacterInfo.txt";
 
 
+
     private void OnEnable()
+    {
+        initializedClass();
+
+    }
+  
+
+    void initializedClass()
     {
         ingameTeamInfos = currentPlayersInformation.ingameTeamInfos;
         whatTeam.text = PlayerPrefs.GetString("Team");
@@ -78,7 +87,7 @@ public class CharacterSelectHandler : MonoBehaviour
                 classinfo.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>(resourceName);
                 classinfo.GetComponentInChildren<TextMeshProUGUI>().text = text;
                 classinfo.GetComponentInChildren<Button>().name = buttonName;
-
+                classinfo.GetComponentInChildren<Button>().onClick.AddListener(() => currentPlayersInformation.ClassSelect(buttonName));
                 classCount++;
             }
             Debug.Log("class count is" + classCount);
@@ -87,10 +96,10 @@ public class CharacterSelectHandler : MonoBehaviour
         {
             Debug.LogError("파일이 없습니다 ");
         }
-
     }
 
-    public void TeamClassChange(string name, string team)
+
+    public void TeamClassChange(string name)
     {
         for (int i = 0; i < teamCharactorInfo.transform.childCount; i++)
         {
@@ -168,11 +177,7 @@ public class CharacterSelectHandler : MonoBehaviour
         }
     }
 
-    public void OnclickClassSelect()
-    {
-
-        currentPlayersInformation.ClassSelect(EventSystem.current.currentSelectedGameObject.name);
-    }
+   
 
 
 }

@@ -14,6 +14,7 @@ public class CurrentPlayersInformation : NetworkBehaviour
     [Header("UI")]
     CharacterSelectHandler characterSelectPanel;
     WaitingPanelHandler waitingPanelHandler;
+    PlayerStatePanelHandler playerStatePanelHandler;
     [SerializeField] TextMeshProUGUI progressTMP;
     [SerializeField] GameObject canvas;
     public IngameTeamInfos ingameTeamInfos;
@@ -32,6 +33,8 @@ public class CurrentPlayersInformation : NetworkBehaviour
         _changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
         ingameTeamInfos = FindObjectOfType<IngameTeamInfos>();
         characterSelectPanel = GetComponentInChildren<CharacterSelectHandler>();
+        waitingPanelHandler = GetComponentInChildren<WaitingPanelHandler>();
+        playerStatePanelHandler= GetComponentInChildren<PlayerStatePanelHandler>();
     }
     public override void Render()
     {
@@ -46,6 +49,10 @@ public class CurrentPlayersInformation : NetworkBehaviour
                 case nameof(ingameTeamInfos.teamBDictionary):
                     ClassChange();
                     break;
+                case nameof(ingameTeamInfos.teamAll):
+                    UpdateWaiting();
+                    break;
+
             }
         }
 
@@ -55,8 +62,8 @@ public class CurrentPlayersInformation : NetworkBehaviour
             switch (change)
             {
                 case nameof(teamADic):
-                    
-                    
+
+
                     break;
 
             }
@@ -146,10 +153,10 @@ public class CurrentPlayersInformation : NetworkBehaviour
         if (team == "A")
         {
             //if (messageSource == Runner.LocalPlayer)
-                teamADic.Add(name, job);
-                ingameTeamInfos.teamADictionary.Add(name, job);
-                ingameTeamInfos.teamAll.Add(name, job);
-          
+            teamADic.Add(name, job);
+            ingameTeamInfos.teamADictionary.Add(name, job);
+            ingameTeamInfos.teamAll.Add(name, job);
+
 
         }
         else if (team == "B")
@@ -172,9 +179,9 @@ public class CurrentPlayersInformation : NetworkBehaviour
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_Class(NetworkString<_32> name, int job,  PlayerRef messageSource)
+    public void RPC_Class(NetworkString<_32> name, int job, PlayerRef messageSource)
     {
-        if(ingameTeamInfos.teamADictionary.ContainsKey(name))
+        if (ingameTeamInfos.teamADictionary.ContainsKey(name))
         {
             ingameTeamInfos.teamADictionary.Set(name, job);
             ingameTeamInfos.teamAll.Set(name, job);
@@ -218,8 +225,27 @@ public class CurrentPlayersInformation : NetworkBehaviour
 
     public void ClassChange()
     {
-        characterSelectPanel.TeamClassChange(gameObject.name, PlayerPrefs.GetString("Team"));
+        if (characterSelectPanel.isActiveAndEnabled)
+        {
+            characterSelectPanel.TeamClassChange(gameObject.name);
+
+        }
     }
 
+    public void UpdateWaiting()
+    {
+
+        if (waitingPanelHandler != null && waitingPanelHandler.gameObject.activeSelf)
+        {
+            waitingPanelHandler.UpdateWaiting();
+        }
+        
+
+        if (playerStatePanelHandler != null && playerStatePanelHandler.gameObject.activeSelf)
+        {
+            playerStatePanelHandler.UpdatePlayerStatePanel();
+        }
+        
+    }
 
 }

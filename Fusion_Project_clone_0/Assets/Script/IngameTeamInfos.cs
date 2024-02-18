@@ -6,6 +6,7 @@ using UnityEngine;
 public class IngameTeamInfos : NetworkBehaviour
 {
 
+    //°ø¿ë Dictionary
     [Networked, Capacity(3)]
     public NetworkDictionary<NetworkString<_32>, int> teamADictionary { get; }
  // Optional initialization
@@ -23,24 +24,17 @@ public class IngameTeamInfos : NetworkBehaviour
 
     public ChangeDetector _changeDetector;
 
-  
 
+    [Header("SpawnPoint")]
+    [SerializeField] Transform[] spawnPoint;
 
     public override void Spawned()
     {
         _changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
        
     }
-    //public override void Render()
-    //{
-    //    foreach (var change in _changeDetector.DetectChanges(this))
-    //    {
-    //        switch (change)
-    //        {
-              
-    //        }
-    //    }
-    //}
+    
+
 
  
 

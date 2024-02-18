@@ -17,6 +17,7 @@ public class TeamSelectHandler : MonoBehaviour
     public void OnclickTeam(string team)
     {
         currentPlayersInformation.TeamSelect(team);
+        
        
     
     }

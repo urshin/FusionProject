@@ -40,9 +40,9 @@ public class InGameUIHandler : MonoBehaviour
 
     private void Start()
     {
-       
 
 
+       // ShowAllPanel();
         //∆–≥Œ º˚±Ë¿∏∑Œ √ ±‚»≠
         HideAllPanel();
         teamSelectPanel.SetActive(true);
@@ -77,8 +77,8 @@ public class InGameUIHandler : MonoBehaviour
 
     public void OnclickStartBTN()
     {
-        
-        
+        HideAllPanel();
+
     }
 
     private void Update()
@@ -100,6 +100,14 @@ public class InGameUIHandler : MonoBehaviour
         characterSelecPanel.SetActive(false);
         WaitingPanel.SetActive(false);
         playerStatePanel.SetActive(false);
+    }
+    void ShowAllPanel()
+    {
+
+        teamSelectPanel.SetActive(true);
+        characterSelecPanel.SetActive(true);
+        WaitingPanel.SetActive(true);
+        playerStatePanel.SetActive(true);
     }
 
 

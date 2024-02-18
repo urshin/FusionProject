@@ -16,9 +16,8 @@ public class FusionSpawner : MonoBehaviour, INetworkRunnerCallbacks
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
 
     //플레이어 캐릭터
-    [SerializeField] private NetworkPrefabRef swordMan;
-    [SerializeField] private NetworkPrefabRef magician;
-    [SerializeField] private NetworkPrefabRef archer;
+    [SerializeField] private NetworkPrefabRef networkPrefab;
+
 
     //메인메뉴 세션
     SessionListUIHandler sessionListUIHandler;
@@ -148,7 +147,7 @@ public class FusionSpawner : MonoBehaviour, INetworkRunnerCallbacks
             else
             {
                 Debug.Log($"Spawning new player for connection token {playerToken}");
-                NetworkObject networkPlayerObject = runner.Spawn(swordMan, new Vector3(0, 0, 0), Quaternion.identity, player) ;
+                NetworkObject networkPlayerObject = runner.Spawn(networkPrefab, new Vector3(0, 0, 0), Quaternion.identity, player) ;
                 
             }
         }
