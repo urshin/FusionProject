@@ -23,6 +23,8 @@ public class CurrentPlayer : NetworkBehaviour
     [SerializeField] PlayerMovementHandler playerMovementHandler;
 
 
+
+
     [Header("PlayerBodyThings")]
     public GameObject playerBody;
 
@@ -35,12 +37,11 @@ public class CurrentPlayer : NetworkBehaviour
     [SerializeField] private PlayerAvatarView view;
 
 
-    private ChangeDetector _changeDetector;
 
     public override void Spawned()
     {
         mainCamera = Camera.main;
-        _changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
+       
         ingameTeamInfos = FindObjectOfType<IngameTeamInfos>();
         characterSelectPanel = GetComponentInChildren<CharacterSelectHandler>();
         waitingPanelHandler = GetComponentInChildren<WaitingPanelHandler>();
@@ -62,12 +63,10 @@ public class CurrentPlayer : NetworkBehaviour
             switch (change)
             {
                 case nameof(ingameTeamInfos.teamADictionary):
-                    ClassChange();
-                    playerMovementHandler.isSPawn= true;
+                    
                     break;
                 case nameof(ingameTeamInfos.teamBDictionary):
-                    ClassChange();
-                    playerMovementHandler.isSPawn = true;
+                    
                     break;
                 case nameof(ingameTeamInfos.teamAll):
                     UpdateWaiting();
@@ -95,7 +94,6 @@ public class CurrentPlayer : NetworkBehaviour
     void Awake()
     {
 
-        // HideCanvas();
 
     }
 
@@ -171,14 +169,30 @@ public class CurrentPlayer : NetworkBehaviour
         {
             ingameTeamInfos.teamADictionary.Set(name, job);
             ingameTeamInfos.teamAll.Set(name, job);
+            ClassChange();
+
         }
         else if (ingameTeamInfos.teamBDictionary.ContainsKey(name))
         {
             ingameTeamInfos.teamBDictionary.Set(name, job);
             ingameTeamInfos.teamAll.Set(name, job);
+            ClassChange();
 
         }
 
+    }
+
+
+
+
+
+
+    public override void FixedUpdateNetwork()
+    {
+      
+   
+          
+       
     }
 
 
@@ -209,6 +223,8 @@ public class CurrentPlayer : NetworkBehaviour
         }
     }
 
+    
+
     public void ClassChange()
     {
         if (characterSelectPanel.isActiveAndEnabled)
@@ -216,8 +232,9 @@ public class CurrentPlayer : NetworkBehaviour
             characterSelectPanel.TeamClassChange(gameObject.name);
 
         }
+      
 
-        for(int i = 0; i < playerBody.transform.childCount; i++)
+        for (int i = 0; i < playerBody.transform.childCount; i++)
         {
 
         playerBody.transform.GetChild(i).gameObject.SetActive(false);
@@ -235,6 +252,10 @@ public class CurrentPlayer : NetworkBehaviour
         {
             playerBody.transform.GetChild(2).gameObject.SetActive(true);
         }
+        else
+        { return; }
+
+
 
     }
 

@@ -25,6 +25,8 @@ public class IngameTeamInfos : NetworkBehaviour
 = MakeInitializer(new Dictionary<NetworkString<_32>, int> { });
 
 
+    [Networked]
+    public NetworkBool isChangeJob { get; set; }   //ui에서 방장이 게임 시작 버튼 눌렀을 때
 
 
     [Networked]

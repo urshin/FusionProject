@@ -37,7 +37,7 @@ public class PlayerMovementHandler : NetworkBehaviour
     {
         ingameTeamInfos = FindObjectOfType<IngameTeamInfos>();
     }
-   
+
 
     // Update is called once per frame
     void Update()
@@ -45,7 +45,7 @@ public class PlayerMovementHandler : NetworkBehaviour
 
 
     }
-    
+
 
 
 
@@ -75,30 +75,30 @@ public class PlayerMovementHandler : NetworkBehaviour
             float speed = Mathf.Sqrt(runVector.magnitude);
 
 
-            if(isSPawn)
-            {
-                UpdatingPlayerCharacter();
-                isSPawn=false;
-            }
+   
 
+           
 
         }
     }
 
 
-    public bool isSPawn =false;
+
     public void UpdatingPlayerCharacter()
     {
 
 
-        if (ingameTeamInfos.teamADictionary.ContainsKey(gameObject.name) || ingameTeamInfos.teamBDictionary.ContainsKey(gameObject.name))
+
+        if (ingameTeamInfos.teamADictionary.ContainsKey(gameObject.name))
         {
-            Vector3 randomOffset = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
-            int teamIndex = ingameTeamInfos.teamADictionary.ContainsKey(gameObject.name) ? 0 : 1;
-            gameObject.transform.position = ingameTeamInfos.spawnPoint[teamIndex].position + randomOffset;
+            gameObject.transform.position = ingameTeamInfos.spawnPoint[0].position;
         }
 
-
+        if (ingameTeamInfos.teamBDictionary.ContainsKey(gameObject.name))
+        {
+            gameObject.transform.position = ingameTeamInfos.spawnPoint[1].position;
+        }
+        
     }
 
 

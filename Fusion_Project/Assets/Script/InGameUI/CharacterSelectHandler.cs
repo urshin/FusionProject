@@ -131,7 +131,7 @@ public class CharacterSelectHandler : MonoBehaviour
                 }
                 else
                 {
-                    return;
+                    continue;
                 }
 
                 i++;
@@ -160,7 +160,7 @@ public class CharacterSelectHandler : MonoBehaviour
                 }
                 else
                 {
-                    return;
+                    continue;
                 }
 
                 i++;
