@@ -19,6 +19,7 @@ public class CurrentPlayersInformation : NetworkBehaviour
     [SerializeField] GameObject canvas;
     [SerializeField] InGameUIHandler ingameUIHandler;
     public IngameTeamInfos ingameTeamInfos;
+    [SerializeField] PlayerMovementHandler playerMovementHandler;
 
 
     [Header("PlayerBodyThings")]
@@ -36,6 +37,9 @@ public class CurrentPlayersInformation : NetworkBehaviour
         characterSelectPanel = GetComponentInChildren<CharacterSelectHandler>();
         waitingPanelHandler = GetComponentInChildren<WaitingPanelHandler>();
         playerStatePanelHandler= GetComponentInChildren<PlayerStatePanelHandler>();
+        ingameUIHandler = GetComponentInChildren<InGameUIHandler>();
+        playerMovementHandler = GetComponentInChildren<PlayerMovementHandler>();   
+
     }
     public override void Render()
     {
@@ -46,9 +50,11 @@ public class CurrentPlayersInformation : NetworkBehaviour
             {
                 case nameof(ingameTeamInfos.teamADictionary):
                     ClassChange();
+                    playerMovementHandler.isSPawn= true;
                     break;
                 case nameof(ingameTeamInfos.teamBDictionary):
                     ClassChange();
+                    playerMovementHandler.isSPawn = true;
                     break;
                 case nameof(ingameTeamInfos.teamAll):
                     UpdateWaiting();
@@ -58,10 +64,7 @@ public class CurrentPlayersInformation : NetworkBehaviour
                     break;
 
             }
-        }
-
-
-        
+        }  
     }
 
     public void updateDiction()
@@ -171,11 +174,11 @@ public class CurrentPlayersInformation : NetworkBehaviour
     {
         switch (Class)
         {
-            case "SwordBTN":
+            case "WarriorBTN":
                 RPC_ClassUpdate(gameObject.name, 1);
                 break;
 
-            case "MagicianBTN":
+            case "MageBTN":
                 RPC_ClassUpdate(gameObject.name, 2);
                 break;
 
@@ -192,6 +195,26 @@ public class CurrentPlayersInformation : NetworkBehaviour
             characterSelectPanel.TeamClassChange(gameObject.name);
 
         }
+
+        for(int i = 0; i < playerBody.transform.childCount; i++)
+        {
+
+        playerBody.transform.GetChild(i).gameObject.SetActive(false);
+        }
+
+        if (ingameTeamInfos.teamAll[gameObject.name] == 1)
+        {
+            playerBody.transform.GetChild(0).gameObject.SetActive(true);
+        }
+        else if (ingameTeamInfos.teamAll[gameObject.name] == 2)
+        {
+            playerBody.transform.GetChild(1).gameObject.SetActive(true);
+        }
+        else if (ingameTeamInfos.teamAll[gameObject.name] == 3)
+        {
+            playerBody.transform.GetChild(2).gameObject.SetActive(true);
+        }
+
     }
 
     public void UpdateWaiting()

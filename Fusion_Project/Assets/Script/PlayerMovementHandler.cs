@@ -2,11 +2,14 @@ using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Fusion.NetworkBehaviour;
 using static NetworkInputData;
 
 public class PlayerMovementHandler : NetworkBehaviour
 {
     NetworkCharacterController _cc;
+
+    [SerializeField] IngameTeamInfos ingameTeamInfos;
 
     //애니메이션
     [SerializeField] Animator bodyAnime;
@@ -28,21 +31,29 @@ public class PlayerMovementHandler : NetworkBehaviour
         movementSpeed = originalSpeed;
 
     }
-    // Start is called before the first frame update
-    void Start()
-    {
 
+
+    public override void Spawned()
+    {
+        ingameTeamInfos = FindObjectOfType<IngameTeamInfos>();
     }
+   
 
     // Update is called once per frame
     void Update()
     {
 
+
     }
+    
+
 
 
     public override void FixedUpdateNetwork()
     {
+
+
+
         if (GetInput(out NetworkInputData data))
         {
             data.direction.Normalize();
@@ -64,12 +75,38 @@ public class PlayerMovementHandler : NetworkBehaviour
             Vector2 runVector = new Vector2(_cc.Velocity.x, _cc.Velocity.z);
             runVector.Normalize();
             float speed = Mathf.Sqrt(runVector.magnitude);
-         
 
 
+            if(isSPawn)
+            {
+                UpdatingPlayerCharacter();
+                isSPawn=false;
+            }
 
 
         }
     }
+
+
+    public bool isSPawn =false;
+    public void UpdatingPlayerCharacter()
+    {
+        
+      
+            if(ingameTeamInfos.teamADictionary.ContainsKey(gameObject.name))
+            {
+                gameObject.transform.position = ingameTeamInfos.spawnPoint[0].position;
+            }
+
+            if (ingameTeamInfos.teamBDictionary.ContainsKey(gameObject.name))
+            {
+                gameObject.transform.position = ingameTeamInfos.spawnPoint[3].position;
+            }
+
+        
+        
+    }
+
+
 }
 

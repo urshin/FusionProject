@@ -27,14 +27,19 @@ public class DataManager : MonoBehaviour
 
     public List<Sprite> jobSprite = new List<Sprite>();
 
+
+
     // Character 정보를 저장할 리스트
-    List<Character> characterList = new List<Character>();
+
+    public List<Character> characterList = new List<Character>();
 
 
 
     // Character 클래스 정의
+    [System.Serializable]
     public class Character
     {
+        public GameObject Prefab;
         public string Class;
         public int HP;
         public int Speed;
@@ -52,61 +57,84 @@ public class DataManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        ReadCharacterInfo();
+        ImageSource();
+        LoadCharacterInfo("Assets/Resources/CharacterInfo.txt");
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            foreach (Character c in characterList)
+            {
+                print(c);
+            }
+        }
     }
 
     public void ImageSource()
     {
         // Resources 폴더 내의 이미지 리소스를 로드하여 jobSprite 리스트에 추가
-        Sprite[] sprites = Resources.LoadAll<Sprite>("Assets/Resources/"); // YourFolderPath는 실제로 폴더 경로로 대체되어야 합니다.
+        Sprite[] sprites = Resources.LoadAll<Sprite>(""); // YourFolderPath는 실제로 폴더 경로로 대체되어야 합니다.
         jobSprite.AddRange(sprites);
     }
 
-    public void ReadCharacterInfo()
+    void LoadCharacterInfo(string filePath)
     {
+        string[] lines = File.ReadAllLines(filePath);
+        Character character = null;
 
-        string filePath = "Assets/Resources/CharacterInfo.txt";
-        // 파일이 존재하는지 확인
-        if (File.Exists(filePath))
+        foreach (string line in lines)
         {
-            // 파일 내용 한 줄씩 읽기
-            string[] lines = File.ReadAllLines(filePath);
-
-            // 각 줄을 처리하여 Character 객체로 변환하고 리스트에 추가
-            foreach (string line in lines)
+            if (line.StartsWith("//") || string.IsNullOrWhiteSpace(line))
             {
-                if (!string.IsNullOrEmpty(line) && !line.StartsWith("//"))
+                continue; // Skip comments and empty lines
+            }
+            else if (line.StartsWith("Class:"))
+            {
+                if (character != null)
                 {
-                    string[] tokens = line.Split(':');
-                    Character character = new Character();
-                    character.Class = tokens[1].Trim();
-                    character.HP = int.Parse(tokens[2].Trim());
-                    character.Speed = int.Parse(tokens[3].Trim());
-                    character.Attack = int.Parse(tokens[4].Trim());
-                    character.AttackSpeed = float.Parse(tokens[5].Trim());
-                    character.Defence = int.Parse(tokens[6].Trim());
-                    characterList.Add(character);
+                    characterList.Add(character); // Add the previous character
+                }
+                character = new Character(); // Create new character instance
+                character.Class = line.Split(':')[1].Trim(); // Extract class name
+                character.Prefab = Resources.Load<GameObject>(character.Class);
+            }
+            else
+            {
+                string[] parts = line.Split(':');
+                string attribute = parts[0].Trim();
+                string value = parts[1].Trim();
+
+                switch (attribute)
+                {
+                    case "HP":
+                        character.HP = int.Parse(value);
+                        break;
+                    case "Speed":
+                        character.Speed = int.Parse(value);
+                        break;
+                    case "Attack":
+                        character.Attack = int.Parse(value);
+                        break;
+                    case "AttackSpeed":
+                        character.AttackSpeed = float.Parse(value);
+                        break;
+                    case "Deffence": // Typo in your text file, should be "Defence"
+                        character.Defence = int.Parse(value);
+                        break;
+                    default:
+                        break;
                 }
             }
-
-            //// 읽어온 정보 출력 
-            //foreach (Character character in characterList)
-            //{
-            //    Debug.Log("Class: " + character.Class + ", HP: " + character.HP + ", Speed: " + character.Speed + ", Attack: " + character.Attack + ", AttackSpeed: " + character.AttackSpeed + ", Defence: " + character.Defence);
-            //}
         }
-        else
+
+        if (character != null)
         {
-            Debug.LogError("CharacterInfo.txt 파일을 찾을 수 없습니다.");
+            characterList.Add(character); // Add the last character read
         }
     }
 
-
-
 }
+

@@ -1,7 +1,7 @@
 // CharacterInfo.txt
 
 // 검사
-Class: Sword
+Class: Warrior
 HP: 100
 Speed: 10
 Attack: 20
@@ -9,7 +9,7 @@ AttackSpeed: 1.5
 Deffence: 15
 
 // 마법사
-Class: Magic
+Class: Mage
 HP: 80
 Speed: 8
 Attack: 25

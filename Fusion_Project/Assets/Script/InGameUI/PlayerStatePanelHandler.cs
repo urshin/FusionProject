@@ -87,10 +87,10 @@ public class PlayerStatePanelHandler : MonoBehaviour
             switch (player.Value)
             {
                 case 1:
-                    playerSprite = GetSprite("Sword");
+                    playerSprite = GetSprite("Warrior");
                     break;
                 case 2:
-                    playerSprite = GetSprite("Magic");
+                    playerSprite = GetSprite("Mage");
                     break;
                 case 3:
                     playerSprite = GetSprite("Archer");

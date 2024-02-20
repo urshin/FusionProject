@@ -27,27 +27,22 @@ public class IngameTeamInfos : NetworkBehaviour
 
 
 
-    [Networked, Capacity(6)]
-    public NetworkDictionary<NetworkObject, int> allPlayer { get; }
-// Optional initialization
-= MakeInitializer(new Dictionary<NetworkObject, int> { });
-
-
-
     [Networked]
-    public NetworkBool isStartBTNOn {  get; set; }  
+    public NetworkBool isStartBTNOn {  get; set; }   //ui에서 방장이 게임 시작 버튼 눌렀을 때
 
 
     public ChangeDetector _changeDetector;
 
 
     [Header("SpawnPoint")]
-    [SerializeField] Transform[] spawnPoint;
+    public Transform[] spawnPoint;
 
     public override void Spawned()
     {
         _changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
-       
+  
+
+
     }
 
     private void Update()
@@ -55,24 +50,7 @@ public class IngameTeamInfos : NetworkBehaviour
         
     }
 
-    public void SetPlayerPosition()
-    {
-        int i = 0;
-        foreach (var player in teamADictionary)
-        {
-            GameObject playerprefab = GameObject.Find(player.Key.ToString()).transform.GetChild(1).gameObject;
-            playerprefab.transform.position = spawnPoint[i].transform.position;
-            i++;
-        }
-
-        foreach (var player in teamBDictionary)
-        {
-            GameObject playerprefab = GameObject.Find(player.Key.ToString());
-            playerprefab.transform.position = spawnPoint[i].transform.position;
-            i++;
-        }
-
-    }
+   
 
 
  

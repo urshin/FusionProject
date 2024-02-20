@@ -65,13 +65,13 @@ public class CharacterSelectHandler : MonoBehaviour
 
             foreach (string line in lines)
             {
-                if (line.StartsWith("Class: Sword"))
+                if (line.StartsWith("Class: Warrior"))
                 {
-                    SetCharacterInfo("Sword", "SwordMan", "SwordBTN", classCount);
+                    SetCharacterInfo("Warrior", "Warrior", "WarriorBTN", classCount);
                 }
-                else if (line.StartsWith("Class: Magic"))
+                else if (line.StartsWith("Class: Mage"))
                 {
-                    SetCharacterInfo("Magic", "Magician", "MagicianBTN", classCount);
+                    SetCharacterInfo("Mage", "Mage", "MageBTN", classCount);
                 }
                 else if (line.StartsWith("Class: Archer"))
                 {
@@ -118,12 +118,12 @@ public class CharacterSelectHandler : MonoBehaviour
                 currentPlayer.GetComponentInChildren<TextMeshProUGUI>().text = A.Key.ToString();
                 if (A.Value == 1)
                 {
-                    currentPlayer.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("Sword");
+                    currentPlayer.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("Warrior");
 
                 }
                 else if (A.Value == 2)
                 {
-                    currentPlayer.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("Magic");
+                    currentPlayer.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("Mage");
                 }
                 else if (A.Value == 3)
                 {
@@ -137,12 +137,7 @@ public class CharacterSelectHandler : MonoBehaviour
                 i++;
             }
         }
-        else
-        {
-            return;
-        }
-
-        if (ingameTeamInfos.teamBDictionary.ContainsKey(name))
+        else if (ingameTeamInfos.teamBDictionary.ContainsKey(name))
         {
             int i = 0;
             foreach (var A in ingameTeamInfos.teamBDictionary)
@@ -152,12 +147,12 @@ public class CharacterSelectHandler : MonoBehaviour
                 currentPlayer.GetComponentInChildren<TextMeshProUGUI>().text = A.Key.ToString();
                 if (A.Value == 1)
                 {
-                    currentPlayer.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("Sword");
+                    currentPlayer.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("Warrior");
 
                 }
                 else if (A.Value == 2)
                 {
-                    currentPlayer.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("Magic");
+                    currentPlayer.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("Mage");
                 }
                 else if (A.Value == 3)
                 {

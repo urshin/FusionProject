@@ -150,7 +150,7 @@ public class FusionSpawner : MonoBehaviour, INetworkRunnerCallbacks
                 Debug.Log($"Spawning new player for connection token {playerToken}");
                 
                 NetworkObject networkPlayerObject = runner.Spawn(networkPrefab, new Vector3(0,0,0), Quaternion.identity, player) ;
-                FindObjectOfType<IngameTeamInfos>().allPlayer.Add(networkPlayerObject, 0);
+                
             }
         }
         else Debug.Log("OnPlayerJoined");
