@@ -26,13 +26,28 @@ public class PlayerInputHandler : MonoBehaviour
     public NetworkInputData GetNetworkInput()
     {
         NetworkInputData networkInputData = new NetworkInputData();
-
-
+        // 플레이어 이동 입력 얻기
+        var cameraRotation = Quaternion.Euler(0f, Camera.main.transform.rotation.eulerAngles.y, 0f);
         var inputDirection = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
-        networkInputData.direction = inputDirection;
+        networkInputData.direction = cameraRotation * inputDirection;
+        networkInputData.moveDirection = inputDirection;
+        networkInputData.mouseDirection = cameraRotation;
         // 스페이스바에 기반한 점프 입력 설정
         networkInputData.buttons.Set(NetworkInputButtons.Jump, Input.GetKey(KeyCode.Space));
 
+        networkInputData.buttons.Set(NetworkInputButtons.Dash, Input.GetKey(KeyCode.LeftShift));
+
+        // 마우스 입력 추적
+        networkInputData.mouseX = Input.GetAxis("Mouse X");
+        networkInputData.mouseY = Input.GetAxis("Mouse Y");
+
+        // 마우스 버튼 0 상태 추적
+        networkInputData.buttons.Set(NetworkInputData.MOUSEBUTTON0, _mouseButton0);
+        _mouseButton0 = false;
+
+        // 마우스 버튼 0 상태 추적
+        networkInputData.buttons.Set(NetworkInputData.MOUSEBUTTON1, _mouseButton1);
+        _mouseButton1 = false;
 
         return networkInputData;
     }

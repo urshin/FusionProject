@@ -22,6 +22,7 @@ public struct NetworkInputData : INetworkInput
     public enum NetworkInputButtons
     {
         Jump,
+        Dash,
     }
 
 }

@@ -11,7 +11,7 @@ using static InGameUIHandler;
 
 public class InGameUIHandler : MonoBehaviour
 {
-    [SerializeField] CurrentPlayersInformation crueentPlayerInformationPrefab;
+    [SerializeField] CurrentPlayer crueentPlayerInformationPrefab;
   
     [Header("ÆÐ³Îµé")]
     [SerializeField] GameObject teamSelectPanel;

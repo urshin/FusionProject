@@ -10,7 +10,7 @@ public class TeamSelectHandler : MonoBehaviour
     public TextMeshProUGUI TeamA;
     public TextMeshProUGUI TeamB;
 
-    [SerializeField] CurrentPlayersInformation currentPlayersInformation;
+    [SerializeField] CurrentPlayer currentPlayersInformation;
 
     
 

@@ -62,14 +62,12 @@ public class PlayerMovementHandler : NetworkBehaviour
 
             if (data.buttons.IsSet(NetworkInputButtons.Jump))
             {
-                print("jump");
+
                 _cc.Jump();
             }
 
             if (data.direction.sqrMagnitude > 0)
                 _forward = data.direction;
-
-
 
             //몸 애니메이션
             Vector2 runVector = new Vector2(_cc.Velocity.x, _cc.Velocity.z);
@@ -91,20 +89,16 @@ public class PlayerMovementHandler : NetworkBehaviour
     public bool isSPawn =false;
     public void UpdatingPlayerCharacter()
     {
-        
-      
-            if(ingameTeamInfos.teamADictionary.ContainsKey(gameObject.name))
-            {
-                gameObject.transform.position = ingameTeamInfos.spawnPoint[0].position;
-            }
 
-            if (ingameTeamInfos.teamBDictionary.ContainsKey(gameObject.name))
-            {
-                gameObject.transform.position = ingameTeamInfos.spawnPoint[3].position;
-            }
 
-        
-        
+        if (ingameTeamInfos.teamADictionary.ContainsKey(gameObject.name) || ingameTeamInfos.teamBDictionary.ContainsKey(gameObject.name))
+        {
+            Vector3 randomOffset = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
+            int teamIndex = ingameTeamInfos.teamADictionary.ContainsKey(gameObject.name) ? 0 : 1;
+            gameObject.transform.position = ingameTeamInfos.spawnPoint[teamIndex].position + randomOffset;
+        }
+
+
     }
 
 

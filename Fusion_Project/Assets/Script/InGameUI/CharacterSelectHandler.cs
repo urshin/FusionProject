@@ -14,7 +14,7 @@ using UnityEngine.EventSystems;
 
 public class CharacterSelectHandler : MonoBehaviour
 {
-    public CurrentPlayersInformation currentPlayersInformation;
+    public CurrentPlayer currentPlayersInformation;
     public IngameTeamInfos ingameTeamInfos;
 
     private void Awake()

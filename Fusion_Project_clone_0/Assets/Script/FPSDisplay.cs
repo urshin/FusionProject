@@ -5,11 +5,6 @@ public class FPSDisplay : MonoBehaviour
 {
     float deltaTime = 0.0f;
 
-    private void Awake()
-    {
-        DontDestroyOnLoad(this);
-    }
-
     void Update()
     {
         deltaTime += (Time.deltaTime - deltaTime) * 0.1f;

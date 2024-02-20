@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class WaitingPanelHandler : NetworkBehaviour
 {
     // 현재 플레이어 정보와 인게임 팀 정보를 저장하는 변수들
-    public CurrentPlayersInformation currentPlayersInformation;
+    public CurrentPlayer currentPlayersInformation;
     public IngameTeamInfos ingameTeamInfos;
 
     // 플레이어 수를 표시하는 텍스트
