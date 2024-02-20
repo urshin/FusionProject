@@ -37,6 +37,8 @@ public class PlayerStatePanelHandler : MonoBehaviour
         {
             PlayerCounting.text = ingameTeamInfos.teamAll.Count.ToString();
         }
+        else
+        { return; }
 
         // 대기 상태 업데이트
         UpdatePlayerStatePanel();

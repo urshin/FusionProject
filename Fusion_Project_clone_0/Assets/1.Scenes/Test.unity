@@ -301,15 +301,13 @@ MonoBehaviour:
     _items: []
   _teamAll:
     _items: []
+  _isChangeJob:
+    _value: 0
   _isStartBTNOn:
     _value: 0
   spawnPoint:
   - {fileID: 1877070186}
   - {fileID: 1255833059}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!114 &252300134
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -63,10 +63,10 @@ public class CurrentPlayer : NetworkBehaviour
             switch (change)
             {
                 case nameof(ingameTeamInfos.teamADictionary):
-                    
+                    ClassChange();
                     break;
                 case nameof(ingameTeamInfos.teamBDictionary):
-                    
+                    ClassChange();
                     break;
                 case nameof(ingameTeamInfos.teamAll):
                     UpdateWaiting();
@@ -169,14 +169,14 @@ public class CurrentPlayer : NetworkBehaviour
         {
             ingameTeamInfos.teamADictionary.Set(name, job);
             ingameTeamInfos.teamAll.Set(name, job);
-            ClassChange();
+            UpdatePlayerJob();
 
         }
         else if (ingameTeamInfos.teamBDictionary.ContainsKey(name))
         {
             ingameTeamInfos.teamBDictionary.Set(name, job);
             ingameTeamInfos.teamAll.Set(name, job);
-            ClassChange();
+            UpdatePlayerJob();
 
         }
 
@@ -223,21 +223,13 @@ public class CurrentPlayer : NetworkBehaviour
         }
     }
 
-    
 
-    public void ClassChange()
+    public void UpdatePlayerJob()
     {
-        if (characterSelectPanel.isActiveAndEnabled)
-        {
-            characterSelectPanel.TeamClassChange(gameObject.name);
-
-        }
-      
-
         for (int i = 0; i < playerBody.transform.childCount; i++)
         {
 
-        playerBody.transform.GetChild(i).gameObject.SetActive(false);
+            playerBody.transform.GetChild(i).gameObject.SetActive(false);
         }
 
         if (ingameTeamInfos.teamAll[gameObject.name] == 1)
@@ -253,7 +245,21 @@ public class CurrentPlayer : NetworkBehaviour
             playerBody.transform.GetChild(2).gameObject.SetActive(true);
         }
         else
-        { return; }
+        {
+            return;
+        }
+
+    }
+
+    public void ClassChange()
+    {
+        if (characterSelectPanel.isActiveAndEnabled)
+        {
+            characterSelectPanel.TeamClassChange(gameObject.name);
+
+        }
+     
+
 
 
 
@@ -262,13 +268,13 @@ public class CurrentPlayer : NetworkBehaviour
     public void UpdateWaiting()
     {
 
-        if (waitingPanelHandler != null && waitingPanelHandler.gameObject.activeSelf)
+        if (waitingPanelHandler.isActiveAndEnabled)
         {
             waitingPanelHandler.UpdateWaiting();
         }
         
 
-        if (playerStatePanelHandler != null && playerStatePanelHandler.gameObject.activeSelf)
+        if (playerStatePanelHandler.isActiveAndEnabled)
         {
             playerStatePanelHandler.UpdatePlayerStatePanel();
         }
