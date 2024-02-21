@@ -7,16 +7,21 @@ using static NetworkInputData;
 
 public class PlayerMovementHandler : NetworkBehaviour
 {
-    NetworkCharacterController _cc;
+    public NetworkCharacterController _cc;
+    PlayerDataHandler _dataHandler;
 
     [SerializeField] IngameTeamInfos ingameTeamInfos;
 
     //애니메이션
     [SerializeField] Animator bodyAnime;
 
+    //플레이어 바디
+    [SerializeField] GameObject body;
+
 
     //플레이어 움직임 관련
-    float movementSpeed;
+    public float movementSpeed;
+    public float AttakSpeed;
     float originalSpeed = 10;
     float dashlSpeed;
 
@@ -27,7 +32,7 @@ public class PlayerMovementHandler : NetworkBehaviour
     {
         _cc = GetComponent<NetworkCharacterController>();
 
-        dashlSpeed = originalSpeed * 2;
+        dashlSpeed = movementSpeed * 2;
         movementSpeed = originalSpeed;
 
     }
@@ -36,6 +41,10 @@ public class PlayerMovementHandler : NetworkBehaviour
     public override void Spawned()
     {
         ingameTeamInfos = FindObjectOfType<IngameTeamInfos>();
+        _dataHandler = GetComponent<PlayerDataHandler>();
+        bodyAnime = body.GetComponentInChildren<Animator>();
+        
+
     }
 
 
@@ -51,9 +60,6 @@ public class PlayerMovementHandler : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-
-
-
         if (GetInput(out NetworkInputData data))
         {
             data.direction.Normalize();
@@ -74,18 +80,31 @@ public class PlayerMovementHandler : NetworkBehaviour
             runVector.Normalize();
             float speed = Mathf.Sqrt(runVector.magnitude);
 
+            
+                bodyAnime.SetFloat("Direction", speed);
+            
 
-            if(ingameTeamInfos.isChangeJob)
+
+
+            if (ingameTeamInfos.TickToggle)
             {
                 UpdatingPlayerCharacter();
-                ingameTeamInfos.isChangeJob = false;
+
+
             }
+
 
 
         }
     }
 
 
+    IEnumerator Co_UpdatingPlayerCharacter()
+    {
+        yield return new WaitForSeconds(0.5f); // 1초 대기
+        ingameTeamInfos.TickToggle = false;
+        
+    }
 
     public void UpdatingPlayerCharacter()
     {
@@ -99,9 +118,28 @@ public class PlayerMovementHandler : NetworkBehaviour
         {
             gameObject.transform.position = ingameTeamInfos.spawnPoint[1].position;
         }
+
         
+        StartCoroutine(Co_UpdatingPlayerCharacter());
     }
 
 
+
+
+
+
+   public  void FindingAnimator()
+    {
+        foreach (Transform child in body.transform)
+        {
+            Animator childAnimator = child.GetComponent<Animator>();
+            if (childAnimator != null && child.gameObject.activeSelf)
+            {
+                bodyAnime = childAnimator;
+                gameObject.GetComponent<NetworkMecanimAnimator>().Animator = childAnimator;
+                break;
+            }
+        }
+    }
 }
 

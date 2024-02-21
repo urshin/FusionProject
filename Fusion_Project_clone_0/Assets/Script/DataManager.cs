@@ -64,13 +64,7 @@ public class DataManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            foreach (Character c in characterList)
-            {
-                print(c);
-            }
-        }
+       
     }
 
     public void ImageSource()

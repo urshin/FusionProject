@@ -29,6 +29,8 @@ public class CurrentPlayer : NetworkBehaviour
 
     [Header("PlayerBodyThings")]
     public GameObject playerBody;
+    [SerializeField] PlayerDataHandler playerDataHandler;
+
 
     [Header("Cam")]
     [SerializeField] CinemachineFreeLook freeLookCamera;
@@ -50,7 +52,7 @@ public class CurrentPlayer : NetworkBehaviour
         playerStatePanelHandler = GetComponentInChildren<PlayerStatePanelHandler>();
         ingameUIHandler = GetComponentInChildren<InGameUIHandler>();
         playerMovementHandler = GetComponent<PlayerMovementHandler>();
-
+        playerDataHandler = GetComponent<PlayerDataHandler>();  
         if (Object.HasInputAuthority)
         {
             view.SetCameraTarget();
@@ -66,16 +68,14 @@ public class CurrentPlayer : NetworkBehaviour
             {
                 case nameof(ingameTeamInfos.teamADictionary):
                     ClassChange();
-
-                    ingameTeamInfos.isChangeJob = true;
                     break;
                 case nameof(ingameTeamInfos.teamBDictionary):
                     ClassChange();
-
-                    ingameTeamInfos.isChangeJob = true;
                     break;
                 case nameof(ingameTeamInfos.teamAll):
                     UpdateWaiting();
+                    ingameTeamInfos.TickToggle = true;
+                    playerDataHandler.RPC_SetPlayerData();
                     break;
                 case nameof(ingameTeamInfos.isStartBTNOn):
                     ingameUIHandler.OnclickStartBTN();
