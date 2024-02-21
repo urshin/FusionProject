@@ -75,9 +75,12 @@ public class PlayerMovementHandler : NetworkBehaviour
             float speed = Mathf.Sqrt(runVector.magnitude);
 
 
-   
+            if(ingameTeamInfos.isChangeJob)
+            {
+                UpdatingPlayerCharacter();
+                ingameTeamInfos.isChangeJob = false;
+            }
 
-           
 
         }
     }
@@ -86,8 +89,6 @@ public class PlayerMovementHandler : NetworkBehaviour
 
     public void UpdatingPlayerCharacter()
     {
-
-
 
         if (ingameTeamInfos.teamADictionary.ContainsKey(gameObject.name))
         {

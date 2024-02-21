@@ -20,8 +20,10 @@ public class CurrentPlayer : NetworkBehaviour
     [SerializeField] GameObject canvas;
     [SerializeField] InGameUIHandler ingameUIHandler;
     public IngameTeamInfos ingameTeamInfos;
-    [SerializeField] PlayerMovementHandler playerMovementHandler;
+     PlayerMovementHandler playerMovementHandler;
 
+    [SerializeField] GameObject WaitingPanel;
+    [SerializeField] GameObject PlayerStatePanel;
 
 
 
@@ -41,13 +43,13 @@ public class CurrentPlayer : NetworkBehaviour
     public override void Spawned()
     {
         mainCamera = Camera.main;
-       
+
         ingameTeamInfos = FindObjectOfType<IngameTeamInfos>();
         characterSelectPanel = GetComponentInChildren<CharacterSelectHandler>();
         waitingPanelHandler = GetComponentInChildren<WaitingPanelHandler>();
-        playerStatePanelHandler= GetComponentInChildren<PlayerStatePanelHandler>();
+        playerStatePanelHandler = GetComponentInChildren<PlayerStatePanelHandler>();
         ingameUIHandler = GetComponentInChildren<InGameUIHandler>();
-        playerMovementHandler = GetComponentInChildren<PlayerMovementHandler>();
+        playerMovementHandler = GetComponent<PlayerMovementHandler>();
 
         if (Object.HasInputAuthority)
         {
@@ -64,9 +66,13 @@ public class CurrentPlayer : NetworkBehaviour
             {
                 case nameof(ingameTeamInfos.teamADictionary):
                     ClassChange();
+
+                    ingameTeamInfos.isChangeJob = true;
                     break;
                 case nameof(ingameTeamInfos.teamBDictionary):
                     ClassChange();
+
+                    ingameTeamInfos.isChangeJob = true;
                     break;
                 case nameof(ingameTeamInfos.teamAll):
                     UpdateWaiting();
@@ -76,7 +82,7 @@ public class CurrentPlayer : NetworkBehaviour
                     break;
 
             }
-        }  
+        }
     }
 
 
@@ -107,7 +113,7 @@ public class CurrentPlayer : NetworkBehaviour
 
     public void Update()
     {
-        
+
     }
 
     public void LateUpdate()
@@ -137,7 +143,7 @@ public class CurrentPlayer : NetworkBehaviour
 
         if (team == "A")
         {
-       
+
             ingameTeamInfos.teamADictionary.Add(name, job);
             ingameTeamInfos.teamAll.Add(name, job);
 
@@ -145,7 +151,7 @@ public class CurrentPlayer : NetworkBehaviour
         }
         else if (team == "B")
         {
-          
+
             ingameTeamInfos.teamBDictionary.Add(name, job);
             ingameTeamInfos.teamAll.Add(name, job);
         }
@@ -189,10 +195,10 @@ public class CurrentPlayer : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-      
-   
-          
-       
+
+
+
+
     }
 
 
@@ -258,27 +264,22 @@ public class CurrentPlayer : NetworkBehaviour
             characterSelectPanel.TeamClassChange(gameObject.name);
 
         }
-     
-
-
-
-
     }
 
     public void UpdateWaiting()
     {
-
-        if (waitingPanelHandler.isActiveAndEnabled)
+        if (WaitingPanel.activeSelf)
         {
             waitingPanelHandler.UpdateWaiting();
-        }
-        
 
-        if (playerStatePanelHandler.isActiveAndEnabled)
+        }
+
+        if (PlayerStatePanel.activeSelf)
         {
             playerStatePanelHandler.UpdatePlayerStatePanel();
-        }
-        
-    }
 
+        }
+
+
+    }
 }

@@ -39,10 +39,10 @@ public class WaitingPanelHandler : NetworkBehaviour
         if (ingameTeamInfos.teamAll.Count > 0)
         {
             PlayerCounting.text = ingameTeamInfos.teamAll.Count.ToString();
+            // 대기 상태 업데이트
+            UpdateWaiting();
         }
 
-        // 대기 상태 업데이트
-        UpdateWaiting();
 
         // 방장인 경우 버튼 활성화
         if (Object.HasStateAuthority)
@@ -84,37 +84,41 @@ public class WaitingPanelHandler : NetworkBehaviour
     // 특정 팀의 플레이어 업데이트 함수
     private void UpdateTeam(NetworkDictionary<NetworkString<_32>, int> teamDictionary, VerticalLayoutGroup teamTransform, int count)
     {
-        int j = 0;
-        foreach (var player in teamDictionary)
+        if (count > 0)
         {
-            GameObject currentPlayer = teamTransform.transform.GetChild(j).gameObject;
-            currentPlayer.SetActive(true);
-            currentPlayer.GetComponentInChildren<TextMeshProUGUI>().text = player.Key.ToString();
-
-            Sprite playerSprite = null;
-            switch (player.Value)
+            int j = 0;
+            foreach (var player in teamDictionary)
             {
-                case 1:
-                    playerSprite = GetSprite("Warrior");
+                GameObject currentPlayer = teamTransform.transform.GetChild(j).gameObject;
+                currentPlayer.SetActive(true);
+                currentPlayer.GetComponentInChildren<TextMeshProUGUI>().text = player.Key.ToString();
+
+                Sprite playerSprite = null;
+                switch (player.Value)
+                {
+                    case 1:
+                        playerSprite = GetSprite("Warrior");
+                        break;
+                    case 2:
+                        playerSprite = GetSprite("Mage");
+                        break;
+                    case 3:
+                        playerSprite = GetSprite("Archer");
+                        break;
+                }
+
+                if (playerSprite != null)
+                {
+                    currentPlayer.GetComponentInChildren<Image>().sprite = playerSprite;
+                }
+
+                j++;
+                if (j >= count) // 최적화: 모든 플레이어를 업데이트한 경우 루프 종료
+                {
                     break;
-                case 2:
-                    playerSprite = GetSprite("Mage");
-                    break;
-                case 3:
-                    playerSprite = GetSprite("Archer");
-                    break;
+                }
             }
 
-            if (playerSprite != null)
-            {
-                currentPlayer.GetComponentInChildren<Image>().sprite = playerSprite;
-            }
-
-            j++;
-            if (j >= count) // 최적화: 모든 플레이어를 업데이트한 경우 루프 종료
-            {
-                break;
-            }
         }
     }
 
@@ -136,7 +140,7 @@ public class WaitingPanelHandler : NetworkBehaviour
     public void OnclickStart()
     {
         ingameTeamInfos.isStartBTNOn = true;
-        
+
 
     }
 
