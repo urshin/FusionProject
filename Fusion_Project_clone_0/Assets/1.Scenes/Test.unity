@@ -301,8 +301,6 @@ MonoBehaviour:
     _items: []
   _teamAll:
     _items: []
-  _isChangeJob:
-    _value: 0
   _isStartBTNOn:
     _value: 0
   spawnPoint:

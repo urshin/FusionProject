@@ -107,8 +107,7 @@ public class PlayerDataHandler : NetworkBehaviour
     public void UpdateMovementData()
     {
         movementHandler._cc.maxSpeed = characterInfo.Speed;
-        movementHandler._cc.acceleration = characterInfo.Speed;
-        movementHandler._cc.braking = characterInfo.Speed;
+        
         movementHandler.FindingAnimator();
 
 

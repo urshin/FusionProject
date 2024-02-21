@@ -59,10 +59,7 @@ public class IngameTeamInfos : NetworkBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            print("ticktoggle =========="+  TickToggle) ;
-        }
+    
     }
 
    

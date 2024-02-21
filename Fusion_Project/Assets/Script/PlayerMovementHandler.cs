@@ -78,11 +78,16 @@ public class PlayerMovementHandler : NetworkBehaviour
             //몸 애니메이션
             Vector2 runVector = new Vector2(_cc.Velocity.x, _cc.Velocity.z);
             runVector.Normalize();
-            float speed = Mathf.Sqrt(runVector.magnitude);
 
-            
-                bodyAnime.SetFloat("Direction", speed);
-            
+            float speed = runVector.magnitude;
+            bodyAnime.SetFloat("X", data.moveDirection.x);
+            bodyAnime.SetFloat("Z", data.moveDirection.z);
+
+
+           
+
+            //    bodyAnime.SetFloat("Direction", speed);
+
 
 
 
