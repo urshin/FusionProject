@@ -17,18 +17,21 @@ public class PlayerMovementHandler : NetworkBehaviour
 
     //애니메이션
     [SerializeField] Animator bodyAnime;
-    [SerializeField] NetworkMecanimAnimator networkAnime;
 
     //플레이어 바디
     [SerializeField] GameObject body;
 
-    
+    [Networked]
+    public float DashGage { get; set; }
+
+    [SerializeField] GameObject playerInterfaceUI;
+
 
 
     //플레이어 움직임 관련
     public float movementSpeed;
     public float AttakSpeed;
-    float originalSpeed = 10;
+    float originalSpeed;
     float dashlSpeed;
 
     //전방 값.
@@ -40,8 +43,7 @@ public class PlayerMovementHandler : NetworkBehaviour
     {
         _cc = GetComponent<NetworkCharacterController>();
 
-        dashlSpeed = movementSpeed * 2;
-        movementSpeed = originalSpeed;
+     
 
     }
 
@@ -50,20 +52,20 @@ public class PlayerMovementHandler : NetworkBehaviour
     {
         ingameTeamInfos = FindObjectOfType<IngameTeamInfos>();
         _dataHandler = GetComponent<PlayerDataHandler>();
-
-        networkAnime = GetComponent<NetworkMecanimAnimator>();
         bodyAnime = body.GetComponent<Animator>();
 
+        DashGage = 100;
 
 
-       
+
+
     }
 
 
     // Update is called once per frame
     void Update()
     {
-        
+     
 
     }
 
@@ -75,41 +77,34 @@ public class PlayerMovementHandler : NetworkBehaviour
         if (GetInput(out NetworkInputData data))
         {
             data.direction.Normalize();
-            _cc.Move(movementSpeed * data.direction * Runner.DeltaTime);
+            _cc.Move( data.direction * Runner.DeltaTime);
             transform.rotation = data.mouseDirection;
 
             if (data.buttons.IsSet(NetworkInputButtons.Jump))
             {
-
                 _cc.Jump();
             }
-
-
+            if (data.buttons.IsSet(NetworkInputButtons.Dash)&&Runner.IsForward)
+            {
+                //나중에 서서히 증가하게 만들기
+                _cc.maxSpeed = _dataHandler.characterInfo.Speed* 3;
+                bodyAnime.SetInteger("isDash", 1);
+            }
+            else
+            {
+                _cc.maxSpeed = _dataHandler.characterInfo.Speed;
+                bodyAnime.SetInteger("isDash", 0); 
+            }
+            
             if (data.direction.sqrMagnitude > 0)
                 _forward = data.direction;
 
-            //몸 애니메이션
-            Vector2 runVector = new Vector2(_cc.Velocity.x, _cc.Velocity.z);
-            runVector.Normalize();
 
-            float speed = runVector.magnitude;
-
-
-
+           
             bodyAnime.SetInteger("Class", ingameTeamInfos.teamAll[gameObject.name]);
 
             bodyAnime.SetFloat("X", data.moveDirection.x);
             bodyAnime.SetFloat("Z", data.moveDirection.z);
-
-
-
-           
-
-
-
-
-
-
 
 
 

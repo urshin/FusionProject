@@ -11979,6 +11979,7 @@ MonoBehaviour:
   bodyAnime: {fileID: 0}
   networkAnime: {fileID: 0}
   body: {fileID: 2683681197174424675}
+  _DashGage: 0
   playerInterfaceUI: {fileID: 6095312856411927410}
   movementSpeed: 0
   AttakSpeed: 0
@@ -12009,7 +12010,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Animator: {fileID: 7654185694117808967}
-  TotalWords: 5
+  TotalWords: 6
   ApplyTiming: 2
   SyncSettings: 127
   StateHashes: 000000004245921401eba117294d5fa26ae36ca1b3fc3148804f147fa22053fabf2794bd958341e27e40c91f072a62c3448451c035d5bb5d1665b8fbf787acecea806bab528d9dd51123aed6
