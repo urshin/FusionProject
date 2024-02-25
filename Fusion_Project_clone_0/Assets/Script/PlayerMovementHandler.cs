@@ -28,6 +28,9 @@ public class PlayerMovementHandler : NetworkBehaviour
 
 
 
+    // 딜레이 타이머
+    [Networked] private TickTimer delay { get; set; }
+
     //플레이어 움직임 관련
     public float movementSpeed;
     public float AttakSpeed;
@@ -87,6 +90,7 @@ public class PlayerMovementHandler : NetworkBehaviour
             if (data.buttons.IsSet(NetworkInputButtons.Dash)&&Runner.IsForward)
             {
                 //나중에 서서히 증가하게 만들기
+                //떨림 현상 수정하기
                 _cc.maxSpeed = _dataHandler.characterInfo.Speed* 3;
                 bodyAnime.SetInteger("isDash", 1);
             }
@@ -99,8 +103,30 @@ public class PlayerMovementHandler : NetworkBehaviour
             if (data.direction.sqrMagnitude > 0)
                 _forward = data.direction;
 
+            if (HasStateAuthority && delay.ExpiredOrNotRunning(Runner))
+            {
+                if (data.buttons.IsSet(NetworkInputData.MOUSEBUTTON0))
+                {
+                    bodyAnime.SetInteger("Attack", 1);
+                }
+                else
+                {
+                    bodyAnime.SetInteger("Attack",0);
+                }
+                if (data.buttons.IsSet(NetworkInputData.MOUSEBUTTON1))
+                {
 
-           
+
+                }
+                else if (!data.buttons.IsSet(NetworkInputData.MOUSEBUTTON1))
+                {
+
+                }
+
+            }
+
+
+
             bodyAnime.SetInteger("Class", ingameTeamInfos.teamAll[gameObject.name]);
 
             bodyAnime.SetFloat("X", data.moveDirection.x);

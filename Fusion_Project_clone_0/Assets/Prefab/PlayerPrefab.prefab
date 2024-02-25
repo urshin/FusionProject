@@ -725,7 +725,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 694449497876094331}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 773f2b76c664da845945c0646c99c5e9, type: 3}
+  m_Avatar: {fileID: 9000000, guid: 3be69a5a43793f848b660a35ea5f3ca2, type: 2}
   m_Controller: {fileID: 0}
   m_CullingMode: 1
   m_UpdateMode: 0
@@ -11977,7 +11977,6 @@ MonoBehaviour:
   _cc: {fileID: 0}
   ingameTeamInfos: {fileID: 0}
   bodyAnime: {fileID: 0}
-  networkAnime: {fileID: 0}
   body: {fileID: 2683681197174424675}
   _DashGage: 0
   playerInterfaceUI: {fileID: 6095312856411927410}
@@ -12010,10 +12009,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Animator: {fileID: 7654185694117808967}
-  TotalWords: 6
-  ApplyTiming: 2
+  TotalWords: 7
+  ApplyTiming: 0
   SyncSettings: 127
-  StateHashes: 000000004245921401eba117294d5fa26ae36ca1b3fc3148804f147fa22053fabf2794bd958341e27e40c91f072a62c3448451c035d5bb5d1665b8fbf787acecea806bab528d9dd51123aed6
+  StateHashes: 000000004245921401eba117294d5fa26ae36ca1b3fc3148804f147fa22053fabf2794bd958341e27e40c91f072a62c3448451c035d5bb5d1665b8fbf787acecea806bab528d9dd51123aed6edb25a4ff72360a5
   TriggerHashes: 00000000
 --- !u!1 &6095312856411927410
 GameObject:
