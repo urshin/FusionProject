@@ -18,7 +18,7 @@ public class CurrentPlayer : NetworkBehaviour
     PlayerStatePanelHandler playerStatePanelHandler;
     [SerializeField] TextMeshProUGUI progressTMP;
     [SerializeField] GameObject canvas;
-    [SerializeField] InGameUIHandler ingameUIHandler;
+   InGameUIHandler ingameUIHandler;
     public IngameTeamInfos ingameTeamInfos;
      PlayerMovementHandler playerMovementHandler;
 

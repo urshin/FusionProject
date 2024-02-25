@@ -151,6 +151,7 @@ public class FusionSpawner : MonoBehaviour, INetworkRunnerCallbacks
                 
                 NetworkObject networkPlayerObject = runner.Spawn(networkPrefab, new Vector3(0,0,0), Quaternion.identity, player) ;
                 
+                
             }
         }
         else Debug.Log("OnPlayerJoined");

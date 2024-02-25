@@ -19,6 +19,9 @@ public class InGameUIHandler : MonoBehaviour
     [SerializeField] GameObject WaitingPanel;
     [SerializeField] GameObject playerStatePanel;
 
+    [SerializeField] GameObject playerinterfaceUI;
+    
+
 
     [Header("ป๓ลย TMP")]
     [SerializeField] TextMeshProUGUI ProgressTMP;
@@ -78,6 +81,7 @@ public class InGameUIHandler : MonoBehaviour
     public void OnclickStartBTN()
     {
         HideAllPanel();
+        playerinterfaceUI.SetActive(true);
 
     }
 
@@ -100,15 +104,8 @@ public class InGameUIHandler : MonoBehaviour
         characterSelecPanel.SetActive(false);
         WaitingPanel.SetActive(false);
         playerStatePanel.SetActive(false);
+        playerinterfaceUI.SetActive(false);
     }
-    void ShowAllPanel()
-    {
-
-        teamSelectPanel.SetActive(true);
-        characterSelecPanel.SetActive(true);
-        WaitingPanel.SetActive(true);
-        playerStatePanel.SetActive(true);
-    }
-
+   
 
 }
