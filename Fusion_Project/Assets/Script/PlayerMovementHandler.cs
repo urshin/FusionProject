@@ -2,8 +2,11 @@ using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
+using UnityEngine.Windows;
 using static Fusion.NetworkBehaviour;
 using static NetworkInputData;
+using static UnityEngine.EventSystems.PointerEventData;
 
 public class PlayerMovementHandler : NetworkBehaviour
 {
@@ -14,6 +17,7 @@ public class PlayerMovementHandler : NetworkBehaviour
 
     //애니메이션
     [SerializeField] Animator bodyAnime;
+    [SerializeField] NetworkMecanimAnimator networkAnime;
 
     //플레이어 바디
     [SerializeField] GameObject body;
@@ -42,20 +46,20 @@ public class PlayerMovementHandler : NetworkBehaviour
     {
         ingameTeamInfos = FindObjectOfType<IngameTeamInfos>();
         _dataHandler = GetComponent<PlayerDataHandler>();
-        bodyAnime = body.GetComponentInChildren<Animator>();
-        
-
+      
+        networkAnime  = GetComponent<NetworkMecanimAnimator>();
+        bodyAnime = body.GetComponent<Animator>();  
     }
 
 
     // Update is called once per frame
     void Update()
     {
-
+       
 
     }
 
-
+ 
 
 
     public override void FixedUpdateNetwork()
@@ -72,6 +76,7 @@ public class PlayerMovementHandler : NetworkBehaviour
                 _cc.Jump();
             }
 
+
             if (data.direction.sqrMagnitude > 0)
                 _forward = data.direction;
 
@@ -80,13 +85,19 @@ public class PlayerMovementHandler : NetworkBehaviour
             runVector.Normalize();
 
             float speed = runVector.magnitude;
-            bodyAnime.SetFloat("X", data.moveDirection.x);
-            bodyAnime.SetFloat("Z", data.moveDirection.z);
 
 
-           
 
-            //    bodyAnime.SetFloat("Direction", speed);
+            bodyAnime.SetInteger("Class", ingameTeamInfos.teamAll[gameObject.name]);
+
+            bodyAnime.SetFloat("X",data.moveDirection.x);
+            bodyAnime.SetFloat("Z",data.moveDirection.z);
+
+
+            
+
+
+
 
 
 
@@ -106,7 +117,7 @@ public class PlayerMovementHandler : NetworkBehaviour
 
     IEnumerator Co_UpdatingPlayerCharacter()
     {
-        yield return new WaitForSeconds(0.5f); // 1초 대기
+        yield return new WaitForSeconds(1f); // 1초 대기
         ingameTeamInfos.TickToggle = false;
         
     }
@@ -140,8 +151,8 @@ public class PlayerMovementHandler : NetworkBehaviour
             Animator childAnimator = child.GetComponent<Animator>();
             if (childAnimator != null && child.gameObject.activeSelf)
             {
-                bodyAnime = childAnimator;
-                gameObject.GetComponent<NetworkMecanimAnimator>().Animator = childAnimator;
+                
+                bodyAnime.avatar = childAnimator.avatar;
                 break;
             }
         }

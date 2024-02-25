@@ -58,6 +58,16 @@ public class CurrentPlayer : NetworkBehaviour
             view.SetCameraTarget();
         }
         camController = camPoint.GetComponent<Animator>();
+
+        if (!ingameTeamInfos.teamAll.ContainsKey(gameObject.name))
+        {
+            RPC_ClassUpdate(gameObject.name, 0);
+        }
+        else
+        {
+            return;
+        }    
+
     }
     public override void Render()
     {
@@ -171,17 +181,17 @@ public class CurrentPlayer : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
     public void RPC_Class(NetworkString<_32> name, int job, PlayerRef messageSource)
     {
+            ingameTeamInfos.teamAll.Set(name, job);
         if (ingameTeamInfos.teamADictionary.ContainsKey(name))
         {
             ingameTeamInfos.teamADictionary.Set(name, job);
-            ingameTeamInfos.teamAll.Set(name, job);
+            
             UpdatePlayerJob();
 
         }
         else if (ingameTeamInfos.teamBDictionary.ContainsKey(name))
         {
             ingameTeamInfos.teamBDictionary.Set(name, job);
-            ingameTeamInfos.teamAll.Set(name, job);
             UpdatePlayerJob();
 
         }

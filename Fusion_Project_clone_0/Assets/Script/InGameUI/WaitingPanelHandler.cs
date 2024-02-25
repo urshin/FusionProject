@@ -36,12 +36,13 @@ public class WaitingPanelHandler : NetworkBehaviour
         PlayBTN.SetActive(false);
 
         // 팀에 플레이어가 있으면 플레이어 수 업데이트
-        if (ingameTeamInfos.teamAll.Count > 0)
+        if (ingameTeamInfos.teamAll.Count> 0)
         {
             PlayerCounting.text = ingameTeamInfos.teamAll.Count.ToString();
             // 대기 상태 업데이트
             UpdateWaiting();
         }
+    
 
 
         // 방장인 경우 버튼 활성화

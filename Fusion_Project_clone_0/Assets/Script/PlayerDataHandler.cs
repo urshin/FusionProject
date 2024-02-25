@@ -17,7 +17,7 @@ public class PlayerDataHandler : NetworkBehaviour
     {
         ingameTeamInfos = FindObjectOfType<IngameTeamInfos>();
         currentPlayer = GetComponent<CurrentPlayer>();
-        movementHandler =GetComponent<PlayerMovementHandler>();
+        movementHandler = GetComponent<PlayerMovementHandler>();
         _changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
 
     }
@@ -46,7 +46,7 @@ public class PlayerDataHandler : NetworkBehaviour
     {
 
         isDead = false;
-        
+
     }
 
 
@@ -80,26 +80,26 @@ public class PlayerDataHandler : NetworkBehaviour
                 case nameof(hp):
 
                     Debug.Log("체력이 변동 되었습니다");
-                    
+
                     break;
             }
         }
     }
 
 
-    
+
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
     public void RPC_SetPlayerData(RpcInfo info = default)
     {
-        RPC_SetData( info.Source);
+        RPC_SetData(info.Source);
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_SetData( PlayerRef messageSource)
+    public void RPC_SetData(PlayerRef messageSource)
     {
         UpdateCharacterInfo();
         UpdateMovementData();
-       
+
     }
 
 
@@ -107,7 +107,7 @@ public class PlayerDataHandler : NetworkBehaviour
     public void UpdateMovementData()
     {
         movementHandler._cc.maxSpeed = characterInfo.Speed;
-        
+
         movementHandler.FindingAnimator();
 
 
@@ -115,50 +115,53 @@ public class PlayerDataHandler : NetworkBehaviour
 
 
 
-        public void UpdateCharacterInfo()
+    public void UpdateCharacterInfo()
     {
-       
-        var characterClass = "";
-        switch (ingameTeamInfos.teamAll[gameObject.name])
+        if (ingameTeamInfos.teamAll.ContainsKey(gameObject.name))
         {
-            case 1:
-                characterClass = "Warrior";
-                break;
-            case 2:
-                characterClass = "Mage";
-                break;
-            case 3:
-                characterClass = "Archer";
-                break;
-            default:
-                // Handle default case if needed
-                break;
+
+            var characterClass = "";
+            switch (ingameTeamInfos.teamAll[gameObject.name])
+            {
+                case 1:
+                    characterClass = "Warrior";
+                    break;
+                case 2:
+                    characterClass = "Mage";
+                    break;
+                case 3:
+                    characterClass = "Archer";
+                    break;
+                default:
+                    // Handle default case if needed
+                    break;
+            }
+
+            var info = DataManager.instance.characterList.Find(x => x.Class == characterClass);
+            if (info != null)
+            {
+                characterInfo.job = info.Class;
+                characterInfo.HP = info.HP;
+                characterInfo.Speed = info.Speed;
+                characterInfo.Attack = info.Attack;
+                characterInfo.AttackSpeed = info.AttackSpeed;
+                characterInfo.Defence = info.Defence;
+
+            }
+            else
+            {
+                // Handle case when info is not found
+            }
+
+
         }
 
-        var info = DataManager.instance.characterList.Find(x => x.Class == characterClass);
-        if (info != null)
-        {
-            characterInfo.job = info.Class;
-            characterInfo.HP = info.HP;
-            characterInfo.Speed = info.Speed;
-            characterInfo.Attack = info.Attack;
-            characterInfo.AttackSpeed = info.AttackSpeed;
-            characterInfo.Defence = info.Defence;
-
-        }
-        else
-        {
-            // Handle case when info is not found
-        }
-
-            
- 
 
 
-    }   
-        
-        
-        
+    }
+
+
+
 
 
 

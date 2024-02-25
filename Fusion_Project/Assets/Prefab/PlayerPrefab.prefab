@@ -908,19 +908,13 @@ Animator:
   m_GameObject: {fileID: 694449497876094331}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 773f2b76c664da845945c0646c99c5e9, type: 3}
-  m_Controller: {fileID: 9100000, guid: 876eaeaccf23fb44b86f5ea8f1d3e739, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
-    are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:LeftFoot'\n\tTransform
-    'mixamorig:LeftHandThumb2'\n\tTransform 'mixamorig:LeftHandIndex1'\n\tTransform
-    'mixamorig:LeftHandPinky2'\n\tTransform 'mixamorig:RightHandRing2'\n\tTransform
-    'mixamorig:Spine1'\n\tTransform 'mixamorig:LeftHandThumb3'\n\tTransform 'mixamorig:RightArm'\n\tTransform
-    'mixamorig:LeftLeg'\n\tand more ...\n\tFrom animation clip 'mixamo.com'"
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -3986,6 +3980,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3682783817201049315}
+  - component: {fileID: 7654185694117808967}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -4011,6 +4006,27 @@ Transform:
   m_Father: {fileID: 5559005070095694398}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &7654185694117808967
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2683681197174424675}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b910dead7479a5c4ea1f455844da28fd, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2683756627977124378
 GameObject:
   m_ObjectHideFlags: 0
@@ -5313,7 +5329,7 @@ Animator:
   m_GameObject: {fileID: 3161893301647014622}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: da301cfed3ec2bf489b2e516f99feed6, type: 3}
-  m_Controller: {fileID: 9100000, guid: d3d82b082c4cb1d4c9419287044cfdf3, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -10745,9 +10761,9 @@ RectTransform:
   m_Father: {fileID: 7301461369385033488}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 400, y: -100}
   m_SizeDelta: {x: 700, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5727504536978804686
@@ -11369,7 +11385,7 @@ GameObject:
   - component: {fileID: 4346289900459054208}
   - component: {fileID: 2015607649979140950}
   - component: {fileID: 429628141740067977}
-  - component: {fileID: 2608713921780526802}
+  - component: {fileID: 3998995504233073191}
   m_Layer: 0
   m_Name: PlayerPrefab
   m_TagString: Untagged
@@ -11430,7 +11446,7 @@ MonoBehaviour:
   - {fileID: 4346289900459054208}
   - {fileID: 2015607649979140950}
   - {fileID: 429628141740067977}
-  - {fileID: 2608713921780526802}
+  - {fileID: 3998995504233073191}
   - {fileID: 3215800012333975440}
 --- !u!114 &4400179455552832954
 MonoBehaviour:
@@ -11528,6 +11544,7 @@ MonoBehaviour:
   _cc: {fileID: 0}
   ingameTeamInfos: {fileID: 0}
   bodyAnime: {fileID: 0}
+  networkAnime: {fileID: 0}
   body: {fileID: 2683681197174424675}
   movementSpeed: 0
   AttakSpeed: 0
@@ -11545,7 +11562,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hp: 0
   _isDead: 0
---- !u!114 &2608713921780526802
+--- !u!114 &3998995504233073191
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -11557,11 +11574,11 @@ MonoBehaviour:
   m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Animator: {fileID: 0}
-  TotalWords: 0
-  ApplyTiming: 0
-  SyncSettings: 95
-  StateHashes: 000000008a18fce4b9abd9d3
+  Animator: {fileID: 7654185694117808967}
+  TotalWords: 5
+  ApplyTiming: 2
+  SyncSettings: 127
+  StateHashes: 000000004245921401eba11700dd6e9b528711b2b3fc3148804f147f2853207d1be0054a958341e27e40c91f
   TriggerHashes: 00000000
 --- !u!1 &6172366228139659007
 GameObject:
@@ -14321,9 +14338,9 @@ RectTransform:
   m_Father: {fileID: 3383424071914598822}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 400, y: -100}
   m_SizeDelta: {x: 700, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &7523483321015955096
@@ -15614,7 +15631,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5399639181963831667
 RectTransform:
   m_ObjectHideFlags: 0
@@ -15850,7 +15867,7 @@ Animator:
   m_GameObject: {fileID: 8489278922371512891}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: dd25e073d80e1474c984bbde6dcf82c1, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

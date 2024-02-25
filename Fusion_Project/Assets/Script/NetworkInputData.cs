@@ -19,10 +19,10 @@ public struct NetworkInputData : INetworkInput
     public float mouseY;
 
 
+
+}
     public enum NetworkInputButtons
     {
         Jump,
         Dash,
     }
-
-}

@@ -35,6 +35,7 @@ public class PlayerInputHandler : MonoBehaviour
         // 스페이스바에 기반한 점프 입력 설정
         networkInputData.buttons.Set(NetworkInputButtons.Jump, Input.GetKey(KeyCode.Space));
 
+
         networkInputData.buttons.Set(NetworkInputButtons.Dash, Input.GetKey(KeyCode.LeftShift));
 
         // 마우스 입력 추적
@@ -50,6 +51,8 @@ public class PlayerInputHandler : MonoBehaviour
         _mouseButton1 = false;
 
         return networkInputData;
+
+
     }
 
 
