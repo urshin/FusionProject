@@ -37,7 +37,11 @@ public class PlayerInputHandler : MonoBehaviour
 
 
         networkInputData.buttons.Set(NetworkInputButtons.Dash, Input.GetKey(KeyCode.LeftShift));
-        
+
+
+        networkInputData.buttons.Set(NetworkInputButtons.Spell, Input.GetKeyDown(KeyCode.E));
+        networkInputData.buttons.Set(NetworkInputButtons.Ultimate, Input.GetKeyDown(KeyCode.Q));
+            
 
         // 마우스 입력 추적
         networkInputData.mouseX = Input.GetAxis("Mouse X");

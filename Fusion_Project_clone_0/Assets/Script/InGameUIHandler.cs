@@ -7,6 +7,7 @@ using TMPro;
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using static InGameUIHandler;
 
 public class InGameUIHandler : MonoBehaviour
@@ -28,8 +29,11 @@ public class InGameUIHandler : MonoBehaviour
 
 
 
-    NetworkRunner runner;
+    [Header("플레이어 정보")]
+    [SerializeField] Slider playerDashSlider;
 
+
+    NetworkRunner runner;
 
 
 
@@ -49,7 +53,7 @@ public class InGameUIHandler : MonoBehaviour
         //패널 숨김으로 초기화
         HideAllPanel();
         teamSelectPanel.SetActive(true);
-      
+       
 
 
 
@@ -93,6 +97,9 @@ public class InGameUIHandler : MonoBehaviour
             playerStatePanel.SetActive(true);
         }
         else playerStatePanel.SetActive(false);
+
+
+    
 
     }
 

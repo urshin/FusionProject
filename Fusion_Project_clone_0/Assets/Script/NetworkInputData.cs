@@ -6,11 +6,6 @@ public struct NetworkInputData : INetworkInput
     public const byte MOUSEBUTTON0 = 1;
     public const byte MOUSEBUTTON1 = 2;
 
-   
-
-
-    
-
     public NetworkButtons buttons;
     public Vector3 direction;
 
@@ -21,10 +16,11 @@ public struct NetworkInputData : INetworkInput
     public float mouseY;
 
 
-
 }
     public enum NetworkInputButtons
     {
         Jump=3,
         Dash=4,
-    }
+    Spell = 5,
+    Ultimate = 6,
+}

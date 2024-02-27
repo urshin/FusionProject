@@ -2,8 +2,7 @@ using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
-
+using UnityEngine.UI;
 using static Fusion.NetworkBehaviour;
 using static NetworkInputData;
 using static UnityEngine.EventSystems.PointerEventData;
@@ -11,7 +10,7 @@ using static UnityEngine.EventSystems.PointerEventData;
 public class PlayerMovementHandler : NetworkBehaviour
 {
     public NetworkCharacterController _cc;
-    PlayerDataHandler _dataHandler;
+    public PlayerDataHandler _dataHandler;
 
     [SerializeField] IngameTeamInfos ingameTeamInfos;
 
@@ -21,8 +20,7 @@ public class PlayerMovementHandler : NetworkBehaviour
     //플레이어 바디
     [SerializeField] GameObject body;
 
-    [Networked]
-    public float DashGage { get; set; }
+
 
     [SerializeField] GameObject playerInterfaceUI;
 
@@ -46,7 +44,7 @@ public class PlayerMovementHandler : NetworkBehaviour
     {
         _cc = GetComponent<NetworkCharacterController>();
 
-     
+
 
     }
 
@@ -57,7 +55,7 @@ public class PlayerMovementHandler : NetworkBehaviour
         _dataHandler = GetComponent<PlayerDataHandler>();
         bodyAnime = body.GetComponent<Animator>();
 
-        DashGage = 100;
+
 
 
 
@@ -68,84 +66,169 @@ public class PlayerMovementHandler : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-     
+
 
     }
 
 
+    //FixedUpdateNetwork수정 전 코드
+    //public override void FixedUpdateNetwork()
+    //{
+    //    if (GetInput(out NetworkInputData data))
+    //    {
+    //        data.direction.Normalize();
+    //        _cc.Move(data.direction * Runner.DeltaTime);
+    //        transform.rotation = data.mouseDirection;
 
+    //        if (data.buttons.IsSet(NetworkInputButtons.Jump))
+    //        {
+    //            _cc.Jump();
+    //        }
+
+    //        if (data.buttons.IsSet(NetworkInputButtons.Dash) && Runner.IsForward)
+    //        {
+
+    //            // 나중에 서서히 증가하게 만들기
+    //            // 떨림 현상 수정하기
+    //            _cc.maxSpeed = _dataHandler.characterInfo.Speed * 3;
+    //            bodyAnime.SetInteger("isDash", 1);
+
+
+    //        }
+    //        else
+    //        {
+    //            _cc.maxSpeed = _dataHandler.characterInfo.Speed;
+    //            bodyAnime.SetInteger("isDash", 0);
+    //        }
+
+
+
+
+    //        if (data.direction.sqrMagnitude > 0)
+    //            _forward = data.direction;
+
+    //        if (HasStateAuthority && delay.ExpiredOrNotRunning(Runner))
+    //        {
+    //            if (data.buttons.IsSet(NetworkInputData.MOUSEBUTTON0))
+    //            {
+    //                bodyAnime.SetInteger("Attack", 1);
+    //            }
+    //            else
+    //            {
+    //                bodyAnime.SetInteger("Attack", 0);
+    //            }
+    //            if (data.buttons.IsSet(NetworkInputData.MOUSEBUTTON1))
+    //            {
+
+
+    //            }
+    //            else if (!data.buttons.IsSet(NetworkInputData.MOUSEBUTTON1))
+    //            {
+
+    //            }
+
+    //        }
+
+
+
+    //        bodyAnime.SetInteger("Class", ingameTeamInfos.teamAll[gameObject.name]);
+
+    //        bodyAnime.SetFloat("X", data.moveDirection.x);
+    //        bodyAnime.SetFloat("Z", data.moveDirection.z);
+
+
+
+    //        if (ingameTeamInfos.TickToggle)
+    //        {
+    //            UpdatingPlayerCharacter();
+
+
+    //        }
+
+
+
+    //    }
+    //}
 
     public override void FixedUpdateNetwork()
     {
-        if (GetInput(out NetworkInputData data))
+        if (GetInput(out NetworkInputData inputData))
         {
-            data.direction.Normalize();
-            _cc.Move( data.direction * Runner.DeltaTime);
-            transform.rotation = data.mouseDirection;
+            inputData.direction.Normalize();
+            _cc.Move(inputData.direction * Runner.DeltaTime);
+            transform.rotation = inputData.mouseDirection;
 
-            if (data.buttons.IsSet(NetworkInputButtons.Jump))
-            {
-                _cc.Jump();
-            }
-            if (data.buttons.IsSet(NetworkInputButtons.Dash)&&Runner.IsForward)
-            {
-                //나중에 서서히 증가하게 만들기
-                //떨림 현상 수정하기
-                _cc.maxSpeed = _dataHandler.characterInfo.Speed* 3;
-                bodyAnime.SetInteger("isDash", 1);
-            }
-            else
-            {
-                _cc.maxSpeed = _dataHandler.characterInfo.Speed;
-                bodyAnime.SetInteger("isDash", 0); 
-            }
-            
-            if (data.direction.sqrMagnitude > 0)
-                _forward = data.direction;
-
-            if (HasStateAuthority && delay.ExpiredOrNotRunning(Runner))
-            {
-                if (data.buttons.IsSet(NetworkInputData.MOUSEBUTTON0))
-                {
-                    bodyAnime.SetInteger("Attack", 1);
-                }
-                else
-                {
-                    bodyAnime.SetInteger("Attack",0);
-                }
-                if (data.buttons.IsSet(NetworkInputData.MOUSEBUTTON1))
-                {
-
-
-                }
-                else if (!data.buttons.IsSet(NetworkInputData.MOUSEBUTTON1))
-                {
-
-                }
-
-            }
-
-
-
-            bodyAnime.SetInteger("Class", ingameTeamInfos.teamAll[gameObject.name]);
-
-            bodyAnime.SetFloat("X", data.moveDirection.x);
-            bodyAnime.SetFloat("Z", data.moveDirection.z);
-
-
-
-            if (ingameTeamInfos.TickToggle)
-            {
-                UpdatingPlayerCharacter();
-
-
-            }
-
-
-
+            HandleJump(inputData);
+            HandleDash(inputData);
+            UpdateAttackAnimation(inputData);
+            UpdatePlayerAnimation(inputData);
+            UpdatePlayerCharacterIfNeeded();
         }
     }
 
+    private void HandleJump(NetworkInputData inputData)
+    {
+        if (inputData.buttons.IsSet(NetworkInputButtons.Jump))
+        {
+            _cc.Jump();
+        }
+    }
+
+    private void HandleDash(NetworkInputData inputData)
+    {
+        if (inputData.buttons.IsSet(NetworkInputButtons.Dash) && Runner.IsForward)
+        {
+            //_cc.maxSpeed = _dataHandler.characterInfo.Speed * 3;
+            bodyAnime.SetInteger("isDash", 1);
+        }
+        else
+        {
+            //_cc.maxSpeed = _dataHandler.characterInfo.Speed;
+            bodyAnime.SetInteger("isDash", 0);
+        }
+    }
+
+    private void UpdateAttackAnimation(NetworkInputData inputData)
+    {
+        if ( delay.ExpiredOrNotRunning(Runner))
+        {
+            if (inputData.buttons.IsSet(NetworkInputData.MOUSEBUTTON0))
+            {
+                bodyAnime.SetInteger("Attack", 1);
+            }
+            else if (inputData.buttons.IsSet(NetworkInputData.MOUSEBUTTON1))
+            {
+                bodyAnime.SetInteger("Attack",2);
+            }
+            else if (inputData.buttons.IsSet(NetworkInputButtons.Spell))
+            {
+                bodyAnime.SetInteger("Attack",3);
+            }
+            else if (inputData.buttons.IsSet(NetworkInputButtons.Ultimate))
+            {
+                bodyAnime.SetInteger("Attack",4);
+            }
+            else
+            {
+                bodyAnime.SetInteger("Attack", 0);
+            }
+        }
+    }
+
+    private void UpdatePlayerAnimation(NetworkInputData inputData)
+    {
+        bodyAnime.SetInteger("Class", ingameTeamInfos.teamAll[gameObject.name]);
+        bodyAnime.SetFloat("X", inputData.moveDirection.x);
+        bodyAnime.SetFloat("Z", inputData.moveDirection.z);
+    }
+
+    private void UpdatePlayerCharacterIfNeeded()
+    {
+        if (ingameTeamInfos.TickToggle)
+        {
+            UpdatingPlayerCharacter();
+        }
+    }
 
     IEnumerator Co_UpdatingPlayerCharacter()
     {
