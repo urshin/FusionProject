@@ -9,8 +9,7 @@ public class W_Basic_Attack : StateMachineBehaviour
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        playerMovementHandle = animator.GetComponentInParent<PlayerMovementHandler>();
-        playerMovementHandle._cc.maxSpeed = 0;
+        
     }
 
    
@@ -21,7 +20,7 @@ public class W_Basic_Attack : StateMachineBehaviour
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-       playerMovementHandle._cc.maxSpeed = playerMovementHandle._dataHandler.characterInfo.Speed;
+       
     }
 
 

@@ -15,7 +15,7 @@ public class PlayerMovementHandler : NetworkBehaviour
     [SerializeField] IngameTeamInfos ingameTeamInfos;
 
     //애니메이션
-    [SerializeField] Animator bodyAnime;
+    public Animator bodyAnime;
 
     //플레이어 바디
     [SerializeField] GameObject body;
@@ -54,11 +54,6 @@ public class PlayerMovementHandler : NetworkBehaviour
         ingameTeamInfos = FindObjectOfType<IngameTeamInfos>();
         _dataHandler = GetComponent<PlayerDataHandler>();
         bodyAnime = body.GetComponent<Animator>();
-
-
-
-
-
 
     }
 

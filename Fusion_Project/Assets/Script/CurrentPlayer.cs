@@ -89,6 +89,7 @@ public class CurrentPlayer : NetworkBehaviour
                     break;
                 case nameof(ingameTeamInfos.isStartBTNOn):
                     ingameUIHandler.OnclickStartBTN();
+                    playerMovementHandler.bodyAnime.SetBool("Ingage", true);
                     break;
 
             }

@@ -56,19 +56,32 @@ public class PlayerDataHandler : NetworkBehaviour
         hitboxRoot = GetComponentInChildren<HitboxRoot>();
     }
 
-    public void OnTakeDamage()
+    public void OnTakeDamage(byte damageAmount)
     {
-        if (isDead) return;
+        //Only take damage while alive
+        if (isDead)
+            return;
 
-        hp -= 1;
-        Debug.Log("데미지 받음");
+        //Ensure that we cannot flip the byte as it can't handle minus values.
+        if (damageAmount > hp)
+            damageAmount = hp;
+
+        hp -= damageAmount;
+
+        Debug.Log($"{Time.time} {transform.name} took damage got {hp} left ");
+
+        //Player died
         if (hp <= 0)
         {
-            Debug.Log("죽음");
+            
+
+            Debug.Log($"{Time.time} {transform.name} died");
+
+            
+
             isDead = true;
         }
     }
-
 
     public override void Render()
     {
