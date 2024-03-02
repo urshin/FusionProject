@@ -89,7 +89,6 @@ public class CurrentPlayer : NetworkBehaviour
                     break;
                 case nameof(ingameTeamInfos.isStartBTNOn):
                     ingameUIHandler.OnclickStartBTN();
-                    playerMovementHandler.bodyAnime.SetBool("Ingage", true);
                     break;
 
             }
@@ -120,6 +119,9 @@ public class CurrentPlayer : NetworkBehaviour
     private void Start()
     {
         HideCanvas();
+        RPC_ClassUpdate(gameObject.name, 1);
+        RPC_ClassUpdate(gameObject.name, 2);
+        RPC_ClassUpdate(gameObject.name, 3);
     }
 
     public void Update()
@@ -224,6 +226,11 @@ public class CurrentPlayer : NetworkBehaviour
 
     public void ClassSelect(string Class)
     {
+        //RPC_ClassUpdate(gameObject.name, 1);
+        //RPC_ClassUpdate(gameObject.name, 2);
+        //RPC_ClassUpdate(gameObject.name, 3);
+
+
         switch (Class)
         {
             case "WarriorBTN":
@@ -241,31 +248,64 @@ public class CurrentPlayer : NetworkBehaviour
     }
 
 
+    //public void UpdatePlayerJob()
+    //{
+    //    for (int i = 0; i < playerBody.transform.childCount; i++)
+    //    {
+
+    //        playerBody.transform.GetChild(i).gameObject.SetActive(false);
+    //    }
+
+    //    NetworkMecanimAnimator networkMecanimAnimator = GetComponent<NetworkMecanimAnimator>();
+
+
+    //    if (ingameTeamInfos.teamAll[gameObject.name] == 1)
+    //    {
+    //        playerBody.transform.GetChild(0).gameObject.SetActive(true);
+    //        networkMecanimAnimator.Animator = playerBody.transform.GetChild(0).gameObject.GetComponent<Animator>();
+    //        playerMovementHandler.bodyAnime = playerBody.transform.GetChild(0).gameObject.GetComponent<Animator>();
+
+
+
+    //    }
+    //    else if (ingameTeamInfos.teamAll[gameObject.name] == 2)
+    //    {
+    //        playerBody.transform.GetChild(1).gameObject.SetActive(true);
+    //        networkMecanimAnimator.Animator = playerBody.transform.GetChild(1).gameObject.GetComponent<Animator>();
+    //        playerMovementHandler.bodyAnime = playerBody.transform.GetChild(1).gameObject.GetComponent<Animator>();
+    //    }
+    //    else if (ingameTeamInfos.teamAll[gameObject.name] == 3)
+    //    {
+    //        playerBody.transform.GetChild(2).gameObject.SetActive(true);
+    //        networkMecanimAnimator.Animator = playerBody.transform.GetChild(2).gameObject.GetComponent<Animator>();
+    //        playerMovementHandler.bodyAnime = playerBody.transform.GetChild(2).gameObject.GetComponent<Animator>();
+    //    }
+
+
+    //}
     public void UpdatePlayerJob()
     {
-        for (int i = 0; i < playerBody.transform.childCount; i++)
+        int teamIndex = ingameTeamInfos.teamAll[gameObject.name] - 1;
+        if (teamIndex < 0 || teamIndex >= playerBody.transform.childCount)
         {
-
-            playerBody.transform.GetChild(i).gameObject.SetActive(false);
-        }
-
-        if (ingameTeamInfos.teamAll[gameObject.name] == 1)
-        {
-            playerBody.transform.GetChild(0).gameObject.SetActive(true);
-        }
-        else if (ingameTeamInfos.teamAll[gameObject.name] == 2)
-        {
-            playerBody.transform.GetChild(1).gameObject.SetActive(true);
-        }
-        else if (ingameTeamInfos.teamAll[gameObject.name] == 3)
-        {
-            playerBody.transform.GetChild(2).gameObject.SetActive(true);
-        }
-        else
-        {
+            Debug.LogError("Invalid team index for player: " + gameObject.name);
             return;
         }
 
+        for (int i = 0; i < playerBody.transform.childCount; i++)
+        {
+            playerBody.transform.GetChild(i).gameObject.SetActive(false);
+        }
+
+        GameObject activePlayerObject = playerBody.transform.GetChild(teamIndex).gameObject;
+        activePlayerObject.SetActive(true);
+
+        NetworkMecanimAnimator networkMecanimAnimator = GetComponent<NetworkMecanimAnimator>();
+        Animator activeAnimator = activePlayerObject.GetComponent<Animator>();
+
+        networkMecanimAnimator.Animator = activeAnimator;
+        playerMovementHandler.bodyAnime = activeAnimator;
+        
     }
 
     public void ClassChange()

@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     public string PlayerNickname;
     public string playerId;
 
-    
+    private bool isCursorVisible = true; // 마우스 가시성 상태를 나타내는 플래그
 
     private void Awake()
     {
@@ -48,6 +48,16 @@ public class GameManager : MonoBehaviour
 
     }
 
+
+    private void Update()
+    {
+        // "B" 키를 누를 때마다 마우스 가시성을 전환
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            isCursorVisible = !isCursorVisible;
+            Cursor.visible = isCursorVisible;
+        }
+    }
     // 다른 스크립트에서 연결 토큰을 설정하는 메서드
     public void SetConnectionToken(byte[] connectionToken)
     {
