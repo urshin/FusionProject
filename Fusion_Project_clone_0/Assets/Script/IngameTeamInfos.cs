@@ -8,6 +8,23 @@ using UnityEngine;
 public class IngameTeamInfos : NetworkBehaviour
 {
 
+    public enum GameState
+    {
+        CharactorSelect,
+        Ready,
+        Gaming,
+        End,
+    }
+
+   public  GameState gameState = new GameState();
+
+
+    //캐릭터
+    public List<GameObject> charactor = new List<GameObject>();
+
+
+
+
     //공용 Dictionary
     [Networked, Capacity(3)]
     public NetworkDictionary<NetworkString<_32>, int> teamADictionary { get; }
@@ -52,7 +69,7 @@ public class IngameTeamInfos : NetworkBehaviour
     public override void Spawned()
     {
         _changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
-  
+      
 
 
     }

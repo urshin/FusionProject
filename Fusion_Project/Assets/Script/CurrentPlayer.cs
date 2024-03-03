@@ -18,9 +18,9 @@ public class CurrentPlayer : NetworkBehaviour
     PlayerStatePanelHandler playerStatePanelHandler;
     [SerializeField] TextMeshProUGUI progressTMP;
     [SerializeField] GameObject canvas;
-   InGameUIHandler ingameUIHandler;
+    InGameUIHandler ingameUIHandler;
     public IngameTeamInfos ingameTeamInfos;
-     PlayerMovementHandler playerMovementHandler;
+    PlayerMovementHandler playerMovementHandler;
 
     [SerializeField] GameObject WaitingPanel;
     [SerializeField] GameObject PlayerStatePanel;
@@ -30,7 +30,7 @@ public class CurrentPlayer : NetworkBehaviour
     [Header("PlayerBodyThings")]
     public GameObject playerBody;
     [SerializeField] PlayerDataHandler playerDataHandler;
-
+    [SerializeField] LayerMask playerlayer;
 
     [Header("Cam")]
     [SerializeField] CinemachineFreeLook freeLookCamera;
@@ -52,23 +52,24 @@ public class CurrentPlayer : NetworkBehaviour
         playerStatePanelHandler = GetComponentInChildren<PlayerStatePanelHandler>();
         ingameUIHandler = GetComponentInChildren<InGameUIHandler>();
         playerMovementHandler = GetComponent<PlayerMovementHandler>();
-        playerDataHandler = GetComponent<PlayerDataHandler>();  
+        playerDataHandler = GetComponent<PlayerDataHandler>();
         if (Object.HasInputAuthority)
         {
             view.SetCameraTarget();
         }
         camController = camPoint.GetComponent<Animator>();
 
-        if (!ingameTeamInfos.teamAll.ContainsKey(gameObject.name))
-        {
-            RPC_ClassUpdate(gameObject.name, 0);
-        }
-        else
-        {
-            return;
-        }    
+
+
+
+
+
+
 
     }
+
+
+
     public override void Render()
     {
         //ingameTeamInfo Change Detect
@@ -89,13 +90,15 @@ public class CurrentPlayer : NetworkBehaviour
                     break;
                 case nameof(ingameTeamInfos.isStartBTNOn):
                     ingameUIHandler.OnclickStartBTN();
+                    SpawnCharactor();
+                    ingameTeamInfos.gameState = IngameTeamInfos.GameState.Gaming;
                     break;
 
             }
         }
     }
 
-
+   
     public void HideCanvas()
     {
         if (!Object.HasInputAuthority)
@@ -119,9 +122,7 @@ public class CurrentPlayer : NetworkBehaviour
     private void Start()
     {
         HideCanvas();
-        RPC_ClassUpdate(gameObject.name, 1);
-        RPC_ClassUpdate(gameObject.name, 2);
-        RPC_ClassUpdate(gameObject.name, 3);
+
     }
 
     public void Update()
@@ -174,35 +175,57 @@ public class CurrentPlayer : NetworkBehaviour
 
     }
 
-
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
-    public void RPC_ClassUpdate(NetworkString<_32> name, int job, RpcInfo info = default)
+    public void RPC_JobUpdate(NetworkString<_32> name, int job, RpcInfo info = default)
     {
-        RPC_Class(name, job, info.Source);
+        RPC_Job(name, job, info.Source);
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_Class(NetworkString<_32> name, int job, PlayerRef messageSource)
+    public void RPC_Job(NetworkString<_32> name, int job, PlayerRef messageSource)
     {
-            ingameTeamInfos.teamAll.Set(name, job);
+
+
         if (ingameTeamInfos.teamADictionary.ContainsKey(name))
         {
+            ingameTeamInfos.teamADictionary.Add(name, job);
             ingameTeamInfos.teamADictionary.Set(name, job);
-            
-            UpdatePlayerJob();
 
         }
         else if (ingameTeamInfos.teamBDictionary.ContainsKey(name))
-        {
-            ingameTeamInfos.teamBDictionary.Set(name, job);
-            UpdatePlayerJob();
 
+        {
+            ingameTeamInfos.teamBDictionary.Add(name, job);
+            ingameTeamInfos.teamBDictionary.Set(name, job);
         }
 
+        ingameTeamInfos.teamAll.Add(name, job);
+        ingameTeamInfos.teamAll.Set(name, job);
     }
 
 
+    public void ClassSelect(string job)
+    {
+        if (job == null)
+        {
+            return;
+        }
+        else if (job == "WarriorBTN")
+        {
+            RPC_JobUpdate(gameObject.name, 1);
+        }
+        else if (job == "MageBTN")
+        {
+            RPC_JobUpdate(gameObject.name, 2);
+        }
+        else if (job == "ArcherBTN")
+        {
+            RPC_JobUpdate(gameObject.name, 3);
+        }
 
+
+
+    }
 
 
 
@@ -214,6 +237,54 @@ public class CurrentPlayer : NetworkBehaviour
 
     }
 
+    public void TeamLayerUpdate()
+    {
+        if (ingameTeamInfos.teamADictionary.ContainsKey(gameObject.name))
+        {
+
+            foreach (var player in ingameTeamInfos.teamADictionary)
+            {
+                CurrentPlayer playerObject = GameObject.Find(player.Key.ToString()).gameObject.GetComponent<CurrentPlayer>();
+
+                SetRenderLayerInChildren(playerObject.playerBody.transform, LayerMask.NameToLayer("team"));
+            }
+            foreach (var player in ingameTeamInfos.teamBDictionary)
+            {
+                CurrentPlayer playerObject = GameObject.Find(player.Key.ToString()).gameObject.GetComponent<CurrentPlayer>();
+
+                SetRenderLayerInChildren(playerObject.playerBody.transform, LayerMask.NameToLayer("enemy"));
+            }
+
+        }
+        else if (ingameTeamInfos.teamBDictionary.ContainsKey(gameObject.name))
+        {
+
+            foreach (var player in ingameTeamInfos.teamBDictionary)
+            {
+                CurrentPlayer playerObject = GameObject.Find(player.Key.ToString()).gameObject.GetComponent<CurrentPlayer>();
+
+                SetRenderLayerInChildren(playerObject.playerBody.transform, LayerMask.NameToLayer("team"));
+            }
+            foreach (var player in ingameTeamInfos.teamADictionary)
+            {
+                CurrentPlayer playerObject = GameObject.Find(player.Key.ToString()).gameObject.GetComponent<CurrentPlayer>();
+
+                SetRenderLayerInChildren(playerObject.playerBody.transform, LayerMask.NameToLayer("enemy"));
+            }
+        }
+
+    }
+
+
+
+    public void SetRenderLayerInChildren(Transform transform, int layerNumber)
+    {
+        //foreach (Transform trans in transform.GetComponentsInChildren<Transform>(true))
+        //{
+        //    trans.gameObject.layer = layerNumber;
+        //}
+        transform.gameObject.transform.parent.gameObject.layer = layerNumber;
+    }
 
     public void TeamSelect(string team)
     {
@@ -221,92 +292,11 @@ public class CurrentPlayer : NetworkBehaviour
         {
             if (team == "A") RPC_TeamUpdate(gameObject.name, 0, "A");
             if (team == "B") RPC_TeamUpdate(gameObject.name, 0, "B");
-        }
-    }
 
-    public void ClassSelect(string Class)
-    {
-        //RPC_ClassUpdate(gameObject.name, 1);
-        //RPC_ClassUpdate(gameObject.name, 2);
-        //RPC_ClassUpdate(gameObject.name, 3);
-
-
-        switch (Class)
-        {
-            case "WarriorBTN":
-                RPC_ClassUpdate(gameObject.name, 1);
-                break;
-
-            case "MageBTN":
-                RPC_ClassUpdate(gameObject.name, 2);
-                break;
-
-            case "ArcherBTN":
-                RPC_ClassUpdate(gameObject.name, 3);
-                break;
         }
     }
 
 
-    //public void UpdatePlayerJob()
-    //{
-    //    for (int i = 0; i < playerBody.transform.childCount; i++)
-    //    {
-
-    //        playerBody.transform.GetChild(i).gameObject.SetActive(false);
-    //    }
-
-    //    NetworkMecanimAnimator networkMecanimAnimator = GetComponent<NetworkMecanimAnimator>();
-
-
-    //    if (ingameTeamInfos.teamAll[gameObject.name] == 1)
-    //    {
-    //        playerBody.transform.GetChild(0).gameObject.SetActive(true);
-    //        networkMecanimAnimator.Animator = playerBody.transform.GetChild(0).gameObject.GetComponent<Animator>();
-    //        playerMovementHandler.bodyAnime = playerBody.transform.GetChild(0).gameObject.GetComponent<Animator>();
-
-
-
-    //    }
-    //    else if (ingameTeamInfos.teamAll[gameObject.name] == 2)
-    //    {
-    //        playerBody.transform.GetChild(1).gameObject.SetActive(true);
-    //        networkMecanimAnimator.Animator = playerBody.transform.GetChild(1).gameObject.GetComponent<Animator>();
-    //        playerMovementHandler.bodyAnime = playerBody.transform.GetChild(1).gameObject.GetComponent<Animator>();
-    //    }
-    //    else if (ingameTeamInfos.teamAll[gameObject.name] == 3)
-    //    {
-    //        playerBody.transform.GetChild(2).gameObject.SetActive(true);
-    //        networkMecanimAnimator.Animator = playerBody.transform.GetChild(2).gameObject.GetComponent<Animator>();
-    //        playerMovementHandler.bodyAnime = playerBody.transform.GetChild(2).gameObject.GetComponent<Animator>();
-    //    }
-
-
-    //}
-    public void UpdatePlayerJob()
-    {
-        int teamIndex = ingameTeamInfos.teamAll[gameObject.name] - 1;
-        if (teamIndex < 0 || teamIndex >= playerBody.transform.childCount)
-        {
-            Debug.LogError("Invalid team index for player: " + gameObject.name);
-            return;
-        }
-
-        for (int i = 0; i < playerBody.transform.childCount; i++)
-        {
-            playerBody.transform.GetChild(i).gameObject.SetActive(false);
-        }
-
-        GameObject activePlayerObject = playerBody.transform.GetChild(teamIndex).gameObject;
-        activePlayerObject.SetActive(true);
-
-        NetworkMecanimAnimator networkMecanimAnimator = GetComponent<NetworkMecanimAnimator>();
-        Animator activeAnimator = activePlayerObject.GetComponent<Animator>();
-
-        networkMecanimAnimator.Animator = activeAnimator;
-        playerMovementHandler.bodyAnime = activeAnimator;
-        
-    }
 
     public void ClassChange()
     {
@@ -332,5 +322,16 @@ public class CurrentPlayer : NetworkBehaviour
         }
 
 
+    }
+
+
+    public void SpawnCharactor()
+    {
+        int job = ingameTeamInfos.teamAll[gameObject.name];
+
+        Instantiate(ingameTeamInfos.charactor[job-1],playerBody.transform.position, Quaternion.identity);
+
+      // Runner.Spawn(ingameTeamInfos.charactor[job], playerBody.transform.position, Quaternion.identity, Object.InputAuthority);
+    
     }
 }

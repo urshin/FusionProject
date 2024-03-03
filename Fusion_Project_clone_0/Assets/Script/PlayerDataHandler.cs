@@ -19,12 +19,11 @@ public class PlayerDataHandler : NetworkBehaviour
         currentPlayer = GetComponent<CurrentPlayer>();
         movementHandler = GetComponent<PlayerMovementHandler>();
         _changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
-
+        isDead = false;
     }
 
     private ChangeDetector _changeDetector;
 
-    [Networked] public byte hp { get; set; }
     [Networked] public bool isDead { get; set; }
 
     [System.Serializable]
@@ -45,7 +44,7 @@ public class PlayerDataHandler : NetworkBehaviour
     private void Start()
     {
 
-        isDead = false;
+      
 
     }
 
@@ -56,22 +55,22 @@ public class PlayerDataHandler : NetworkBehaviour
         hitboxRoot = GetComponentInChildren<HitboxRoot>();
     }
 
-    public void OnTakeDamage(byte damageAmount)
+    public void OnTakeDamage(int damageAmount)
     {
         //Only take damage while alive
         if (isDead)
             return;
 
         //Ensure that we cannot flip the byte as it can't handle minus values.
-        if (damageAmount > hp)
-            damageAmount = hp;
+        if (damageAmount > characterInfo.HP)
+            damageAmount = characterInfo.HP;
 
-        hp -= damageAmount;
+        characterInfo.HP -= damageAmount;
 
-        Debug.Log($"{Time.time} {transform.name} took damage got {hp} left ");
+        Debug.Log($"{Time.time} {transform.name} took damage got {characterInfo.HP} left ");
 
         //Player died
-        if (hp <= 0)
+        if (characterInfo.HP <= 0)
         {
             
 
@@ -90,7 +89,8 @@ public class PlayerDataHandler : NetworkBehaviour
         {
             switch (change)
             {
-                case nameof(hp):
+             
+                case nameof(characterInfo.HP):
 
                     Debug.Log("체력이 변동 되었습니다");
 

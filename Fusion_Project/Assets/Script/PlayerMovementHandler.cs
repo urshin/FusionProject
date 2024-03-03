@@ -75,9 +75,9 @@ public class PlayerMovementHandler : NetworkBehaviour
             HandleJump(inputData);
             HandleDash(inputData);
 
-            UpdateAttackAnimation(inputData);
             if (bodyAnime != null)
             {
+                UpdateAttackAnimation(inputData);
                 UpdatePlayerAnimation(inputData);
 
             }
@@ -111,36 +111,35 @@ public class PlayerMovementHandler : NetworkBehaviour
     {
         if (delay.ExpiredOrNotRunning(Runner))
         {
-            if (bodyAnime != null)
-            {
-                if (inputData.buttons.IsSet(NetworkInputData.MOUSEBUTTON0))
-                {
-                    bodyAnime.SetInteger("Attack", 1);
-                }
-                else if (inputData.buttons.IsSet(NetworkInputData.MOUSEBUTTON1))
-                {
-                    bodyAnime.SetInteger("Attack", 2);
-                }
-                else if (inputData.buttons.IsSet(NetworkInputButtons.Spell))
-                {
-                    bodyAnime.SetInteger("Attack", 3);
-                }
-                else if (inputData.buttons.IsSet(NetworkInputButtons.Ultimate))
-                {
-                    bodyAnime.SetInteger("Attack", 4);
-                }
-                else
-                {
-                    bodyAnime.SetInteger("Attack", 0);
-                }
 
+            if (inputData.buttons.IsSet(NetworkInputData.MOUSEBUTTON0))
+            {
+                bodyAnime.SetInteger("Attack", 1);
             }
+            else if (inputData.buttons.IsSet(NetworkInputData.MOUSEBUTTON1))
+            {
+                bodyAnime.SetInteger("Attack", 2);
+            }
+            else if (inputData.buttons.IsSet(NetworkInputButtons.Spell))
+            {
+                bodyAnime.SetInteger("Attack", 3);
+            }
+            else if (inputData.buttons.IsSet(NetworkInputButtons.Ultimate))
+            {
+                bodyAnime.SetInteger("Attack", 4);
+            }
+            else
+            {
+                bodyAnime.SetInteger("Attack", 0);
+            }
+
+
         }
     }
 
     private void UpdatePlayerAnimation(NetworkInputData inputData)
     {
-
+        
         bodyAnime.SetFloat("X", inputData.moveDirection.x);
         bodyAnime.SetFloat("Z", inputData.moveDirection.z);
 
