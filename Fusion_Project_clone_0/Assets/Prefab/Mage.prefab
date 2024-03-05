@@ -320,6 +320,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2049257224439280004}
   - component: {fileID: 5372865007956978686}
+  - component: {fileID: -7222083094095158171}
+  - component: {fileID: 8695728061120459329}
   m_Layer: 6
   m_Name: Mage
   m_TagString: Untagged
@@ -342,7 +344,7 @@ Transform:
   - {fileID: 3458215434616198843}
   - {fileID: 5773683279359463696}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &5372865007956978686
 Animator:
@@ -365,6 +367,42 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-7222083094095158171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1674138644038511422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animator: {fileID: 5372865007956978686}
+  TotalWords: 4
+  ApplyTiming: 2
+  SyncSettings: 111
+  StateHashes: 00000000294d5fa26ae36ca125411612c1d354a1ad1893236246303f0e8df7bd57e353d63b289454edb25a4f81799dcd
+  TriggerHashes: 00000000
+--- !u!114 &8695728061120459329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1674138644038511422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 435749351
+  ObjectInterest: 1
+  Flags: 786433
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: -7222083094095158171}
 --- !u!1 &1866169819707937833
 GameObject:
   m_ObjectHideFlags: 0

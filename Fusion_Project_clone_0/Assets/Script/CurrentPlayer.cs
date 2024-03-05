@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using TMPro;
+using Unity.Jobs;
 using Unity.VisualScripting;
 using UnityEngine;
 using static Fusion.NetworkBehaviour;
@@ -28,7 +29,8 @@ public class CurrentPlayer : NetworkBehaviour
 
 
     [Header("PlayerBodyThings")]
-    public GameObject playerBody;
+    public NetworkObject playerBody;
+
     [SerializeField] PlayerDataHandler playerDataHandler;
     [SerializeField] LayerMask playerlayer;
 
@@ -327,11 +329,49 @@ public class CurrentPlayer : NetworkBehaviour
 
     public void SpawnCharactor()
     {
-        int job = ingameTeamInfos.teamAll[gameObject.name];
 
-        Instantiate(ingameTeamInfos.charactor[job-1],playerBody.transform.position, Quaternion.identity);
 
-      // Runner.Spawn(ingameTeamInfos.charactor[job], playerBody.transform.position, Quaternion.identity, Object.InputAuthority);
-    
+
+        foreach (var Player in ingameTeamInfos.teamAll)
+        {
+            GameObject current = GameObject.Find(Player.Key.ToString());
+            
+
+            int job = ingameTeamInfos.teamAll[Player.Key];
+           if(Object.HasStateAuthority)
+            {
+             //GameObject body = Instantiate(ingameTeamInfos.charactor[job - 1], current.GetComponent<CurrentPlayer>().playerBody.transform.position, Quaternion.identity);
+             NetworkObject body = Runner.Spawn(ingameTeamInfos.charactor[job-1], current.GetComponent<CurrentPlayer>().playerBody.transform.position, Quaternion.identity);
+            current.GetComponent<PlayerMovementHandler>().bodyAnime = body.GetComponent<Animator>();
+            
+                // body를 current.GetComponent<CurrentPlayer>().playerBody의 자식으로 설정
+                body.transform.parent = current.GetComponent<CurrentPlayer>().playerBody.transform;
+                RPC_MoveGameobject(body, current.GetComponent<CurrentPlayer>().playerBody);
+
+
+
+
+            }
+            // current.GetComponent<PlayerMovementHandler>().networkMecanimAnimator.Animator =  body.GetComponent<NetworkMecanimAnimator>().Animator;
+
+
+        }
     }
+
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
+    public void RPC_MoveGameobject(NetworkObject gameobject, NetworkObject position, RpcInfo info = default)
+    {
+        RPC_Move(gameobject,position, info.Source);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
+    public void RPC_Move(NetworkObject gameobject, NetworkObject position, PlayerRef messageSource)
+    {
+
+        gameobject.transform.parent = position.transform;
+        gameobject.transform.localPosition = Vector3.zero;
+
+    }
+
 }

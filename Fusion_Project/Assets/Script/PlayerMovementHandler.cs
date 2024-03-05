@@ -17,7 +17,7 @@ public class PlayerMovementHandler : NetworkBehaviour
     //플레이어 바디
     [SerializeField] GameObject body;
     public Animator bodyAnime;
-
+    public NetworkMecanimAnimator networkMecanimAnimator;
 
     [SerializeField] GameObject playerInterfaceUI;
 
@@ -57,15 +57,16 @@ public class PlayerMovementHandler : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        networkMecanimAnimator = GetComponentInChildren<NetworkMecanimAnimator>();
 
     }
 
 
 
-
     public override void FixedUpdateNetwork()
     {
+        
+
         if (GetInput(out NetworkInputData inputData))
         {
             inputData.direction.Normalize();
@@ -140,8 +141,15 @@ public class PlayerMovementHandler : NetworkBehaviour
     private void UpdatePlayerAnimation(NetworkInputData inputData)
     {
         
-        bodyAnime.SetFloat("X", inputData.moveDirection.x);
-        bodyAnime.SetFloat("Z", inputData.moveDirection.z);
+        //bodyAnime.SetFloat("X", inputData.moveDirection.x);
+        //bodyAnime.SetFloat("Z", inputData.moveDirection.z);
+
+        if(networkMecanimAnimator!=null)
+        {
+
+        networkMecanimAnimator.Animator.SetFloat("X", inputData.moveDirection.x);
+        networkMecanimAnimator.Animator.SetFloat("Z", inputData.moveDirection.z);
+        }
 
 
 
