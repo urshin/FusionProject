@@ -3,7 +3,7 @@
 // 검사
 Class: Warrior
 HP: 100
-Speed: 3
+Speed: 8
 Attack: 20
 AttackSpeed: 1.5
 Deffence: 15
@@ -11,7 +11,7 @@ Deffence: 15
 // 마법사
 Class: Mage
 HP: 80
-Speed: 3
+Speed: 8
 Attack: 25
 AttackSpeed: 2.0
 Deffence: 10
@@ -19,7 +19,7 @@ Deffence: 10
 // 궁수
 Class: Archer
 HP: 90
-Speed: 3
+Speed: 8
 Attack: 18
 AttackSpeed: 1.8
 Deffence: 12

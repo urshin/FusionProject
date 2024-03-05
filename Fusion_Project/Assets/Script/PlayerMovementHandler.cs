@@ -76,7 +76,7 @@ public class PlayerMovementHandler : NetworkBehaviour
             HandleJump(inputData);
             HandleDash(inputData);
 
-            if (bodyAnime != null)
+            if (networkMecanimAnimator != null)
             {
                 UpdateAttackAnimation(inputData);
                 UpdatePlayerAnimation(inputData);
@@ -115,23 +115,23 @@ public class PlayerMovementHandler : NetworkBehaviour
 
             if (inputData.buttons.IsSet(NetworkInputData.MOUSEBUTTON0))
             {
-                bodyAnime.SetInteger("Attack", 1);
+                networkMecanimAnimator.Animator.SetInteger("Attack", 1);
             }
             else if (inputData.buttons.IsSet(NetworkInputData.MOUSEBUTTON1))
             {
-                bodyAnime.SetInteger("Attack", 2);
+                networkMecanimAnimator.Animator.SetInteger("Attack", 2);
             }
             else if (inputData.buttons.IsSet(NetworkInputButtons.Spell))
             {
-                bodyAnime.SetInteger("Attack", 3);
+                networkMecanimAnimator.Animator.SetInteger("Attack", 3);
             }
             else if (inputData.buttons.IsSet(NetworkInputButtons.Ultimate))
             {
-                bodyAnime.SetInteger("Attack", 4);
+                networkMecanimAnimator.Animator.SetInteger("Attack", 4);
             }
             else
             {
-                bodyAnime.SetInteger("Attack", 0);
+                networkMecanimAnimator.Animator.SetInteger("Attack", 0);
             }
 
 
@@ -144,12 +144,11 @@ public class PlayerMovementHandler : NetworkBehaviour
         //bodyAnime.SetFloat("X", inputData.moveDirection.x);
         //bodyAnime.SetFloat("Z", inputData.moveDirection.z);
 
-        if(networkMecanimAnimator!=null)
-        {
+       
 
         networkMecanimAnimator.Animator.SetFloat("X", inputData.moveDirection.x);
         networkMecanimAnimator.Animator.SetFloat("Z", inputData.moveDirection.z);
-        }
+        
 
 
 

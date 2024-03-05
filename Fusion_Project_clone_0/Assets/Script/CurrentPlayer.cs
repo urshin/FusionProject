@@ -93,7 +93,8 @@ public class CurrentPlayer : NetworkBehaviour
                 case nameof(ingameTeamInfos.isStartBTNOn):
                     ingameUIHandler.OnclickStartBTN();
                     SpawnCharactor();
-                    ingameTeamInfos.gameState = IngameTeamInfos.GameState.Gaming;
+                    ingameTeamInfos.gameState = IngameTeamInfos.GameState.Ready;
+                    ingameTeamInfos. startTimer = TickTimer.CreateFromSeconds(Runner, 5);
                     break;
 
             }
@@ -285,7 +286,7 @@ public class CurrentPlayer : NetworkBehaviour
         //{
         //    trans.gameObject.layer = layerNumber;
         //}
-        transform.gameObject.transform.parent.gameObject.layer = layerNumber;
+         transform.gameObject.transform.parent.gameObject.layer = layerNumber;
     }
 
     public void TeamSelect(string team)
@@ -356,6 +357,7 @@ public class CurrentPlayer : NetworkBehaviour
 
 
         }
+        TeamLayerUpdate();
     }
 
 
@@ -371,6 +373,11 @@ public class CurrentPlayer : NetworkBehaviour
 
         gameobject.transform.parent = position.transform;
         gameobject.transform.localPosition = Vector3.zero;
+        gameobject.transform.rotation = position.transform.parent.rotation;
+
+       
+
+       
 
     }
 

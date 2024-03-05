@@ -79,9 +79,24 @@ public class IngameTeamInfos : NetworkBehaviour
     
     }
 
-   
+   public TickTimer startTimer = TickTimer.None;
+    
+    public override void FixedUpdateNetwork()
+    {
+
+        
 
 
- 
+        if (startTimer.Expired(Runner) && gameState == GameState.Ready)
+        {
+            gameState = GameState.Gaming;
+
+            return;
+        }
+
+    }
+
+
+
 
 }

@@ -14,9 +14,9 @@ public class PlayerAttackHandler : NetworkBehaviour
 
 
     //Hit info
-   public List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
-   public PlayerRef attackedByPlayerRef;
-   public NetworkObject attackedByNetworkObject;
+    public List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
+    public PlayerRef attackedByPlayerRef;
+    public NetworkObject attackedByNetworkObject;
     [Header("Collision detection")]
     public LayerMask collisionLayers;
 
@@ -29,10 +29,11 @@ public class PlayerAttackHandler : NetworkBehaviour
     public IngameTeamInfos ingameTeamInfos;
     public PlayerDataHandler PlayerDataHandler;
     public NetworkPlayer networkPlayer;
-   public  NetworkObject networkObject;
+    public NetworkObject networkObject;
 
-    private void Awake()
+    public override void Spawned()
     {
+
         ingameTeamInfos = FindObjectOfType<IngameTeamInfos>();
         PlayerDataHandler = GetComponent<PlayerDataHandler>();
         networkPlayer = GetBehaviour<NetworkPlayer>();
@@ -49,15 +50,13 @@ public class PlayerAttackHandler : NetworkBehaviour
 
     public void Attak1(string job)
     {
-        if(ingameTeamInfos.gameState == IngameTeamInfos.GameState.Gaming)
+        if (ingameTeamInfos.gameState == IngameTeamInfos.GameState.Gaming)
         {
             switch (job)
             {
                 case "Mage":
                     FireMagicBall(aimPoint.forward);
                     break;
-
-
                 case "Warrior":
                     attak1();
                     break;
@@ -66,12 +65,12 @@ public class PlayerAttackHandler : NetworkBehaviour
                     break;
             }
 
-            
+
 
         }
         else
         { return; }
-       
+
 
 
     }
@@ -79,23 +78,28 @@ public class PlayerAttackHandler : NetworkBehaviour
 
     public void FireMagicBall(Vector3 aimForwardVector)
     {
-        //Check that we have not recently fired a grenade. 
-        if (MagicBallFireDelay.ExpiredOrNotRunning(Runner))
+        if (ingameTeamInfos.gameState == IngameTeamInfos.GameState.Gaming)
         {
-            Runner.Spawn(magicBall, aimPoint.position + aimForwardVector * 1.5f, Quaternion.LookRotation(aimForwardVector), Object.InputAuthority, (runner, spawnedRocket) =>
+            //Check that we have not recently fired a grenade. 
+            if (MagicBallFireDelay.ExpiredOrNotRunning(Runner))
             {
-                spawnedRocket.GetComponent<MagicBall>().Fire(Object.InputAuthority, networkObject);
-            });
+                Runner.Spawn(magicBall, aimPoint.position + aimForwardVector * 1.5f, Quaternion.LookRotation(aimForwardVector), Object.InputAuthority, (runner, spawnedRocket) =>
+                {
+                    spawnedRocket.GetComponent<MagicBall>().Fire(Object.InputAuthority, networkObject);
+                });
 
-            //Start a new timer to avoid grenade spamming
-            MagicBallFireDelay = TickTimer.CreateFromSeconds(Runner, 0.5f);
+                //Start a new timer to avoid grenade spamming
+                MagicBallFireDelay = TickTimer.CreateFromSeconds(Runner, 0.5f);
+            }
+
         }
     }
 
-    public void attak1()
-    {
-        print( gameObject.name+"공격시도");
-    }
+
+public void attak1()
+{
+    print(gameObject.name + "공격시도");
+}
 
 
 

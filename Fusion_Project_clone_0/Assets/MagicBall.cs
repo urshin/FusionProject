@@ -77,13 +77,11 @@ public class MagicBall : NetworkBehaviour
                 return;
             }
 
-            print(Object.HasStateAuthority);
-            print(firedByPlayerRef);
-            print(hits);
-            print(collisionLayers);
+           
          
             //Check if the rocket has hit anything
-            int hitCount = Runner.LagCompensation.OverlapSphere(checkForImpactPoint.position, 0.5f, firedByPlayerRef, hits, collisionLayers, HitOptions.None, clearHits: true);
+            //int hitCount = Runner.LagCompensation.OverlapSphere(checkForImpactPoint.position, 0.5f, firedByPlayerRef, hits, collisionLayers, HitOptions.None, clearHits: true);
+            int hitCount = Runner.LagCompensation.OverlapBox(checkForImpactPoint.position, gameObject.transform.GetChild(0).transform.localScale,Quaternion.identity, firedByPlayerRef, hits, collisionLayers, HitOptions.None, clearHits: true);
 
         
             bool isValidHit = false;
