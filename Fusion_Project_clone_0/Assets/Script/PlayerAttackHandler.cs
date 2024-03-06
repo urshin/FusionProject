@@ -6,7 +6,13 @@ using UnityEngine;
 
 public class PlayerAttackHandler : NetworkBehaviour
 {
+
+    [Header("Mage")]
     public GameObject magicBall;
+    public GameObject magicRain;
+   
+    
+    
     public Transform aimPoint;
 
     TickTimer MagicBallFireDelay = TickTimer.None;
@@ -94,9 +100,46 @@ public class PlayerAttackHandler : NetworkBehaviour
 
         }
     }
+    public void FireMagicRain(Vector3 aimForwardVector)
+    {
+        if (ingameTeamInfos.gameState == IngameTeamInfos.GameState.Gaming)
+        {
+            Vector3 point30UnitsFromCamera = RaySystem(30);
+            //Check that we have not recently fired a grenade. 
+            if (MagicBallFireDelay.ExpiredOrNotRunning(Runner))
+            {
+                Runner.Spawn(magicRain, point30UnitsFromCamera, Quaternion.LookRotation(aimForwardVector), Object.InputAuthority, (runner, spawnedRocket) =>
+                {
+                    spawnedRocket.GetComponent<MagicRain>().Fire(Object.InputAuthority, networkObject);
+                });
+
+                //Start a new timer to avoid grenade spamming
+                MagicBallFireDelay = TickTimer.CreateFromSeconds(Runner, 2f);
+            }
+
+        }
+    }
+
+    private static Vector3 RaySystem(float far)
+    {
+        // 카메라의 위치와 방향을 기반으로 레이를 생성합니다.
+        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+
+        // 레이의 시작점
+        Vector3 rayOrigin = ray.origin;
+
+        // 레이의 방향
+        Vector3 rayDirection = ray.direction;
+
+        // 레이를 far만큼 발사한 지점을 구합니다.
+        Vector3 point30UnitsFromCamera = rayOrigin + rayDirection * far;
+        point30UnitsFromCamera.y = 0;
 
 
-public void attak1()
+        return point30UnitsFromCamera;
+    }
+
+    public void attak1()
 {
     print(gameObject.name + "공격시도");
 }

@@ -1,19 +1,21 @@
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class MagicBall : NetworkBehaviour
+public class MagicRain : NetworkBehaviour
 {
-
-
     [SerializeField] float Speed;
     [SerializeField] float LifeTimer;
+    [SerializeField] Transform Size;
 
+    [SerializeField] int damage;
+    [SerializeField] bool multipleDamage;
+    [SerializeField] int multipleRate;
+    [SerializeField] bool penetrate;
 
     [Header("Prefabs")]
-   // public GameObject explosionParticleSystemPrefab;
+    // public GameObject explosionParticleSystemPrefab;
 
     [Header("Collision detection")]
     public Transform checkForImpactPoint;
@@ -27,13 +29,11 @@ public class MagicBall : NetworkBehaviour
 
     //Fired by info
     PlayerRef firedByPlayerRef;
- 
+
     NetworkObject firedByNetworkObject;
 
     //Other components
     NetworkObject networkObject;
-
-
 
     //LifeTimer
     [Networked] private TickTimer life { get; set; }
@@ -47,13 +47,13 @@ public class MagicBall : NetworkBehaviour
     public override void Spawned()
     {
         Speed = 20f;
-        LifeTimer = 5f;
+        LifeTimer = 3f;
     }
 
     public void Fire(PlayerRef firedByPlayerRef, NetworkObject firedByNetworkObject)
     {
         this.firedByPlayerRef = firedByPlayerRef;
-        
+
         this.firedByNetworkObject = firedByNetworkObject;
 
         networkObject = GetComponent<NetworkObject>();
@@ -63,7 +63,9 @@ public class MagicBall : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-            transform.position += Speed * transform.forward * Runner.DeltaTime;
+
+
+
 
         if (Object.HasStateAuthority)
         {
@@ -75,13 +77,13 @@ public class MagicBall : NetworkBehaviour
                 return;
             }
 
-           
-         
-            //Check if the rocket has hit anything
-            //int hitCount = Runner.LagCompensation.OverlapSphere(checkForImpactPoint.position, 0.5f, firedByPlayerRef, hits, collisionLayers, HitOptions.None, clearHits: true);
-            int hitCount = Runner.LagCompensation.OverlapBox(checkForImpactPoint.position, gameObject.transform.GetChild(0).transform.localScale,Quaternion.identity, firedByPlayerRef, hits, collisionLayers, options: HitOptions.SubtickAccuracy, clearHits: true);
 
-        
+
+            //Check if the rocket has hit anything
+            int hitCount = Runner.LagCompensation.OverlapSphere(checkForImpactPoint.position, Size.localScale.x, firedByPlayerRef, hits, collisionLayers, options: HitOptions.SubtickAccuracy, clearHits: true);
+            //int hitCount = Runner.LagCompensation.OverlapBox(checkForImpactPoint.position, gameObject.transform.GetChild(0).transform.localScale, Quaternion.identity, firedByPlayerRef, hits, collisionLayers, options: HitOptions.SubtickAccuracy, clearHits: true);
+
+
             bool isValidHit = false;
 
             //We've hit something, so the hit could be valid
@@ -104,28 +106,44 @@ public class MagicBall : NetworkBehaviour
             if (isValidHit)
             {
                 //Now we need to figure out of anything was within the blast radius
-       
+
                 //Deal damage to anything within the hit radius
                 for (int i = 0; i < hitCount; i++)
                 {
-                    
+
                     PlayerDataHandler playerDataHandler = hits[i].Hitbox.transform.root.GetComponent<PlayerDataHandler>();
 
                     if (playerDataHandler != null)
-                        playerDataHandler.OnTakeDamage(1);
-                }
+                    {
 
-               Runner.Despawn(networkObject);
+                        if (!multipleDamage)
+                            playerDataHandler.OnTakeDamage(damage);
+                        else if (multipleDamage)
+                        {
+                            StartCoroutine(TakemultipleDamage(playerDataHandler));
+
+
+                        }
+
+                    }
+                }
+                if (!penetrate)
+                {
+                    Runner.Despawn(networkObject);
+
+                }
+                
             }
-      }
+        }
 
 
     }
 
-
-    
+    IEnumerator TakemultipleDamage(PlayerDataHandler playerDataHandler)
+    {
+        playerDataHandler.OnTakeDamage(damage);
+        yield return new WaitForSeconds(1 / multipleRate);
+        StartCoroutine(TakemultipleDamage(playerDataHandler));
+    }
 
 }
-
-
-

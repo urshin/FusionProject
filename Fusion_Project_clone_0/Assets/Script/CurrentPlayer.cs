@@ -87,8 +87,10 @@ public class CurrentPlayer : NetworkBehaviour
                     break;
                 case nameof(ingameTeamInfos.teamAll):
                     UpdateWaiting();
-                    ingameTeamInfos.TickToggle = true;
+                   
                     playerDataHandler.RPC_SetPlayerData();
+
+                   
                     break;
                 case nameof(ingameTeamInfos.isStartBTNOn):
                     ingameUIHandler.OnclickStartBTN();
@@ -359,14 +361,14 @@ public class CurrentPlayer : NetworkBehaviour
 
 
         }
-        if(Object.HasInputAuthority)
+        if (Object.HasInputAuthority)
         {
-        TeamLayerUpdate();
+            TeamLayerUpdate();
 
         }
-        
+
         //플레이어 살아있는지 초기화 하기
-        foreach(var player in ingameTeamInfos.playerAlive)
+        foreach (var player in ingameTeamInfos.playerAlive)
         {
             ingameTeamInfos.playerAlive.Set(player.Key, 1);
         }
@@ -398,21 +400,57 @@ public class CurrentPlayer : NetworkBehaviour
     public void LastPlayer()
     {
 
-         int leftPlayer =ingameTeamInfos.playerAlive.Count;
-        foreach(var player in ingameTeamInfos.playerAlive)
+
+        int leftPlayer = ingameTeamInfos.playerAlive.Count;
+        foreach (var player in ingameTeamInfos.playerAlive)
         {
-            if(player.Value == 0)
+            if (player.Value == 0)
             {
                 leftPlayer--;
             }
         }
-        if(leftPlayer <=1)
+        if (leftPlayer <= 1 && ingameTeamInfos.gameState == IngameTeamInfos.GameState.Gaming)
         {
-        Debug.Log("게임 끝났어~");
+            Debug.Log("게임 끝났어~");
 
+            ingameTeamInfos.teamADictionary.Clear();
+
+            ingameTeamInfos.teamBDictionary.Clear();
+
+            foreach (var player in ingameTeamInfos.teamAll)
+            {
+                ingameTeamInfos.teamAll.Set(player.Key, 0);
+            }
+
+            ingameTeamInfos.playerAlive.Clear();
+
+            ingameUIHandler.RestartGame();
         }
+
+
+
     }
 
 
- 
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
+    public void RPC_ReStartGame(NetworkObject networkObject, RpcInfo info = default)
+    {
+        RPC_Restart(networkObject, info.Source);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
+    public void RPC_Restart(NetworkObject networkObject, PlayerRef messageSource)
+    {
+
+        //Runner.Despawn(playerBody.transform.GetChild(0).GetComponent<NetworkObject>());
+        ingameTeamInfos.teamADictionary.Clear();
+        ingameTeamInfos.teamBDictionary.Clear();
+        ingameTeamInfos.teamAll.Clear();
+        ingameTeamInfos.playerAlive.Clear();
+        ingameUIHandler.RestartGame();
+
+
+
+
+    }
 }

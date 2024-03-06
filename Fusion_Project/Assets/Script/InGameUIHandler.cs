@@ -59,6 +59,12 @@ public class InGameUIHandler : MonoBehaviour
 
     }
 
+    public void RestartGame()
+    {
+        HideAllPanel();
+        teamSelectPanel.SetActive(true);
+
+    }
 
 
     public void OnClickTeamSelect()

@@ -76,13 +76,15 @@ public class PlayerMovementHandler : NetworkBehaviour
             HandleJump(inputData);
             HandleDash(inputData);
 
-            if (networkMecanimAnimator != null)
+            if (networkMecanimAnimator != null&& ingameTeamInfos.gameState == IngameTeamInfos.GameState.Gaming)
             {
                 UpdateAttackAnimation(inputData);
                 UpdatePlayerAnimation(inputData);
 
             }
-            UpdatePlayerCharacterIfNeeded();
+            if (ingameTeamInfos.gameState == IngameTeamInfos.GameState.CharactorSelect)
+                UpdatingPlayerCharacter();
+            // UpdatePlayerCharacterIfNeeded();
         }
     }
 
@@ -133,8 +135,7 @@ public class PlayerMovementHandler : NetworkBehaviour
             {
                 networkMecanimAnimator.Animator.SetInteger("Attack", 0);
             }
-
-
+           
         }
     }
 
@@ -154,24 +155,11 @@ public class PlayerMovementHandler : NetworkBehaviour
 
     }
 
-    private void UpdatePlayerCharacterIfNeeded()
-    {
-        if (ingameTeamInfos.TickToggle)
-        {
-            UpdatingPlayerCharacter();
-        }
-    }
-
-    IEnumerator Co_UpdatingPlayerCharacter()
-    {
-        yield return new WaitForSeconds(1f); // 1√  ¥Î±‚
-        ingameTeamInfos.TickToggle = false;
-
-    }
+   
 
     public void UpdatingPlayerCharacter()
     {
-
+       
         if (ingameTeamInfos.teamADictionary.ContainsKey(gameObject.name))
         {
             gameObject.transform.position = ingameTeamInfos.spawnPoint[0].position;
@@ -182,8 +170,6 @@ public class PlayerMovementHandler : NetworkBehaviour
             gameObject.transform.position = ingameTeamInfos.spawnPoint[1].position;
         }
 
-
-        StartCoroutine(Co_UpdatingPlayerCharacter());
     }
 
 }

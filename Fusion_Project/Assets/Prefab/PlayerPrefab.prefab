@@ -6232,6 +6232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   magicBall: {fileID: 5529168638135381423, guid: 657dd84cbaa20884f81b1fa8f390f10a, type: 3}
+  magicRain: {fileID: 7803256193181283776, guid: 55b559fcf34e66748a4d0512fd888923, type: 3}
   aimPoint: {fileID: 1708654560843443813}
   attackedByNetworkObject: {fileID: 0}
   collisionLayers:

@@ -65,8 +65,6 @@ public class MagicBall : NetworkBehaviour
     {
             transform.position += Speed * transform.forward * Runner.DeltaTime;
 
-        print(Object.HasStateAuthority);
-
         if (Object.HasStateAuthority)
         {
             //Check if the rocket has reached the end of its life

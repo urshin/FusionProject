@@ -107,30 +107,28 @@ public class PlayerDataHandler : NetworkBehaviour
 
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
-    public void RPC_SetPlayerData(RpcInfo info = default)
+    public void RPC_SetPlayerData( RpcInfo info = default)
     {
         RPC_SetData(info.Source);
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_SetData(PlayerRef messageSource)
+    public void RPC_SetData( PlayerRef messageSource)
     {
         UpdateCharacterInfo();
-        UpdateMovementData();
+      
 
     }
 
 
 
-    public void UpdateMovementData()
-    {
-        movementHandler._cc.maxSpeed = characterInfo.Speed;
-    }
 
 
 
     public void UpdateCharacterInfo()
     {
+    
+       
         if (ingameTeamInfos.teamAll.ContainsKey(gameObject.name))
         {
 
@@ -169,7 +167,7 @@ public class PlayerDataHandler : NetworkBehaviour
 
 
         }
-
+        movementHandler._cc.maxSpeed = characterInfo.Speed;
 
 
     }
