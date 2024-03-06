@@ -6018,7 +6018,7 @@ GameObject:
   - component: {fileID: 429628141740067977}
   - component: {fileID: 6294638578597680228}
   - component: {fileID: 5561644014669499339}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PlayerPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6214,10 +6214,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Config: 3
-  BroadRadius: 1.8122551
+  BroadRadius: 1.8
   Offset: {x: 0, y: 0, z: 0}
   GizmosColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  Hitboxes: []
+  Hitboxes:
+  - {fileID: 9143166011493163027}
 --- !u!114 &5561644014669499339
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9365,7 +9366,7 @@ MonoBehaviour:
   BoxExtents: {x: 0, y: 0, z: 0}
   CapsuleExtents: 1.8
   Offset: {x: 0, y: 0.9, z: 0}
-  Root: {fileID: 0}
+  Root: {fileID: 6294638578597680228}
   GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &8718049375752719712
 GameObject:

@@ -42,6 +42,12 @@ public class IngameTeamInfos : NetworkBehaviour
 = MakeInitializer(new Dictionary<NetworkString<_32>, int> { });
 
 
+    [Networked, Capacity(6)]
+    public NetworkDictionary<NetworkString<_32>, int> playerAlive { get; }
+// Optional initialization
+= MakeInitializer(new Dictionary<NetworkString<_32>, int> { });
+
+
     // 가상 불리언을 위한 백업 값입니다.
     [Networked] int _intToggle { get; set; }
 

@@ -65,7 +65,7 @@ public class MagicBall : NetworkBehaviour
     {
             transform.position += Speed * transform.forward * Runner.DeltaTime;
 
-
+        print(Object.HasStateAuthority);
 
         if (Object.HasStateAuthority)
         {
@@ -81,7 +81,7 @@ public class MagicBall : NetworkBehaviour
          
             //Check if the rocket has hit anything
             //int hitCount = Runner.LagCompensation.OverlapSphere(checkForImpactPoint.position, 0.5f, firedByPlayerRef, hits, collisionLayers, HitOptions.None, clearHits: true);
-            int hitCount = Runner.LagCompensation.OverlapBox(checkForImpactPoint.position, gameObject.transform.GetChild(0).transform.localScale,Quaternion.identity, firedByPlayerRef, hits, collisionLayers, HitOptions.None, clearHits: true);
+            int hitCount = Runner.LagCompensation.OverlapBox(checkForImpactPoint.position, gameObject.transform.GetChild(0).transform.localScale,Quaternion.identity, firedByPlayerRef, hits, collisionLayers, options: HitOptions.SubtickAccuracy, clearHits: true);
 
         
             bool isValidHit = false;
@@ -106,11 +106,11 @@ public class MagicBall : NetworkBehaviour
             if (isValidHit)
             {
                 //Now we need to figure out of anything was within the blast radius
-                hitCount = Runner.LagCompensation.OverlapSphere(checkForImpactPoint.position, 1, firedByPlayerRef, hits, collisionLayers, HitOptions.None);
-
+       
                 //Deal damage to anything within the hit radius
                 for (int i = 0; i < hitCount; i++)
                 {
+                    
                     PlayerDataHandler playerDataHandler = hits[i].Hitbox.transform.root.GetComponent<PlayerDataHandler>();
 
                     if (playerDataHandler != null)
@@ -119,13 +119,13 @@ public class MagicBall : NetworkBehaviour
 
                Runner.Despawn(networkObject);
             }
-        }
+      }
 
 
     }
 
 
-
+    
 
 }
 

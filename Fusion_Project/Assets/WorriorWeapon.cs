@@ -28,14 +28,6 @@ public class WorriorWeapon : NetworkBehaviour
 
     }
 
-    public void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.layer == LayerMask.NameToLayer("enemy"))
-        {
-        print(other.name);
-            other.GetComponent<PlayerDataHandler>().OnTakeDamage(1);
-
-        }
-    }
+   
 
 }

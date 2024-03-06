@@ -19,12 +19,17 @@ public class PlayerDataHandler : NetworkBehaviour
         currentPlayer = GetComponent<CurrentPlayer>();
         movementHandler = GetComponent<PlayerMovementHandler>();
         _changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
+        hitboxRoot = GetComponentInChildren<HitboxRoot>();
+
         isDead = false;
+       
     }
 
     private ChangeDetector _changeDetector;
 
     [Networked] public bool isDead { get; set; }
+
+
 
     [System.Serializable]
     public class CharacterInfo
@@ -39,7 +44,7 @@ public class PlayerDataHandler : NetworkBehaviour
 
     [SerializeField]
     public CharacterInfo characterInfo = new CharacterInfo();
-
+     
 
     private void Start()
     {
@@ -51,8 +56,7 @@ public class PlayerDataHandler : NetworkBehaviour
 
     private void Awake()
     {
-        movementHandler = GetComponent<PlayerMovementHandler>();
-        hitboxRoot = GetComponentInChildren<HitboxRoot>();
+    
     }
 
     public void OnTakeDamage(int damageAmount)
@@ -62,7 +66,7 @@ public class PlayerDataHandler : NetworkBehaviour
             return;
 
         //Ensure that we cannot flip the byte as it can't handle minus values.
-        if (damageAmount > characterInfo.HP)
+        if (damageAmount > characterInfo.HP )
             damageAmount = characterInfo.HP;
 
         characterInfo.HP -= damageAmount;
@@ -77,8 +81,9 @@ public class PlayerDataHandler : NetworkBehaviour
             Debug.Log($"{Time.time} {transform.name} died");
 
             
-
+            
             isDead = true;
+            ingameTeamInfos.playerAlive.Set(gameObject.name, 0);
         }
     }
 

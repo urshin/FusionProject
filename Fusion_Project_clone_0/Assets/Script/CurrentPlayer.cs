@@ -94,14 +94,16 @@ public class CurrentPlayer : NetworkBehaviour
                     ingameUIHandler.OnclickStartBTN();
                     SpawnCharactor();
                     ingameTeamInfos.gameState = IngameTeamInfos.GameState.Ready;
-                    ingameTeamInfos. startTimer = TickTimer.CreateFromSeconds(Runner, 5);
+                    ingameTeamInfos.startTimer = TickTimer.CreateFromSeconds(Runner, 5);
                     break;
-
+                case nameof(ingameTeamInfos.playerAlive):
+                    LastPlayer();
+                    break;
             }
         }
     }
 
-   
+
     public void HideCanvas()
     {
         if (!Object.HasInputAuthority)
@@ -163,6 +165,7 @@ public class CurrentPlayer : NetworkBehaviour
 
             ingameTeamInfos.teamADictionary.Add(name, job);
             ingameTeamInfos.teamAll.Add(name, job);
+            ingameTeamInfos.playerAlive.Add(name, job);
 
 
         }
@@ -171,6 +174,7 @@ public class CurrentPlayer : NetworkBehaviour
 
             ingameTeamInfos.teamBDictionary.Add(name, job);
             ingameTeamInfos.teamAll.Add(name, job);
+            ingameTeamInfos.playerAlive.Add(name, job);
         }
 
 
@@ -286,7 +290,7 @@ public class CurrentPlayer : NetworkBehaviour
         //{
         //    trans.gameObject.layer = layerNumber;
         //}
-         transform.gameObject.transform.parent.gameObject.layer = layerNumber;
+        transform.gameObject.transform.parent.gameObject.layer = layerNumber;
     }
 
     public void TeamSelect(string team)
@@ -336,35 +340,44 @@ public class CurrentPlayer : NetworkBehaviour
         foreach (var Player in ingameTeamInfos.teamAll)
         {
             GameObject current = GameObject.Find(Player.Key.ToString());
-            
+
+
 
             int job = ingameTeamInfos.teamAll[Player.Key];
-           if(Object.HasStateAuthority)
+            if (Object.HasStateAuthority)
             {
-             //GameObject body = Instantiate(ingameTeamInfos.charactor[job - 1], current.GetComponent<CurrentPlayer>().playerBody.transform.position, Quaternion.identity);
-             NetworkObject body = Runner.Spawn(ingameTeamInfos.charactor[job-1], current.GetComponent<CurrentPlayer>().playerBody.transform.position, Quaternion.identity);
-            current.GetComponent<PlayerMovementHandler>().bodyAnime = body.GetComponent<Animator>();
-            
+                //GameObject body = Instantiate(ingameTeamInfos.charactor[job - 1], current.GetComponent<CurrentPlayer>().playerBody.transform.position, Quaternion.identity);
+                NetworkObject body = Runner.Spawn(ingameTeamInfos.charactor[job - 1], current.GetComponent<CurrentPlayer>().playerBody.transform.position, Quaternion.identity);
+                current.GetComponent<PlayerMovementHandler>().bodyAnime = body.GetComponent<Animator>();
+
                 // body를 current.GetComponent<CurrentPlayer>().playerBody의 자식으로 설정
                 body.transform.parent = current.GetComponent<CurrentPlayer>().playerBody.transform;
                 RPC_MoveGameobject(body, current.GetComponent<CurrentPlayer>().playerBody);
 
 
-
-
             }
-            // current.GetComponent<PlayerMovementHandler>().networkMecanimAnimator.Animator =  body.GetComponent<NetworkMecanimAnimator>().Animator;
 
 
         }
+        if(Object.HasInputAuthority)
+        {
         TeamLayerUpdate();
+
+        }
+        
+        //플레이어 살아있는지 초기화 하기
+        foreach(var player in ingameTeamInfos.playerAlive)
+        {
+            ingameTeamInfos.playerAlive.Set(player.Key, 1);
+        }
+
     }
 
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
     public void RPC_MoveGameobject(NetworkObject gameobject, NetworkObject position, RpcInfo info = default)
     {
-        RPC_Move(gameobject,position, info.Source);
+        RPC_Move(gameobject, position, info.Source);
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
@@ -375,10 +388,31 @@ public class CurrentPlayer : NetworkBehaviour
         gameobject.transform.localPosition = Vector3.zero;
         gameobject.transform.rotation = position.transform.parent.rotation;
 
-       
 
-       
+
+
 
     }
 
+
+    public void LastPlayer()
+    {
+
+         int leftPlayer =ingameTeamInfos.playerAlive.Count;
+        foreach(var player in ingameTeamInfos.playerAlive)
+        {
+            if(player.Value == 0)
+            {
+                leftPlayer--;
+            }
+        }
+        if(leftPlayer <=1)
+        {
+        Debug.Log("게임 끝났어~");
+
+        }
+    }
+
+
+ 
 }

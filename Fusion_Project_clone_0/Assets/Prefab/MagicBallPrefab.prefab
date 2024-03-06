@@ -48,7 +48,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2916483231273665973}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -171,7 +171,7 @@ MonoBehaviour:
   checkForImpactPoint: {fileID: 5688218676208095305}
   collisionLayers:
     serializedVersion: 2
-    m_Bits: 193
+    m_Bits: 1153
 --- !u!1001 &8143640263902955251
 PrefabInstance:
   m_ObjectHideFlags: 0
