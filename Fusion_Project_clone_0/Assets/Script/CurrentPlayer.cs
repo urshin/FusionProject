@@ -8,6 +8,7 @@ using TMPro;
 using Unity.Jobs;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static Fusion.NetworkBehaviour;
 using static InGameUIHandler;
 
@@ -87,20 +88,25 @@ public class CurrentPlayer : NetworkBehaviour
                     break;
                 case nameof(ingameTeamInfos.teamAll):
                     UpdateWaiting();
-                   
                     playerDataHandler.RPC_SetPlayerData();
-
-                   
                     break;
                 case nameof(ingameTeamInfos.isStartBTNOn):
-                    ingameUIHandler.OnclickStartBTN();
-                    SpawnCharactor();
-                    ingameTeamInfos.gameState = IngameTeamInfos.GameState.Ready;
-                    ingameTeamInfos.startTimer = TickTimer.CreateFromSeconds(Runner, 5);
+                    
+                        ingameUIHandler.OnclickStartBTN();
+                        SpawnCharactor();
+                        ingameTeamInfos.gameState = IngameTeamInfos.GameState.Ready;
+                        ingameTeamInfos.startTimer = TickTimer.CreateFromSeconds(Runner, 5);
+                        
+                    
+            
+
                     break;
                 case nameof(ingameTeamInfos.playerAlive):
                     LastPlayer();
+                    
+
                     break;
+               
             }
         }
     }
@@ -400,7 +406,7 @@ public class CurrentPlayer : NetworkBehaviour
     public void LastPlayer()
     {
 
-
+        
         int leftPlayer = ingameTeamInfos.playerAlive.Count;
         foreach (var player in ingameTeamInfos.playerAlive)
         {
@@ -413,19 +419,16 @@ public class CurrentPlayer : NetworkBehaviour
         {
             Debug.Log("∞‘¿” ≥°≥µæÓ~");
 
-            ingameTeamInfos.teamADictionary.Clear();
+            //ingameUIHandler.RestartGame();
 
-            ingameTeamInfos.teamBDictionary.Clear();
+            ingameTeamInfos.gameState = IngameTeamInfos.GameState.End;
 
-            foreach (var player in ingameTeamInfos.teamAll)
-            {
-                ingameTeamInfos.teamAll.Set(player.Key, 0);
-            }
+           
+            
 
-            ingameTeamInfos.playerAlive.Clear();
-
-            ingameUIHandler.RestartGame();
         }
+
+        
 
 
 
@@ -433,20 +436,20 @@ public class CurrentPlayer : NetworkBehaviour
 
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
-    public void RPC_ReStartGame(NetworkObject networkObject, RpcInfo info = default)
+    public void RPC_ReStartGame(  RpcInfo info = default)
     {
-        RPC_Restart(networkObject, info.Source);
+        RPC_Restart(info.Source);
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void RPC_Restart(NetworkObject networkObject, PlayerRef messageSource)
+    public void RPC_Restart( PlayerRef messageSource)
     {
 
         //Runner.Despawn(playerBody.transform.GetChild(0).GetComponent<NetworkObject>());
-        ingameTeamInfos.teamADictionary.Clear();
-        ingameTeamInfos.teamBDictionary.Clear();
-        ingameTeamInfos.teamAll.Clear();
-        ingameTeamInfos.playerAlive.Clear();
+        //ingameTeamInfos.teamADictionary.Clear();
+        //ingameTeamInfos.teamBDictionary.Clear();
+        //ingameTeamInfos.teamAll.Clear();
+        //ingameTeamInfos.playerAlive.Clear();
         ingameUIHandler.RestartGame();
 
 

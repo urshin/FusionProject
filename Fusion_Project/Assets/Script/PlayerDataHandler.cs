@@ -121,10 +121,6 @@ public class PlayerDataHandler : NetworkBehaviour
     }
 
 
-
-
-
-
     public void UpdateCharacterInfo()
     {
     
@@ -166,8 +162,9 @@ public class PlayerDataHandler : NetworkBehaviour
             }
 
 
-        }
         movementHandler._cc.maxSpeed = characterInfo.Speed;
+        }
+        else { return; }
 
 
     }

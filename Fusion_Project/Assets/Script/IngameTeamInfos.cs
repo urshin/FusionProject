@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class IngameTeamInfos : NetworkBehaviour
 {
@@ -14,6 +15,7 @@ public class IngameTeamInfos : NetworkBehaviour
         Ready,
         Gaming,
         End,
+        Restart,
     }
 
    public  GameState gameState = new GameState();
@@ -65,7 +67,7 @@ public class IngameTeamInfos : NetworkBehaviour
     public override void Spawned()
     {
         _changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
-      
+        isStartBTNOn = false;
 
 
     }
@@ -86,8 +88,35 @@ public class IngameTeamInfos : NetworkBehaviour
         if (startTimer.Expired(Runner) && gameState == GameState.Ready)
         {
             gameState = GameState.Gaming;
-
+       
             return;
+        }
+        if (gameState == GameState.End)
+        {
+
+
+            teamADictionary.Clear();
+
+            teamBDictionary.Clear();
+
+            foreach (var player in teamAll)
+            {
+                teamAll.Set(player.Key, 0);
+            }
+
+            foreach (var player in playerAlive)
+            {
+                playerAlive.Set(player.Key, 1);
+            }
+
+
+            gameState = GameState.Restart;
+        
+
+
+
+
+
         }
 
     }

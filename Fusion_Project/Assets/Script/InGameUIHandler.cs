@@ -33,6 +33,7 @@ public class InGameUIHandler : MonoBehaviour
     [SerializeField] Slider playerDashSlider;
 
 
+    [SerializeField] IngameTeamInfos ingameTeamInfos;
     NetworkRunner runner;
 
 
@@ -48,7 +49,7 @@ public class InGameUIHandler : MonoBehaviour
     private void Start()
     {
 
-
+        ingameTeamInfos = FindObjectOfType<IngameTeamInfos>();
        // ShowAllPanel();
         //패널 숨김으로 초기화
         HideAllPanel();
@@ -95,6 +96,8 @@ public class InGameUIHandler : MonoBehaviour
 
     }
 
+ 
+
     private void Update()
     {
         //플레이어 정보
@@ -104,8 +107,7 @@ public class InGameUIHandler : MonoBehaviour
         }
         else playerStatePanel.SetActive(false);
 
-
-    
+      
 
     }
 
