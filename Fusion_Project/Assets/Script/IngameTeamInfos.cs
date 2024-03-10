@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class IngameTeamInfos : NetworkBehaviour
 {
-
+    
     public enum GameState
     {
         CharactorSelect,
@@ -17,9 +17,11 @@ public class IngameTeamInfos : NetworkBehaviour
         End,
         Restart,
     }
+  
+    //public GameState gameState = new GameState();
 
-   public  GameState gameState = new GameState();
-
+    [Networked]
+    public GameState gameState { get;set;}
 
     //캐릭터
     public List<GameObject> charactor = new List<GameObject>();
@@ -50,12 +52,12 @@ public class IngameTeamInfos : NetworkBehaviour
 = MakeInitializer(new Dictionary<NetworkString<_32>, int> { });
 
 
- 
+
 
 
 
     [Networked]
-    public NetworkBool isStartBTNOn {  get; set; }   //ui에서 방장이 게임 시작 버튼 눌렀을 때
+    public NetworkBool isStartBTNOn { get; set; }   //ui에서 방장이 게임 시작 버튼 눌렀을 때
 
 
     public ChangeDetector _changeDetector;
@@ -74,21 +76,21 @@ public class IngameTeamInfos : NetworkBehaviour
 
     private void Update()
     {
-    
+
     }
 
-   public TickTimer startTimer = TickTimer.None;
-    
+    public TickTimer startTimer = TickTimer.None;
+
     public override void FixedUpdateNetwork()
     {
 
-        
+
 
 
         if (startTimer.Expired(Runner) && gameState == GameState.Ready)
         {
             gameState = GameState.Gaming;
-       
+            isStartBTNOn = false;
             return;
         }
         if (gameState == GameState.End)
@@ -108,20 +110,28 @@ public class IngameTeamInfos : NetworkBehaviour
             {
                 playerAlive.Set(player.Key, 1);
             }
-
-
-            gameState = GameState.Restart;
-        
-
-
-
-
-
+            DestroyPlayerBody();
+            gameState = GameState.CharactorSelect;
         }
 
+      
+
+
+
+
+
+
     }
-
-
+    
+    public void DestroyPlayerBody()
+    {
+        foreach(var player in teamAll)
+        {
+            NetworkObject playerbody = GameObject.Find(player.Key.ToString()).GetComponent<CurrentPlayer>().playerBody;
+            if(playerbody.transform.childCount != 0)
+            Runner.Despawn(playerbody.transform.GetChild(0).GetComponent<NetworkObject>());
+        }
+    }
 
 
 }

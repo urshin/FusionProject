@@ -92,10 +92,19 @@ public class CurrentPlayer : NetworkBehaviour
                     break;
                 case nameof(ingameTeamInfos.isStartBTNOn):
                     
+                    if(ingameTeamInfos.isStartBTNOn)
+                    {
+
                         ingameUIHandler.OnclickStartBTN();
                         SpawnCharactor();
                         ingameTeamInfos.gameState = IngameTeamInfos.GameState.Ready;
-                        ingameTeamInfos.startTimer = TickTimer.CreateFromSeconds(Runner, 5);
+                        ingameTeamInfos.startTimer = TickTimer.CreateFromSeconds(Runner, 3);
+                         
+                    }
+                    else
+                    {
+                        return;
+                    }
                         
                     
             
@@ -406,6 +415,7 @@ public class CurrentPlayer : NetworkBehaviour
     public void LastPlayer()
     {
 
+
         
         int leftPlayer = ingameTeamInfos.playerAlive.Count;
         foreach (var player in ingameTeamInfos.playerAlive)
@@ -423,8 +433,9 @@ public class CurrentPlayer : NetworkBehaviour
 
             ingameTeamInfos.gameState = IngameTeamInfos.GameState.End;
 
-           
-            
+            ingameUIHandler.RestartGame();
+            Runner.Despawn(playerBody.transform.GetChild(0).GetComponent<NetworkObject>());
+
 
         }
 

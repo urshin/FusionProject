@@ -124,7 +124,7 @@ public class PlayerDataHandler : NetworkBehaviour
     public void UpdateCharacterInfo()
     {
     
-       
+       isDead = false;
         if (ingameTeamInfos.teamAll.ContainsKey(gameObject.name))
         {
 
