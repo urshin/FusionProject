@@ -16,13 +16,14 @@ public class Archer_Attack2 : StateMachineBehaviour
         attackHandler = animator.GetComponentInParent<PlayerAttackHandler>();
         attackHandler.FireArcherAttak2(attackHandler.aimPoint.forward);
         moveHandler = animator.GetComponentInParent<PlayerMovementHandler>();
-        moveHandler.StartDash(20);
+        moveHandler.isdashing = true;
+        moveHandler.dashSpeed = 15;
 
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        moveHandler.isdashing = true;
+        
 
     }
 

@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 8646690137051980603}
   - component: {fileID: 5312120214547165172}
   m_Layer: 0
-  m_Name: ArcherBasicAttackPrefab
+  m_Name: ArcherAttack1Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

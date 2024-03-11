@@ -6189,6 +6189,9 @@ MonoBehaviour:
   playerInterfaceUI: {fileID: 6095312856411927410}
   movementSpeed: 0
   AttakSpeed: 0
+  isdashing: 0
+  dashDirection: {x: 0, y: 0, z: 0}
+  dashSpeed: 0
 --- !u!114 &429628141740067977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6238,8 +6241,12 @@ MonoBehaviour:
   magicMeteo: {fileID: 5831891328905433897, guid: 50855c14acda0c847a3e81452cfb1dde, type: 3}
   archerAttak1: {fileID: 8328991502346904274, guid: 7aaa86940dc9df54cb9c5b8a4d74614c, type: 3}
   archerAttak2: {fileID: 6328713436417047917, guid: 7343881af9e5dc845806e8a5eed2ec83, type: 3}
-  archerAttak3: {fileID: 0}
-  archerAttak4: {fileID: 0}
+  archerAttak3: {fileID: 5965997655984568810, guid: f8ef8c12dd7ad6145ab414022f35a7b8, type: 3}
+  archerAttak4: {fileID: 9176222518409433577, guid: 0836fda611040424f90af6b3001e6d94, type: 3}
+  warriorAttak1: {fileID: 2068292243103472091, guid: 4f504e14f151cc640bb6ced928dc274e, type: 3}
+  warriorAttak2: {fileID: 0}
+  warriorAttak3: {fileID: 0}
+  warriorAttak4: {fileID: 0}
   aimPoint: {fileID: 1708654560843443813}
   attackedByNetworkObject: {fileID: 0}
   collisionLayers:

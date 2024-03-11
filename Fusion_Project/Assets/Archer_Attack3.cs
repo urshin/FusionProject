@@ -1,11 +1,8 @@
-using Fusion;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class Archer_Attack2 : StateMachineBehaviour
+public class Archer_Attack3 : StateMachineBehaviour
 {
     [SerializeField] PlayerAttackHandler attackHandler;
     [SerializeField] PlayerMovementHandler moveHandler;
@@ -14,16 +11,16 @@ public class Archer_Attack2 : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         attackHandler = animator.GetComponentInParent<PlayerAttackHandler>();
-        attackHandler.FireArcherAttak2(attackHandler.aimPoint.forward);
+        attackHandler.FireArcherAttak3(attackHandler.aimPoint.forward);
         moveHandler = animator.GetComponentInParent<PlayerMovementHandler>();
         moveHandler.isdashing = true;
-        moveHandler.dashSpeed = 15;
+        moveHandler.dashSpeed = 10;
 
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        
+
 
     }
 
@@ -42,6 +39,4 @@ public class Archer_Attack2 : StateMachineBehaviour
         // Implement code that sets up animation IK (inverse kinematics)
     }
 
-
-  
 }

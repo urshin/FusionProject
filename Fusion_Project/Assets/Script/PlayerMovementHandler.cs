@@ -102,11 +102,6 @@ public class PlayerMovementHandler : NetworkBehaviour
         }
     }
 
-    public void StartDash(float Speed)
-    {
-        isdashing = true;
-        dashSpeed = Speed;
-    }
 
 
 
@@ -171,7 +166,9 @@ public class PlayerMovementHandler : NetworkBehaviour
 
 
         networkMecanimAnimator.Animator.SetFloat("X", inputData.moveDirection.x);
-        networkMecanimAnimator.Animator.SetFloat("Z", inputData.moveDirection.z);
+        networkMecanimAnimator.Animator.SetFloat("Z", inputData.moveDirection.z); 
+       // networkMecanimAnimator.Animator.SetFloat("X", _cc.Velocity.normalized.x);
+      //  networkMecanimAnimator.Animator.SetFloat("Z", _cc.Velocity.normalized.z);
 
 
 
