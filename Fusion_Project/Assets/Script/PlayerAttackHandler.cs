@@ -10,9 +10,15 @@ public class PlayerAttackHandler : NetworkBehaviour
     [Header("Mage")]
     public GameObject magicBall;
     public GameObject magicRain;
-   
-    
-    
+    public GameObject magicBeam;
+    public GameObject magicMeteo;
+
+    [Header("Archer")]
+    public GameObject archerAttak1;
+    public GameObject archerAttak2;
+    public GameObject archerAttak3;
+    public GameObject archerAttak4;
+
     public Transform aimPoint;
 
     TickTimer MagicBallFireDelay = TickTimer.None;
@@ -119,6 +125,91 @@ public class PlayerAttackHandler : NetworkBehaviour
 
         }
     }
+    public void FireBeam(Vector3 aimForwardVector)
+    {
+        if (ingameTeamInfos.gameState == IngameTeamInfos.GameState.Gaming)
+        {
+           // Vector3 point30UnitsFromCamera = RaySystem(30);
+            //Check that we have not recently fired a grenade. 
+            if (MagicBallFireDelay.ExpiredOrNotRunning(Runner))
+            {
+                Runner.Spawn(magicBeam, aimPoint.position + aimForwardVector * 1.5f, Quaternion.LookRotation(aimForwardVector), Object.InputAuthority, (runner, spawnedRocket) =>
+                {
+                    spawnedRocket.GetComponent<MagicBeam>().Fire(Object.InputAuthority, networkObject);
+                });
+
+                
+                //Start a new timer to avoid grenade spamming
+                MagicBallFireDelay = TickTimer.CreateFromSeconds(Runner, 2f);
+            }
+
+        }
+    }
+
+    public void FireMeteo(Vector3 aimForwardVector)
+    {
+        if (ingameTeamInfos.gameState == IngameTeamInfos.GameState.Gaming)
+        {
+            Vector3 point30UnitsFromCamera = RaySystem(50);
+            //Check that we have not recently fired a grenade. 
+            if (MagicBallFireDelay.ExpiredOrNotRunning(Runner))
+            {
+                Runner.Spawn(magicMeteo, point30UnitsFromCamera, Quaternion.LookRotation(aimForwardVector), Object.InputAuthority, (runner, spawnedRocket) =>
+                {
+                    spawnedRocket.GetComponent<AttackSystem>().Fire(Object.InputAuthority, networkObject);
+                });
+
+                //Start a new timer to avoid grenade spamming
+                MagicBallFireDelay = TickTimer.CreateFromSeconds(Runner, 2f);
+            }
+
+        }
+    }
+
+
+
+
+
+
+    //Archer
+
+    public void FireArcherAttak1(Vector3 aimForwardVector)
+    {
+        if (ingameTeamInfos.gameState == IngameTeamInfos.GameState.Gaming)
+        {
+            //Check that we have not recently fired a grenade. 
+            if (MagicBallFireDelay.ExpiredOrNotRunning(Runner))
+            {
+                Runner.Spawn(archerAttak1, aimPoint.position + aimForwardVector * 1.5f, Quaternion.LookRotation(aimForwardVector), Object.InputAuthority, (runner, spawnedRocket) =>
+                {
+                    spawnedRocket.GetComponent<AttackSystem>().Fire(Object.InputAuthority, networkObject);
+                });
+
+                //Start a new timer to avoid grenade spamming
+                MagicBallFireDelay = TickTimer.CreateFromSeconds(Runner, 0.5f);
+            }
+
+        }
+    }
+    public void FireArcherAttak2(Vector3 aimForwardVector)
+    {
+        if (ingameTeamInfos.gameState == IngameTeamInfos.GameState.Gaming)
+        {
+            //Check that we have not recently fired a grenade. 
+            if (MagicBallFireDelay.ExpiredOrNotRunning(Runner))
+            {
+                Runner.Spawn(archerAttak2, aimPoint.position + aimForwardVector * 1.5f, Quaternion.LookRotation(aimForwardVector), Object.InputAuthority, (runner, spawnedRocket) =>
+                {
+                    spawnedRocket.GetComponent<AttackSystem>().Fire(Object.InputAuthority, networkObject);
+                });
+
+                //Start a new timer to avoid grenade spamming
+                MagicBallFireDelay = TickTimer.CreateFromSeconds(Runner, 0.5f);
+            }
+
+        }
+    }
+
 
     private static Vector3 RaySystem(float far)
     {

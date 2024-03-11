@@ -8,6 +8,7 @@ public class AttackSystem : NetworkBehaviour
 
     [SerializeField] float Speed;
     [SerializeField] float LifeTimer;
+    [SerializeField] float DelayTimer;
     [SerializeField] Transform Size;
 
     [SerializeField] int damage;
@@ -15,7 +16,7 @@ public class AttackSystem : NetworkBehaviour
     [SerializeField] int multipleRate;
     [SerializeField] bool penetrate;
     [SerializeField] bool isMove;
-    enum Shape { box,shpere};
+    enum Shape { box, shpere };
     [SerializeField] Shape shape;
 
     [Header("Prefabs")]
@@ -41,6 +42,7 @@ public class AttackSystem : NetworkBehaviour
 
     //LifeTimer
     [Networked] private TickTimer life { get; set; }
+    [Networked] private TickTimer delay { get; set; }
 
     public void Init()
     {
@@ -50,7 +52,8 @@ public class AttackSystem : NetworkBehaviour
 
     public override void Spawned()
     {
-       
+
+        delay = TickTimer.CreateFromSeconds(Runner, DelayTimer);
     }
 
     public void Fire(PlayerRef firedByPlayerRef, NetworkObject firedByNetworkObject)
@@ -66,9 +69,9 @@ public class AttackSystem : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if(isMove)
+        if (isMove)
         {
-        transform.position += Speed * transform.forward * Runner.DeltaTime;
+            transform.position += Speed * transform.forward * Runner.DeltaTime;
 
         }
 
@@ -83,72 +86,75 @@ public class AttackSystem : NetworkBehaviour
                 return;
             }
 
-
-
-            //Check if the object has hit anything
-
-            int hitCount =0; 
-            if(shape == Shape.shpere)
+            if (delay.Expired(Runner))
             {
-                hitCount = Runner.LagCompensation.OverlapSphere(checkForImpactPoint.position, checkForImpactPoint.transform.localScale.x, firedByPlayerRef, hits, collisionLayers, options: HitOptions.SubtickAccuracy, clearHits: true);
-            }
-            else if(shape == Shape.box)
-            {
-             hitCount = Runner.LagCompensation.OverlapBox(checkForImpactPoint.position, checkForImpactPoint.transform.localScale, Quaternion.identity, firedByPlayerRef, hits, collisionLayers, options: HitOptions.SubtickAccuracy, clearHits: true);
+                //Check if the object has hit anything
 
-            }
-
-
-            bool isValidHit = false;
-
-            //We've hit something, so the hit could be valid
-            if (hitCount > 0)
-                isValidHit = true;
-
-            //check what we've hit
-            for (int i = 0; i < hitCount; i++)
-            {
-                //Check if we have hit a Hitbox
-                if (hits[i].Hitbox != null)
+                int hitCount = 0;
+                if (shape == Shape.shpere)
                 {
-                    //Check that we didn't fire the rocket and hit ourselves. This can happen if the lag is a bit high.
-                    if (hits[i].Hitbox.Root.GetBehaviour<NetworkObject>() == firedByNetworkObject)
-                        isValidHit = false;
+                    hitCount = Runner.LagCompensation.OverlapSphere(checkForImpactPoint.position, checkForImpactPoint.transform.localScale.x, firedByPlayerRef, hits, collisionLayers, options: HitOptions.SubtickAccuracy, clearHits: true);
                 }
-            }
+                else if (shape == Shape.box)
+                {
+                    hitCount = Runner.LagCompensation.OverlapBox(checkForImpactPoint.position, checkForImpactPoint.transform.localScale, Quaternion.identity, firedByPlayerRef, hits, collisionLayers, options: HitOptions.SubtickAccuracy, clearHits: true);
 
-            //We hit something valid
-            if (isValidHit)
-            {
-                //Now we need to figure out of anything was within the blast radius
+                }
 
-                //Deal damage to anything within the hit radius
+
+                bool isValidHit = false;
+
+                //We've hit something, so the hit could be valid
+                if (hitCount > 0)
+                    isValidHit = true;
+
+                //check what we've hit
                 for (int i = 0; i < hitCount; i++)
                 {
-
-                    PlayerDataHandler playerDataHandler = hits[i].Hitbox.transform.root.GetComponent<PlayerDataHandler>();
-
-                    if (playerDataHandler != null)
+                    //Check if we have hit a Hitbox
+                    if (hits[i].Hitbox != null)
                     {
-
-                        if (!multipleDamage)
-                            playerDataHandler.OnTakeDamage(damage);
-                        else if (multipleDamage)
-                        {
-                            StartCoroutine(TakemultipleDamage(playerDataHandler));
-
-
-                        }
-
+                        //Check that we didn't fire the rocket and hit ourselves. This can happen if the lag is a bit high.
+                        if (hits[i].Hitbox.Root.GetBehaviour<NetworkObject>() == firedByNetworkObject)
+                            isValidHit = false;
                     }
                 }
-                if (!penetrate)
+
+                //We hit something valid
+                if (isValidHit)
                 {
-                    Runner.Despawn(networkObject);
+                    //Now we need to figure out of anything was within the blast radius
+
+                    //Deal damage to anything within the hit radius
+                    for (int i = 0; i < hitCount; i++)
+                    {
+
+                        PlayerDataHandler playerDataHandler = hits[i].Hitbox.transform.root.GetComponent<PlayerDataHandler>();
+
+                        if (playerDataHandler != null)
+                        {
+
+                            if (!multipleDamage)
+                                playerDataHandler.OnTakeDamage(damage);
+                            else if (multipleDamage)
+                            {
+                                StartCoroutine(TakemultipleDamage(playerDataHandler));
+
+
+                            }
+
+                        }
+                    }
+                    if (!penetrate)
+                    {
+                        Runner.Despawn(networkObject);
+
+                    }
 
                 }
 
             }
+
         }
 
 

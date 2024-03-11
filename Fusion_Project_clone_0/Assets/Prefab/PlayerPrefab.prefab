@@ -197,6 +197,7 @@ MonoBehaviour:
   playerinterfaceUI: {fileID: 6095312856411927410}
   ProgressTMP: {fileID: 4427139712452385436}
   playerDashSlider: {fileID: 519655229315211716}
+  ingameTeamInfos: {fileID: 0}
 --- !u!1 &828584982626162587
 GameObject:
   m_ObjectHideFlags: 0
@@ -6233,6 +6234,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   magicBall: {fileID: 5529168638135381423, guid: 657dd84cbaa20884f81b1fa8f390f10a, type: 3}
   magicRain: {fileID: 7803256193181283776, guid: 55b559fcf34e66748a4d0512fd888923, type: 3}
+  magicBeam: {fileID: 8559980071665393196, guid: d4db9cd3defd1bc489da262ab3ee7adf, type: 3}
+  magicMeteo: {fileID: 5831891328905433897, guid: 50855c14acda0c847a3e81452cfb1dde, type: 3}
+  archerAttak1: {fileID: 8328991502346904274, guid: 7aaa86940dc9df54cb9c5b8a4d74614c, type: 3}
+  archerAttak2: {fileID: 6328713436417047917, guid: 7343881af9e5dc845806e8a5eed2ec83, type: 3}
+  archerAttak3: {fileID: 0}
+  archerAttak4: {fileID: 0}
   aimPoint: {fileID: 1708654560843443813}
   attackedByNetworkObject: {fileID: 0}
   collisionLayers:

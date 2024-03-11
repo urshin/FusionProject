@@ -62,21 +62,35 @@ public class PlayerMovementHandler : NetworkBehaviour
     }
 
 
-
+    public bool isdashing =false;
+    public Vector3 dashDirection;
+    public float dashSpeed;
     public override void FixedUpdateNetwork()
     {
-        
-
         if (GetInput(out NetworkInputData inputData))
         {
             inputData.direction.Normalize();
-            _cc.Move(inputData.direction * Runner.DeltaTime);
+
+
+            if (isdashing)
+            {
+                _cc.Dash(dashSpeed);
+            }
+            else
+            {
+
+                _cc.Move(inputData.direction * Runner.DeltaTime);
+            }
+
+            //_cc.Move(inputData.direction * Runner.DeltaTime);
+
+
             transform.rotation = inputData.mouseDirection;
 
             HandleJump(inputData);
             HandleDash(inputData);
 
-            if (networkMecanimAnimator != null&& ingameTeamInfos.gameState == IngameTeamInfos.GameState.Gaming)
+            if (networkMecanimAnimator != null && ingameTeamInfos.gameState == IngameTeamInfos.GameState.Gaming)
             {
                 UpdateAttackAnimation(inputData);
                 UpdatePlayerAnimation(inputData);
@@ -87,6 +101,14 @@ public class PlayerMovementHandler : NetworkBehaviour
             // UpdatePlayerCharacterIfNeeded();
         }
     }
+
+    public void StartDash(float Speed)
+    {
+        isdashing = true;
+        dashSpeed = Speed;
+    }
+
+
 
     private void HandleJump(NetworkInputData inputData)
     {
@@ -101,12 +123,13 @@ public class PlayerMovementHandler : NetworkBehaviour
         if (inputData.buttons.IsSet(NetworkInputButtons.Dash) && Runner.IsForward)
         {
             //_cc.maxSpeed = _dataHandler.characterInfo.Speed * 3;
-
-
+           
+           
         }
         else
         {
             //_cc.maxSpeed = _dataHandler.characterInfo.Speed;
+           
         }
     }
 
@@ -135,31 +158,31 @@ public class PlayerMovementHandler : NetworkBehaviour
             {
                 networkMecanimAnimator.Animator.SetInteger("Attack", 0);
             }
-           
+
         }
     }
 
     private void UpdatePlayerAnimation(NetworkInputData inputData)
     {
-        
+
         //bodyAnime.SetFloat("X", inputData.moveDirection.x);
         //bodyAnime.SetFloat("Z", inputData.moveDirection.z);
 
-       
+
 
         networkMecanimAnimator.Animator.SetFloat("X", inputData.moveDirection.x);
         networkMecanimAnimator.Animator.SetFloat("Z", inputData.moveDirection.z);
-        
+
 
 
 
     }
 
-   
+
 
     public void UpdatingPlayerCharacter()
     {
-       
+
         if (ingameTeamInfos.teamADictionary.ContainsKey(gameObject.name))
         {
             gameObject.transform.position = ingameTeamInfos.spawnPoint[0].position;
@@ -171,6 +194,31 @@ public class PlayerMovementHandler : NetworkBehaviour
         }
 
     }
+
+
+    //public void Dashing(float Timer, float Speed)
+    //{
+    //    if (GetInput(out NetworkInputData inputData))
+    //    {
+
+    //        StartCoroutine(Dash(Timer, Speed, inputData));
+    //    }
+    //}
+
+    //public IEnumerator Dash(float Timer, float Speed, NetworkInputData inputData)
+    //{
+    //    float startTime = Runner.SimulationTime;
+    //    while (Runner.SimulationTime < startTime + Timer)
+    //    {
+    //        _cc.Move(inputData.direction * Runner.DeltaTime);
+    //        _cc.maxSpeed = _cc.maxSpeed *Speed;
+    //        yield return null;
+
+    //    }
+    //    _cc.maxSpeed /= Speed;
+    //}
+
+
 
 }
 
