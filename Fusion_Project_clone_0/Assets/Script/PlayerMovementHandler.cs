@@ -102,7 +102,16 @@ public class PlayerMovementHandler : NetworkBehaviour
         }
     }
 
-
+    public void DashDash(float time)
+    {
+        isdashing = true;
+        StartCoroutine(DashTime(time));
+    }
+    IEnumerator DashTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+        isdashing = false;
+    }
 
 
     private void HandleJump(NetworkInputData inputData)

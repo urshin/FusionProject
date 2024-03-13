@@ -303,6 +303,7 @@ MonoBehaviour:
   multipleRate: 0
   penetrate: 1
   isMove: 0
+  isChasingPlayer: 1
   shape: 1
   checkForImpactPoint: {fileID: 5462521612829139370}
   collisionLayers:

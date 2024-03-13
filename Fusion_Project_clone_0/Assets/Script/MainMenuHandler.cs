@@ -70,7 +70,7 @@ public class MainMenuHandler : MonoBehaviour
     {
         //네트워크 러너 핸들러를 찾아서 새로운 게임 세션을 생성합니다.
         FusionLuncher fusionLuncher = FindObjectOfType<FusionLuncher>();
-        fusionLuncher.CreateGame(sessionNameInputField.text, "Test");
+        fusionLuncher.CreateGame(sessionNameInputField.text, "Scene_A");
         HideAllPanels();
     }
 

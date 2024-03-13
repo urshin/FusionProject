@@ -5942,6 +5942,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1708654560843443813}
+  - component: {fileID: 7139970248835647323}
   m_Layer: 0
   m_Name: SpawnPos
   m_TagString: Untagged
@@ -5964,6 +5965,23 @@ Transform:
   m_Father: {fileID: 5559005070095694398}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7139970248835647323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5786230837861685997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 1195730610
+  ObjectInterest: 0
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours: []
 --- !u!1 &5899362807900328702
 GameObject:
   m_ObjectHideFlags: 0
@@ -6076,6 +6094,7 @@ MonoBehaviour:
   Flags: 262145
   NestedObjects:
   - {fileID: 6888097935070214461}
+  - {fileID: 7139970248835647323}
   NetworkedBehaviours:
   - {fileID: 7417416623134514743}
   - {fileID: 7492844300681368518}
@@ -6244,9 +6263,10 @@ MonoBehaviour:
   archerAttak3: {fileID: 5965997655984568810, guid: f8ef8c12dd7ad6145ab414022f35a7b8, type: 3}
   archerAttak4: {fileID: 9176222518409433577, guid: 0836fda611040424f90af6b3001e6d94, type: 3}
   warriorAttak1: {fileID: 2068292243103472091, guid: 4f504e14f151cc640bb6ced928dc274e, type: 3}
-  warriorAttak2: {fileID: 0}
-  warriorAttak3: {fileID: 0}
-  warriorAttak4: {fileID: 0}
+  warriorAttak2: {fileID: 5713669969703894852, guid: d105b9983fd99ef499e46e710c7d1679, type: 3}
+  warriorAttak3: {fileID: 4981185209240832306, guid: c8456246c2d6fff4298f68257f658ba6, type: 3}
+  warriorAttak4: {fileID: 9041159145225513694, guid: e950734163ef55c4590c301cb5fdccd0, type: 3}
+  networkAimPosition: {fileID: 0}
   aimPoint: {fileID: 1708654560843443813}
   attackedByNetworkObject: {fileID: 0}
   collisionLayers:
@@ -6254,6 +6274,7 @@ MonoBehaviour:
     m_Bits: 65
   ingameTeamInfos: {fileID: 0}
   PlayerDataHandler: {fileID: 0}
+  playerMovementHandler: {fileID: 0}
   networkPlayer: {fileID: 0}
   networkObject: {fileID: 0}
 --- !u!1 &6095312856411927410

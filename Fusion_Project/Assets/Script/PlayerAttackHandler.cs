@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerAttackHandler : NetworkBehaviour
 {
@@ -26,7 +27,7 @@ public class PlayerAttackHandler : NetworkBehaviour
     public GameObject warriorAttak3;
     public GameObject warriorAttak4;
 
-
+    public NetworkObject networkAimPosition;
     public Transform aimPoint;
 
     TickTimer MagicBallFireDelay = TickTimer.None;
@@ -48,6 +49,7 @@ public class PlayerAttackHandler : NetworkBehaviour
     //Other components
     public IngameTeamInfos ingameTeamInfos;
     public PlayerDataHandler PlayerDataHandler;
+    public PlayerMovementHandler playerMovementHandler;
     public NetworkPlayer networkPlayer;
     public NetworkObject networkObject;
 
@@ -58,42 +60,10 @@ public class PlayerAttackHandler : NetworkBehaviour
         PlayerDataHandler = GetComponent<PlayerDataHandler>();
         networkPlayer = GetBehaviour<NetworkPlayer>();
         networkObject = GetComponent<NetworkObject>();
+        playerMovementHandler = GetComponent<PlayerMovementHandler>();
     }
 
 
-
-
-
-
-
-
-
-    public void Attak1(string job)
-    {
-        if (ingameTeamInfos.gameState == IngameTeamInfos.GameState.Gaming)
-        {
-            switch (job)
-            {
-                case "Mage":
-                    FireMagicBall(aimPoint.forward);
-                    break;
-                case "Warrior":
-                    attak1();
-                    break;
-                case "Archer":
-                    attak1();
-                    break;
-            }
-
-
-
-        }
-        else
-        { return; }
-
-
-
-    }
 
 
     public void FireMagicBall(Vector3 aimForwardVector)
@@ -283,8 +253,63 @@ public class PlayerAttackHandler : NetworkBehaviour
         }
     }
 
+    public void FireWarriorAttack2(Vector3 aimForwardVector)
+    {
+        if (ingameTeamInfos.gameState == IngameTeamInfos.GameState.Gaming)
+        {
+            //Check that we have not recently fired a grenade. 
+            if (MagicBallFireDelay.ExpiredOrNotRunning(Runner))
+            {
+               NetworkObject fireObject=   Runner.Spawn(warriorAttak2, aimPoint.position + aimForwardVector * 1.5f, Quaternion.LookRotation(aimForwardVector), Object.InputAuthority, (runner, spawnedRocket) =>
+                {
+                    spawnedRocket.GetComponent<AttackSystem>().Fire(Object.InputAuthority, networkObject);
+                });
+                //fireObject.transform.parent = aimPoint;
+                //RPC_SetSkillPosition(fireObject, networkAimPosition);
 
+                
+                //Start a new timer to avoid grenade spamming
+                MagicBallFireDelay = TickTimer.CreateFromSeconds(Runner, 0.5f);
+            }
 
+        }
+    }
+    public void FireWarriorAttack3(Vector3 aimForwardVector)
+    {
+        if (ingameTeamInfos.gameState == IngameTeamInfos.GameState.Gaming)
+        {
+            //Check that we have not recently fired a grenade. 
+            if (MagicBallFireDelay.ExpiredOrNotRunning(Runner))
+            {
+                NetworkObject fireObject = Runner.Spawn(warriorAttak3, aimPoint.position + aimForwardVector * 1.5f, Quaternion.LookRotation(aimForwardVector), Object.InputAuthority, (runner, spawnedRocket) =>
+                {
+                    spawnedRocket.GetComponent<AttackSystem>().Fire(Object.InputAuthority, networkObject);
+                });
+
+                //Start a new timer to avoid grenade spamming
+                MagicBallFireDelay = TickTimer.CreateFromSeconds(Runner, 0.5f);
+            }
+
+        }
+    }
+    public void FireWarriorAttack4(Vector3 aimForwardVector)
+    {
+        if (ingameTeamInfos.gameState == IngameTeamInfos.GameState.Gaming)
+        {
+            //Check that we have not recently fired a grenade. 
+            if (MagicBallFireDelay.ExpiredOrNotRunning(Runner))
+            {
+                NetworkObject fireObject = Runner.Spawn(warriorAttak4, aimPoint.position + aimForwardVector * 1.5f, Quaternion.LookRotation(aimForwardVector), Object.InputAuthority, (runner, spawnedRocket) =>
+                {
+                    spawnedRocket.GetComponent<AttackSystem>().Fire(Object.InputAuthority, networkObject);
+                });
+
+                //Start a new timer to avoid grenade spamming
+                MagicBallFireDelay = TickTimer.CreateFromSeconds(Runner, 0.5f);
+            }
+
+        }
+    }
 
     private static Vector3 RaySystem(float far)
     {
@@ -312,7 +337,24 @@ public class PlayerAttackHandler : NetworkBehaviour
 
 
 
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
+    public void RPC_SetSkillPosition(NetworkObject moveObject, NetworkObject position, RpcInfo info = default)
+    {
+        RPC_Position(moveObject, position, info.Source);
+    }
 
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
+    public void RPC_Position(NetworkObject moveObject, NetworkObject position, PlayerRef messageSource)
+    {
+
+        moveObject.transform.parent = position.transform;
+        moveObject.transform.localPosition = Vector3.zero;
+        moveObject.transform.rotation = position.transform.parent.rotation;
+
+
+
+
+    }
 
 
 
